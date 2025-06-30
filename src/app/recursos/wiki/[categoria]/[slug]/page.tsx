@@ -1,11 +1,10 @@
 import BackButton from '@/components/BackButton';
 import { BookOpenIcon, CodeBracketIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 
+// @ts-ignore
 export default function ArticlePage({
   params,
-}: {
-  params: { categoria: string; slug: string };
-}) {
+}: any) {
   // Contenido de ejemplo (en producción vendría de una API/BD)
   const articles = {
     fundamentos: {
@@ -384,12 +383,25 @@ export default function ArticlePage({
     }
   };
 
-  const article = articles[params.categoria as keyof typeof articles]?.[params.slug] || {
+  interface Article {
+    title: string;
+    content: string;
+    lastUpdated: string;
+    difficulty: string;
+    tags: string[];
+    related: string[];
+  }
+
+  const categoria = params.categoria as keyof typeof articles;
+  const categoryArticles = articles[categoria];
+  const slug = params.slug as keyof typeof categoryArticles;
+  const article: Article = (categoryArticles[slug] as Article | undefined) || {
     title: 'Artículo no encontrado',
     content: '<p>El artículo solicitado no existe o no está disponible.</p>',
     lastUpdated: new Date().toISOString().split('T')[0],
     difficulty: 'N/A',
-    tags: []
+    tags: [],
+    related: [],
   };
 
   return (
