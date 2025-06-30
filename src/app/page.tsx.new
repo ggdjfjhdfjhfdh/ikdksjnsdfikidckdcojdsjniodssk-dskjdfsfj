@@ -1,0 +1,125 @@
+"use client";
+import { useState, useEffect } from 'react';
+import type { FC } from 'react';
+import type { NextPage } from 'next';
+import type { JSX } from 'react';
+import Link from 'next/link';
+import { 
+  ArrowRightIcon, 
+  ShieldCheckIcon,
+  GlobeAltIcon,
+  EyeIcon,
+  BoltIcon,
+  DocumentTextIcon,
+  AcademicCapIcon,
+  CodeBracketIcon,
+  PlusIcon,
+  LockClosedIcon,
+  Bars3Icon
+} from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+
+export function TestComponent() {
+  return (
+    <div>
+      <h1>Test Component</h1>
+    </div>
+  );
+}
+
+const HomePage: NextPage = (): JSX.Element => {
+  const [isClient, setIsClient] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Ensure component is mounted
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const newsData = [
+    {
+      title: 'Noticia 1',
+      description: 'Descripción de la noticia 1',
+      url: 'https://example.com/noticia-1',
+      source: 'Fuente de la noticia 1',
+      rewrittenTitle: 'Título reescrito de la noticia 1'
+    },
+    {
+      title: 'Noticia 2',
+      description: 'Descripción de la noticia 2',
+      url: 'https://example.com/noticia-2',
+      source: 'Fuente de la noticia 2'
+    },
+    {
+      title: 'Noticia 3',
+      description: 'Descripción de la noticia 3',
+      url: 'https://example.com/noticia-3',
+      source: 'Fuente de la noticia 3'
+    },
+  ];
+
+  return (
+    <div className="flex flex-col">
+      {/* Hero Section Mejorado */}
+      <main className="relative min-h-screen overflow-hidden flex items-center justify-center">
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src="/videos/cyber-bg.mp4" type="video/mp4" />
+          </video>
+          {/* Overlay para legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/60 to-transparent z-10"></div>
+        </div>
+        {/* Hero Content */}
+        <section className="relative z-20 w-full max-w-4xl mx-auto flex flex-col items-center md:items-start text-center md:text-left px-4 pt-24 pb-20 animate-fade-in">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight">
+            Protege tu empresa con <span className="text-cyan-500">ciberseguridad inteligente</span>
+          </h1>
+          <p className="text-lg md:text-2xl text-gray-700 mb-8 max-w-2xl">
+            Soluciones avanzadas, simples y adaptadas a tu negocio. Seguridad real con tecnología de última generación.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto justify-center md:justify-start mb-8">
+            <button className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400">
+              Solicita una demo
+            </button>
+            <button className="bg-white/90 hover:bg-gray-100 text-cyan-600 font-bold py-3 px-8 rounded-full border border-cyan-400 shadow transition-all text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400">
+              Ver soluciones
+            </button>
+          </div>
+          {/* Badges de confianza */}
+          <div className="flex gap-4 mt-2 flex-wrap justify-center md:justify-start">
+            <span className="bg-white/80 rounded-full px-4 py-2 text-sm text-gray-900 shadow">+100 empresas protegidas</span>
+            <span className="bg-white/80 rounded-full px-4 py-2 text-sm text-gray-900 shadow">IA avanzada</span>
+            <span className="bg-white/80 rounded-full px-4 py-2 text-sm text-gray-900 shadow">Soporte 24/7</span>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-8">
+        <div className="container mx-auto px-6 text-center">
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-gray-400 text-sm mb-2 md:mb-0">
+              &copy; {new Date().getFullYear()} Se.Sec.Pro. Todos los derechos reservados.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <a href="/legal/privacy-policy" className="text-gray-300 hover:text-white underline transition-colors">Política de Privacidad</a>
+              <a href="/legal/terms" className="text-gray-300 hover:text-white underline transition-colors">Términos y Condiciones</a>
+              <a href="/legal/cookies" className="text-gray-300 hover:text-white underline transition-colors">Política de Cookies</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default HomePage;
