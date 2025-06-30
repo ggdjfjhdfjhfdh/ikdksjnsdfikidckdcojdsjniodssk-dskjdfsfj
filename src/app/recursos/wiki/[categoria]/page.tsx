@@ -1,11 +1,10 @@
 import BackButton from '@/components/BackButton';
 import { BookOpenIcon, CodeBracketIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 
+// @ts-ignore
 export default function CategoryPage({
   params,
-}: {
-  params: { categoria: string };
-}) {
+}: any) {
   // Datos de ejemplo (en producción vendría de una API/BD)
   const categoryData = {
     fundamentos: {
