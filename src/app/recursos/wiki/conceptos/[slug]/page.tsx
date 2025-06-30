@@ -1,10 +1,7 @@
 import BackButton from '@/components/BackButton';
 
-export default function ArticlePage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+// @ts-ignore
+export default function ArticlePage({ params }: any) {
   // Datos del artículo (en un caso real esto vendría de una base de datos)
   const article = {
     id: params.slug,
