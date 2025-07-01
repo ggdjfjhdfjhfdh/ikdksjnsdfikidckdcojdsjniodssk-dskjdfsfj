@@ -1,169 +1,168 @@
 import Link from 'next/link';
-import DownloadButton from '@/components/DownloadButton';
 import ShareButton from '@/components/ShareButton';
 import BackButton from '@/components/BackButton';
+import { HardDrive, Shield, Clock, RefreshCw, HelpCircle, ChevronDown } from 'lucide-react';
+import { ReactNode } from 'react';
+
+interface SectionProps {
+  title: string;
+  icon: ReactNode;
+  children: ReactNode;
+}
 
 export default function GestionCopiasSeguridad() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
-      {/* Botón de volver */}
-      <div className="container mx-auto mb-6 max-w-6xl">
-        <BackButton href="/recursos/guias" label="Volver a todas las guías" />
-      </div>
-      
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
-        {/* Contenido principal */}
-        <div className="flex-1 bg-white rounded-xl shadow-md overflow-hidden">
-          {/* Hero Section */}
-          <div className="bg-transparent p-8 text-center">
-            <span className="text-6xl mb-4 inline-block">💾</span>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-              Gestión de Copias de Seguridad
-            </h1>
-            <p className="text-xl text-gray-600 mb-4">
-              Protege tus datos con estrategias efectivas de respaldo y recuperación
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8 scroll-smooth text-base">
+      <BackButton href="/recursos/guias" label="Volver a guías" />
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 mt-8">
+        <article className="flex-1 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+          <header className="bg-gradient-to-r from-blue-50 to-gray-100 p-8 text-center border-b border-gray-200">
+            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <HardDrive className="w-10 h-10 text-blue-600" />
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Gestión Profesional de Copias de Seguridad</h1>
+            <p className="text-gray-900 text-lg max-w-2xl mx-auto">
+              Estrategias comprobadas para proteger sus datos críticos
             </p>
-            <div className="flex justify-center gap-2">
-              <span className="text-xs font-semibold px-3 py-1 bg-green-100 text-green-800 rounded-full">
-                Datos
-              </span>
-              <span className="text-xs font-semibold px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full">
-                Intermedio
-              </span>
-              <span className="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
-                12 min lectura
-              </span>
-            </div>
-          </div>
+          </header>
 
-          {/* Contenido */}
-          <div className="p-8">
-            {/* Sección 1 */}
-            <section className="mb-12">
-              <div className="flex items-center mb-6">
-                <div className="h-0.5 bg-blue-200 flex-1 mr-4"></div>
-                <h2 className="text-2xl font-bold text-gray-900 flex-shrink-0">
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-lg font-bold mr-3">1</span>
-                  Importancia de las copias
-                </h2>
-                <div className="h-0.5 bg-blue-200 flex-1 ml-4"></div>
+          <div className="divide-y divide-gray-100">
+            <Section title="Importancia de las copias" icon={<Shield className="w-6 h-6 text-blue-600" />}>
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded-r">
+                <p className="font-medium text-blue-800 text-base">
+                  60% de las PYMEs que pierden sus datos cierran en 6 meses
+                </p>
               </div>
-              
-              <p className="mb-4 text-gray-800">
-                Las copias de seguridad son tu última línea de defensa contra pérdida de datos por fallos hardware, ransomware o errores humanos.
+              <p className="text-gray-700 mb-4 text-base">
+                Las copias de seguridad son su última línea de defensa contra pérdida de datos por fallos hardware, ransomware o errores humanos.
               </p>
-              
-              <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-6">
-                <p className="font-medium text-gray-900 mb-2">📊 Datos clave:</p>
-                <ul className="list-disc pl-5 space-y-1 text-gray-800">
-                  <li>60% de las PYMEs que pierden sus datos cierran en 6 meses</li>
-                  <li>El 96% de los servidores con backups completos sobreviven a desastres</li>
-                  <li>El costo promedio de pérdida de datos es $3.92 millones</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Sección 2 */}
-            <section className="mb-12">
-              <div className="flex items-center mb-6">
-                <div className="h-0.5 bg-blue-200 flex-1 mr-4"></div>
-                <h2 className="text-2xl font-bold text-gray-900 flex-shrink-0">
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-lg font-bold mr-3">2</span>
-                  Métodos de backup
-                </h2>
-                <div className="h-0.5 bg-blue-200 flex-1 ml-4"></div>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="bg-white border border-gray-200 p-5 rounded-lg shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Regla 3-2-1</h3>
-                  <ul className="list-disc pl-5 space-y-2 text-gray-800">
-                    <li>3 copias de tus datos</li>
-                    <li>2 medios de almacenamiento diferentes</li>
-                    <li>1 copia fuera del sitio</li>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-lg">Riesgos comunes:</h3>
+                  <ul className="list-disc pl-5 text-sm text-gray-800 space-y-1 text-base">
+                    <li>Fallos de hardware</li>
+                    <li>Ataques de ransomware</li>
+                    <li>Errores humanos</li>
                   </ul>
                 </div>
-                
-                <div className="bg-white border border-gray-200 p-5 rounded-lg shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Soluciones recomendadas</h3>
-                  <ul className="list-disc pl-5 space-y-2 text-gray-800">
-                    <li>Cloud: Backblaze, Google Drive, AWS S3</li>
-                    <li>Local: NAS, discos externos</li>
-                    <li>Híbrido: Combinación cloud + local</li>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2 text-lg">Beneficios:</h3>
+                  <ul className="list-disc pl-5 text-sm text-gray-800 space-y-1 text-base">
+                    <li>Recuperación rápida</li>
+                    <li>Protección contra ransomware</li>
+                    <li>Continuidad del negocio</li>
                   </ul>
                 </div>
               </div>
-            </section>
+            </Section>
 
-            {/* Sección 3 */}
-            <section className="mb-12">
-              <div className="flex items-center mb-6">
-                <div className="h-0.5 bg-blue-200 flex-1 mr-4"></div>
-                <h2 className="text-2xl font-bold text-gray-900 flex-shrink-0">
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-lg font-bold mr-3">3</span>
-                  Frecuencia recomendada
-                </h2>
-                <div className="h-0.5 bg-blue-200 flex-1 ml-4"></div>
+            <Section title="Estrategia 3-2-1" icon={<RefreshCw className="w-6 h-6 text-green-600" />}>
+              <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4 rounded-r">
+                <p className="font-medium text-green-800 text-base">
+                  La estrategia mínima recomendada por expertos en seguridad
+                </p>
               </div>
-              
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200">
-                  <thead>
-                    <tr className="bg-gray-50">
-                      <th className="py-2 px-4 border-b text-left text-gray-900">Tipo de dato</th>
-                      <th className="py-2 px-4 border-b text-left text-gray-900">Frecuencia</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="py-2 px-4 border-b text-gray-800">Documentos personales</td>
-                      <td className="py-2 px-4 border-b text-gray-800">Diaria</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-4 border-b text-gray-800">Fotos y videos</td>
-                      <td className="py-2 px-4 border-b text-gray-800">Semanal</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-4 border-b text-gray-800">Sistema operativo</td>
-                      <td className="py-2 px-4 border-b text-gray-800">Mensual</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </section>
+              <ul className="list-disc pl-5 text-sm text-gray-800 space-y-2 text-base">
+                <li>3 copias de tus datos</li>
+                <li>2 medios de almacenamiento diferentes</li>
+                <li>1 copia fuera del sitio</li>
+              </ul>
+            </Section>
 
-            {/* CTA */}
-            <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900 mb-3">¿No tienes un sistema de backups?</h3>
-              <p className="mb-4 text-gray-800">
-                Configura hoy mismo tu primera copia de seguridad automatizada.
-              </p>
-              <Link 
-                href="#"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-              >
-                Configurar backups automáticos
-              </Link>
-            </div>
+            <Section title="Implementación Práctica" icon={<Clock className="w-6 h-6 text-indigo-600" />}>
+              <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-4 rounded-r">
+                <p className="font-medium text-indigo-800 text-base">
+                  Pasos concretos para implementar un sistema de backups efectivo
+                </p>
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3 text-lg">Para empresas:</h3>
+                  <ul className="list-disc pl-5 text-gray-800 space-y-2 text-base">
+                    <li>Asignar responsable de backups</li>
+                    <li>Automatizar procesos con herramientas como Veeam o Acronis</li>
+                    <li>Establecer política de retención (ej: 30-60-90 días)</li>
+                    <li>Realizar pruebas de recuperación trimestrales</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-3 text-lg">Para usuarios individuales:</h3>
+                  <ul className="list-disc pl-5 text-gray-800 space-y-2 text-base">
+                    <li>Usar soluciones como Time Machine (Mac) o File History (Windows)</li>
+                    <li>Programar backups semanales</li>
+                    <li>Almacenar copia externa en disco duro o nube</li>
+                  </ul>
+                </div>
+              </div>
+            </Section>
+
+            <Section title="Preguntas Frecuentes" icon={<HelpCircle className="w-6 h-6 text-purple-600" />}>
+              <div className="space-y-4">
+                <details className="border border-gray-200 rounded-lg p-4">
+                  <summary className="cursor-pointer font-medium text-gray-900 text-lg flex items-center justify-between">
+                    ¿Con qué frecuencia debo probar mis copias?
+                    <ChevronDown className="w-5 h-5 text-gray-500" />
+                  </summary>
+                  <p className="mt-3 text-gray-700 pl-2 text-base">
+                    <strong>Recomendamos:</strong> Pruebas mensuales para backups críticos y trimestrales para otros datos.
+                  </p>
+                </details>
+                <details className="border border-gray-200 rounded-lg p-4">
+                  <summary className="cursor-pointer font-medium text-gray-900 text-lg flex items-center justify-between">
+                    ¿Es seguro almacenar copias en la nube?
+                    <ChevronDown className="w-5 h-5 text-gray-500" />
+                  </summary>
+                  <p className="mt-3 text-gray-700 pl-2 text-base">
+                    Los proveedores profesionales usan cifrado AES-256. Para máxima seguridad, encripte sus datos localmente antes de subirlos.
+                  </p>
+                </details>
+                <details className="border border-gray-200 rounded-lg p-4">
+                  <summary className="cursor-pointer font-medium text-gray-900 text-lg flex items-center justify-between">
+                    ¿Qué datos son más críticos para respaldar?
+                    <ChevronDown className="w-5 h-5 text-gray-500" />
+                  </summary>
+                  <div className="mt-3 text-gray-700 pl-2 text-base space-y-2">
+                    <p><strong>Prioridad 1:</strong> Documentos financieros, bases de datos, configuraciones críticas</p>
+                    <p><strong>Prioridad 2:</strong> Correos electrónicos, documentos de trabajo</p>
+                    <p><strong>Prioridad 3:</strong> Archivos multimedia, otros datos personales</p>
+                  </div>
+                </details>
+              </div>
+            </Section>
           </div>
-        </div>
-        
-        {/* Barra lateral */}
-        <div className="md:w-64 flex-shrink-0">
-          <div className="bg-white p-6 rounded-xl shadow-md sticky top-4 space-y-4">
-            <h3 className="font-bold text-gray-900">Contenido</h3>
-            <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-blue-600 hover:underline">1. Importancia de las copias</a></li>
-              <li><a href="#" className="text-blue-600 hover:underline">2. Métodos de backup</a></li>
-              <li><a href="#" className="text-blue-600 hover:underline">3. Frecuencia recomendada</a></li>
-            </ul>
-            <div className="mt-4">
-              <DownloadButton />
-              <ShareButton />
-            </div>
+        </article>
+
+        <aside className="lg:w-64">
+          <div className="bg-white border border-gray-200 p-6 rounded-lg sticky top-4 space-y-4">
+            <ShareButton />
+            <nav>
+              <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 text-sm">Contenido</h3>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="text-blue-600 hover:underline">1. Importancia</a></li>
+                <li><a href="#" className="text-blue-600 hover:underline">2. Estrategia 3-2-1</a></li>
+                <li><a href="#" className="text-blue-600 hover:underline">3. Implementación Práctica</a></li>
+                <li><a href="#" className="text-blue-600 hover:underline">4. FAQ</a></li>
+              </ul>
+            </nav>
           </div>
-        </div>
+        </aside>
       </div>
     </main>
+  );
+}
+
+function Section({ title, icon, children }: SectionProps) {
+  return (
+    <section className="p-8 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm mb-6 last:mb-0">
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center shadow-inner">
+          {icon}
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+      </div>
+      <div className="ml-16">
+        {children}
+      </div>
+    </section>
   );
 }
