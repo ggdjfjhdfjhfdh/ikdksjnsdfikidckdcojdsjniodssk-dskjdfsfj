@@ -380,6 +380,24 @@ export default function ArticlePage({
         tags: ['redes', 'cifrado', 'seguridad'],
         related: ['firewalls', 'autenticacion-multifactor', 'segmentacion']
       },
+    },
+    cumplimiento: {
+      'iso27001': {
+        title: 'ISO/IEC 27001',
+        content: '<p>Contenido del artículo sobre ISO/IEC 27001...</p>',
+        lastUpdated: '2025-06-22',
+        difficulty: 'Intermedio',
+        tags: ['cumplimiento', 'normas'],
+        related: ['iso27002']
+      },
+      'iso27002': {
+        title: 'ISO/IEC 27002',
+        content: '<p>Contenido del artículo sobre ISO/IEC 27002...</p>',
+        lastUpdated: '2025-07-01',
+        difficulty: 'Intermedio',
+        tags: ['cumplimiento', 'seguridad'],
+        related: ['iso27001']
+      },
     }
   };
 
