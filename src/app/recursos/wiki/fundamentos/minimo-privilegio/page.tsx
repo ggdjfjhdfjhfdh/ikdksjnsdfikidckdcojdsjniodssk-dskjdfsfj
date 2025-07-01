@@ -109,7 +109,7 @@ export default function MinimoPrivilegioPage() {
                 <tr className="bg-white">
                   <td className="border p-2">Usuarios</td>
                   <td className="border p-2">% cuentas con permisos mínimos</td>
-                  <td className="border p-2">>95%</td>
+                  <td className="border p-2">&gt;95%</td>
                 </tr>
                 <tr className="bg-gray-50">
                   <td className="border p-2">Sistemas</td>
@@ -119,7 +119,7 @@ export default function MinimoPrivilegioPage() {
                 <tr className="bg-white">
                   <td className="border p-2">Cloud</td>
                   <td className="border p-2">% políticas IAM restrictivas</td>
-                  <td className="border p-2">>90%</td>
+                  <td className="border p-2">&gt;90%</td>
                 </tr>
               </tbody>
             </table>
