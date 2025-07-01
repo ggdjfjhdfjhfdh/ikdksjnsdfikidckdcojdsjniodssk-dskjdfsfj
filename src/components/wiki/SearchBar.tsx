@@ -7,6 +7,7 @@ type Article = {
   title: string;
   description: string;
   href: string;
+  content?: string;
 };
 
 interface SearchBarProps {
@@ -38,47 +39,16 @@ export default function SearchBar({ allArticles }: SearchBarProps) {
       return;
     }
 
-    const searchInWiki = async () => {
-      if (searchTerm.trim() === '') {
-        setFilteredArticles([]);
-        return;
-      }
-
-      let retries = 3;
-      let delay = 1000;
-      
-      while (retries > 0) {
-        try {
-          const response = await fetch(`/api/wiki/search?q=${encodeURIComponent(searchTerm)}`);
-          
-          if (!response.ok) {
-            throw new Error(`API request failed with status ${response.status}`);
-          }
-          
-          const results = await response.json();
-          setFilteredArticles(results);
-          return;
-        } catch (error) {
-          console.error(`Error searching wiki (${retries} retries left):`, error);
-          retries--;
-          
-          if (retries === 0) {
-            // Fallback to local search if all retries fail
-            const localResults = allArticles.filter((article: Article) => 
-              article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              article.description.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            setFilteredArticles(localResults);
-          } else {
-            // Exponential backoff
-            await new Promise(resolve => setTimeout(resolve, delay));
-            delay *= 2;
-          }
-        }
-      }
-    };
+    const results = allArticles.filter((article) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        article.title.toLowerCase().includes(searchLower) ||
+        (article.description && article.description.toLowerCase().includes(searchLower)) ||
+        (article.content && article.content.toLowerCase().includes(searchLower))
+      );
+    });
     
-    searchInWiki();
+    setFilteredArticles(results);
   }, [searchTerm, allArticles]);
 
   return (
@@ -94,7 +64,7 @@ export default function SearchBar({ allArticles }: SearchBarProps) {
       {searchTerm && (
         <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-96 overflow-y-auto">
           {filteredArticles.length > 0 ? (
-            filteredArticles.map((article: Article) => (
+            filteredArticles.map((article) => (
               <ArticleCard 
                 key={article.href} 
                 title={article.title}
