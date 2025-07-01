@@ -39,18 +39,42 @@ export default function SearchBar({ allArticles }: SearchBarProps) {
     }
 
     const searchInWiki = async () => {
-      try {
-        const response = await fetch(`/api/wiki/search?q=${encodeURIComponent(searchTerm)}`);
-        const results = await response.json();
-        setFilteredArticles(results);
-      } catch (error) {
-        console.error('Error searching wiki:', error);
-        // Fallback to local search if API fails
-        const localResults = allArticles.filter((article: Article) => 
-          article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          article.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredArticles(localResults);
+      if (searchTerm.trim() === '') {
+        setFilteredArticles([]);
+        return;
+      }
+
+      let retries = 3;
+      let delay = 1000;
+      
+      while (retries > 0) {
+        try {
+          const response = await fetch(`/api/wiki/search?q=${encodeURIComponent(searchTerm)}`);
+          
+          if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+          }
+          
+          const results = await response.json();
+          setFilteredArticles(results);
+          return;
+        } catch (error) {
+          console.error(`Error searching wiki (${retries} retries left):`, error);
+          retries--;
+          
+          if (retries === 0) {
+            // Fallback to local search if all retries fail
+            const localResults = allArticles.filter((article: Article) => 
+              article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              article.description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredArticles(localResults);
+          } else {
+            // Exponential backoff
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 2;
+          }
+        }
       }
     };
     
