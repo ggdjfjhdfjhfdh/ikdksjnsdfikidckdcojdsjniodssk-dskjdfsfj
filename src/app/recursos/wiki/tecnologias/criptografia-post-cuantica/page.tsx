@@ -5,6 +5,7 @@ export default function PostQuantumCryptoArticle() {
   return (
     <ArticleLayout 
       title="Criptografía Post-Cuántica" 
+      description="Introducción a los algoritmos criptográficos resistentes a computación cuántica"
       backUrl="/recursos/wiki/tecnologias"
     >
       <div className="prose max-w-none">
