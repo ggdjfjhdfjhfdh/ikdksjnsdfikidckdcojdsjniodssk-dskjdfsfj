@@ -27,8 +27,8 @@ export default function CCPAPage() {
             <div className="bg-white p-3 rounded shadow">
               <h3 className="font-semibold text-gray-900">CCPA Original</h3>
               <ul className="list-disc pl-5 mt-2 text-sm text-gray-700">
-                <li>Empresas con >$25M en ingresos</li>
-                <li>Compra/venta datos de >50k consumidores</li>
+                <li>Empresas con &gt;$25M en ingresos</li>
+                <li>Compra/venta datos de &gt;50k consumidores</li>
                 <li>50%+ ingresos por venta de datos</li>
               </ul>
             </div>
