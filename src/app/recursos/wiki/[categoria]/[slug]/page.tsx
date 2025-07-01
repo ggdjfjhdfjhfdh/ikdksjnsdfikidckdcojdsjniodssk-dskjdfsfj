@@ -392,7 +392,11 @@ export default function ArticlePage({
     related: [],
   };
 
-  const article = articles[params.categoria]?.[params.slug] ?? notFoundArticle;
+  const category = params.categoria as keyof typeof articles;
+  const categoryArticles = articles[category];
+  const article = categoryArticles
+    ? (categoryArticles[params.slug as keyof typeof categoryArticles] ?? notFoundArticle)
+    : notFoundArticle;
 
   const safeArticle = {
     title: article?.title ?? 'Título no disponible',
