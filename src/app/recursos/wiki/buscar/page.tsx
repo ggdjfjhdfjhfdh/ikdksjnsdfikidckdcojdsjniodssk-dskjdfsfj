@@ -8,7 +8,7 @@ import BackButton from '@/components/BackButton';
 export default function SearchPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Array<{title: string, description: string, href: string}>>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
