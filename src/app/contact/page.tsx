@@ -51,7 +51,7 @@ export default function ContactPage() {
   } = useForm<FormData>({ mode: 'onTouched' });
 
   // Lee la API key de Web3Forms desde el entorno (.env o .env.local). Ambas funcionan con Next.js si la variable empieza por NEXT_PUBLIC_
-  const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+  const accessKey = '2c1f7424-fab8-41da-8934-12f7fa156646'
 
   if (!accessKey) {
     console.warn('Web3Forms API key is missing. Añádela en .env o .env.local como NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY');
