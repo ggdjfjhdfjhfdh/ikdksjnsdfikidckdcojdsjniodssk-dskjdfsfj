@@ -1,4 +1,4 @@
-import ArticleLayout from '../../../../../../components/article-layout';
+import ArticleLayout from '@/components/wiki/ArticleLayout';
 
 export default function IS027002Page() {
   return (
