@@ -17,8 +17,8 @@ export default function RootLayout({
   return (
     <html lang="es" className={inter.className}>
       <head>
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="preload" href="/site.webmanifest" as="manifest" />
+        <link rel="manifest" href="/api/manifest" />
+        <link rel="preload" href="/api/manifest" as="fetch" />
       </head>
       <body className="antialiased">
         <LanguageProvider>
