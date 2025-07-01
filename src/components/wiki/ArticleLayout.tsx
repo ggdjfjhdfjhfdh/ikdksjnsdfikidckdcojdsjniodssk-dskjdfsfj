@@ -9,13 +9,15 @@ type ArticleLayoutProps = {
   description: string;
   children: ReactNode;
   backUrl: string;
+  fullWidth?: boolean;
 };
 
 export default function ArticleLayout({
   title,
   description,
   children,
-  backUrl
+  backUrl,
+  fullWidth = false
 }: ArticleLayoutProps) {
   const router = useRouter();
 
@@ -38,8 +40,8 @@ export default function ArticleLayout({
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-8">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className={`bg-gray-50 min-h-screen py-8 ${fullWidth ? 'px-0' : ''}`}>
+      <div className={`${fullWidth ? 'max-w-full' : 'max-w-3xl'} mx-auto px-4 sm:px-6 lg:px-8`}>
         <div className="flex justify-between items-start mb-6">
           <Link 
             href={backUrl} 

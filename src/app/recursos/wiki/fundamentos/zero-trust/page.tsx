@@ -7,7 +7,6 @@ export default function ZeroTrustPage() {
       title="Zero Trust Architecture (ZTA)" 
       description="Modelo de seguridad 'Never Trust, Always Verify' según NIST SP 800-207"
       backUrl="/recursos/wiki/fundamentos"
-      fullWidth
     >
       <div className="w-full px-4">
         <div className="max-w-6xl mx-auto prose max-w-none text-gray-800">
