@@ -383,25 +383,24 @@ export default function ArticlePage({
     }
   };
 
-  interface Article {
-    title: string;
-    content: string;
-    lastUpdated: string;
-    difficulty: string;
-    tags: string[];
-    related: string[];
-  }
-
-  const categoria = params.categoria as keyof typeof articles;
-  const categoryArticles = articles[categoria];
-  const slug = params.slug as keyof typeof categoryArticles;
-  const article: Article = (categoryArticles[slug] as Article | undefined) || {
+  const notFoundArticle = {
     title: 'Artículo no encontrado',
     content: '<p>El artículo solicitado no existe o no está disponible.</p>',
     lastUpdated: new Date().toISOString().split('T')[0],
     difficulty: 'N/A',
     tags: [],
     related: [],
+  };
+
+  const article = articles[params.categoria]?.[params.slug] ?? notFoundArticle;
+
+  const safeArticle = {
+    title: article?.title ?? 'Título no disponible',
+    content: article?.content ?? '<p>Contenido no disponible</p>',
+    lastUpdated: article?.lastUpdated ?? 'Fecha no disponible',
+    difficulty: article?.difficulty ?? 'Nivel no disponible',
+    tags: article?.tags ?? [],
+    related: article?.related ?? [],
   };
 
   return (
@@ -413,11 +412,11 @@ export default function ArticlePage({
           <div className="flex justify-between items-start mb-6">
             <div>
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mb-2">
-                {article.difficulty}
+                {safeArticle.difficulty}
               </span>
-              <h1 className="text-3xl font-bold text-gray-900">{article.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900">{safeArticle.title}</h1>
               <div className="flex flex-wrap gap-2 mt-2">
-                {article.tags.map((tag: string) => (
+                {safeArticle.tags.map((tag: string) => (
                   <span key={tag} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                     {tag}
                   </span>
@@ -425,13 +424,13 @@ export default function ArticlePage({
               </div>
             </div>
             <div className="text-sm text-gray-700">
-              Actualizado: {article.lastUpdated}
+              Actualizado: {safeArticle.lastUpdated}
             </div>
           </div>
           
           <div 
             className="prose prose-lg max-w-none text-gray-700"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: safeArticle.content }}
           />
         </div>
       </div>

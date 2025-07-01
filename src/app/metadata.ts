@@ -22,7 +22,7 @@ export const metadata: Metadata = {
       { rel: 'icon', url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
     ],
   },
-  manifest: '/api/manifest',
+  // Manifest removed to prevent 429 errors
   // Configuración para redes sociales
   openGraph: {
     title: 'Sesecpro - Advanced Cybersecurity Solutions',

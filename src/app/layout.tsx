@@ -17,8 +17,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={inter.className}>
       <head>
-        <link rel="manifest" href="/api/manifest" />
-        <link rel="preload" href="/api/manifest" as="fetch" />
+        {/* Manifest removed to prevent 429 errors */}
       </head>
       <body className="antialiased">
         <LanguageProvider>
