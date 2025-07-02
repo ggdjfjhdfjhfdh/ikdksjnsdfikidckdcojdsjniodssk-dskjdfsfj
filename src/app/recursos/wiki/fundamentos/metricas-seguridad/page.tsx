@@ -8,14 +8,14 @@ export default function MetricasSeguridadPage() {
       description="Indicadores cuantitativos y cualitativos para medir la postura de seguridad de una organización"
       backUrl="/recursos/wiki/fundamentos"
     >
-      <div className="space-y-10 text-gray-800">
+      <div className="space-y-10 text-gray-800 px-4 sm:px-6">
         <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4">Fundamentos de Métricas de Seguridad</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">Fundamentos de Métricas de Seguridad</h2>
           <div className="prose max-w-none">
-            <p className="mb-4">
+            <p className="mb-4 text-sm sm:text-base">
               Las <strong>métricas de seguridad</strong> permiten:
             </p>
-            <ul className="list-disc pl-6 space-y-2 mb-4">
+            <ul className="list-disc pl-6 space-y-2 mb-4 text-sm sm:text-base">
               <li>Evaluar objetivamente la postura de seguridad</li>
               <li>Identificar tendencias y patrones</li>
               <li>Priorizar inversiones en controles</li>
@@ -23,14 +23,14 @@ export default function MetricasSeguridadPage() {
               <li>Comunicar riesgos a stakeholders</li>
             </ul>
             
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
               <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-500">
-                <p className="text-sm font-medium mb-2">Métricas Lagging:</p>
-                <p className="text-sm">Indicadores retrospectivos (ej: tiempo de detección/respuesta)</p>
+                <p className="text-xs sm:text-sm font-medium mb-2">Métricas Lagging:</p>
+                <p className="text-xs sm:text-sm">Indicadores retrospectivos (ej: tiempo de detección/respuesta)</p>
               </div>
               <div className="bg-green-50 p-4 rounded border-l-4 border-green-500">
-                <p className="text-sm font-medium mb-2">Métricas Leading:</p>
-                <p className="text-sm">Indicadores predictivos (ej: cobertura de parches)</p>
+                <p className="text-xs sm:text-sm font-medium mb-2">Métricas Leading:</p>
+                <p className="text-xs sm:text-sm">Indicadores predictivos (ej: cobertura de parches)</p>
               </div>
             </div>
           </div>
@@ -38,7 +38,7 @@ export default function MetricasSeguridadPage() {
 
         <section className="bg-blue-50 p-6 rounded-lg border border-blue-200">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Métricas Clave</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
               <h3 className="font-semibold mb-2 text-blue-700">Prevención</h3>
               <ul className="list-disc pl-5 space-y-1 text-sm">

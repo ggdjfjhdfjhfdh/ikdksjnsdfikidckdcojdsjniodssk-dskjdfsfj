@@ -8,20 +8,20 @@ export default function SeguridadPorDisenoPage() {
       description="Principio de integrar controles de seguridad desde las etapas iniciales del desarrollo de sistemas y procesos"
       backUrl="/recursos/wiki/fundamentos"
     >
-      <div className="space-y-10 text-gray-800">
+      <div className="space-y-10 text-gray-800 px-4 sm:px-6">
         <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4">¿Qué es Seguridad por Diseño?</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">¿Qué es Seguridad por Diseño?</h2>
           <div className="prose max-w-none">
-            <p className="mb-4">
+            <p className="mb-4 text-sm sm:text-base">
               La <strong>Seguridad por Diseño</strong> es un enfoque proactivo que integra controles y consideraciones de seguridad:
             </p>
-            <ul className="list-disc pl-6 space-y-2 mb-4">
+            <ul className="list-disc pl-6 space-y-2 mb-4 text-sm sm:text-base">
               <li>Desde las fases iniciales de diseño de sistemas</li>
               <li>En toda la arquitectura y ciclo de vida del producto</li>
               <li>Basado en principios de privacidad y seguridad fundamentales</li>
             </ul>
             <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-500">
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">
                 <strong>Definición formal (NIST):</strong> "Enfoque que incorpora seguridad y resiliencia cibernética como componentes esenciales desde la concepción inicial."
               </p>
             </div>

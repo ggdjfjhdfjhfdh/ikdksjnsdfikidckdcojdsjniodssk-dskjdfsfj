@@ -1,5 +1,6 @@
 import ArticleLayout from '@/components/wiki/ArticleLayout';
 import { FiExternalLink } from 'react-icons/fi';
+import { ResponsiveTable, TableCell } from '@/components/wiki/ResponsiveTable';
 
 export default function PFSPage() {
   return (
@@ -49,31 +50,33 @@ export default function PFSPage() {
 
         <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
           <h2 className="text-2xl font-bold mb-4">Comparativa de Protocolos</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Protocolo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PFS</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seguridad</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recomendado</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">TLS 1.3</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Obligatorio</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Alta</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">✓ (IETF)</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">TLS 1.2</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Opcional</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Media</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Condicional</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="bg-gray-100 p-4 rounded-lg border border-gray-200 mb-6">
+            <ResponsiveTable>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <TableCell header>Protocolo</TableCell>
+                    <TableCell header>PFS</TableCell>
+                    <TableCell header>Seguridad</TableCell>
+                    <TableCell header>Recomendado</TableCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <TableCell>TLS 1.3</TableCell>
+                    <TableCell>Obligatorio</TableCell>
+                    <TableCell>Alta</TableCell>
+                    <TableCell>✓ (IETF)</TableCell>
+                  </tr>
+                  <tr>
+                    <TableCell>TLS 1.2</TableCell>
+                    <TableCell>Opcional</TableCell>
+                    <TableCell>Media</TableCell>
+                    <TableCell>Condicional</TableCell>
+                  </tr>
+                </tbody>
+              </table>
+            </ResponsiveTable>
           </div>
         </section>
 

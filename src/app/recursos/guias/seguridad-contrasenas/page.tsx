@@ -21,7 +21,7 @@ import {
   Users,
   Zap
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 /*********************************
  * Utilidades de generación (tipadas)
@@ -67,12 +67,17 @@ function generatePassword(length: number, includeUppercase: boolean, includeNumb
  * Componente principal
  *********************************/
 export default function SeguridadContrasenas() {
-  const [passphrase, setPassphrase] = useState<Passphrase>(generatePassphrase());
-  const [password, setPassword] = useState<string>(generatePassword(12, true, true, true));
+  const [passphrase, setPassphrase] = useState<Passphrase>({ words: [], combined: '' });
+  const [password, setPassword] = useState<string>('');
   const [includeUppercase, setIncludeUppercase] = useState(true);
   const [includeNumbers, setIncludeNumbers] = useState(true);
   const [includeSymbols, setIncludeSymbols] = useState(true);
   const [length, setLength] = useState(12);
+
+  useEffect(() => {
+    setPassphrase(generatePassphrase());
+    setPassword(generatePassword(12, true, true, true));
+  }, []);
 
   const navItems = [
     { id: 'plan-directo', label: 'Plan exprés' },
@@ -317,8 +322,8 @@ export default function SeguridadContrasenas() {
                         
                         <div className="mb-4">
                           <div className="flex flex-wrap gap-2 mb-3">
-                            {passphrase.words.map((w) => (
-                              <span key={w} className="bg-gray-50 px-3 py-1.5 rounded-md text-gray-800 text-sm font-medium">
+                            {passphrase.words.map((w, i) => (
+                              <span key={`${i}-${w}`} className="bg-gray-50 px-3 py-1.5 rounded-md text-gray-800 text-sm font-medium">
                                 {w}
                               </span>
                             ))}

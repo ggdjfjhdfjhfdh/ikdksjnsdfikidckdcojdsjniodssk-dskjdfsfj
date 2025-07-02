@@ -8,22 +8,22 @@ export default function ModeloAAAPage() {
       description="Marco fundamental para la gestión de accesos y seguridad de sistemas"
       backUrl="/recursos/wiki/fundamentos"
     >
-      <div className="space-y-8 text-gray-800">
+      <div className="space-y-8 text-gray-800 px-4 sm:px-6">
         <section>
-          <h2 className="text-2xl font-bold mb-4">Definición</h2>
-          <p className="mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">Definición</h2>
+          <p className="mb-4 text-sm sm:text-base">
             El modelo AAA es un marco de seguridad que establece tres procesos clave para el control de accesos:
             <strong>Autenticación</strong>, <strong>Autorización</strong> y <strong>Auditoría</strong>.
           </p>
         </section>
 
         <section className="bg-gray-100 p-6 rounded-lg border-l-4 border-blue-700">
-          <h3 className="text-xl font-semibold mb-4">Componentes Principales</h3>
+          <h3 className="text-lg sm:text-xl font-semibold mb-4">Componentes Principales</h3>
           
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
             <div className="bg-white p-4 rounded shadow">
-              <h4 className="font-bold text-lg mb-2 text-blue-700">1. Autenticación</h4>
-              <ul className="list-disc pl-5 space-y-1 text-sm">
+              <h4 className="font-bold text-base sm:text-lg mb-2 text-blue-700">1. Autenticación</h4>
+              <ul className="list-disc pl-5 space-y-1 text-xs sm:text-sm">
                 <li>Verificación de identidad</li>
                 <li>Métodos: Contraseñas, MFA, Certificados</li>
                 <li>Protocolos: OAuth, SAML, OpenID</li>
@@ -31,8 +31,8 @@ export default function ModeloAAAPage() {
             </div>
             
             <div className="bg-white p-4 rounded shadow">
-              <h4 className="font-bold text-lg mb-2 text-blue-700">2. Autorización</h4>
-              <ul className="list-disc pl-5 space-y-1 text-sm">
+              <h4 className="font-bold text-base sm:text-lg mb-2 text-blue-700">2. Autorización</h4>
+              <ul className="list-disc pl-5 space-y-1 text-xs sm:text-sm">
                 <li>Determina permisos post-autenticación</li>
                 <li>Modelos: RBAC, ABAC, ACL</li>
                 <li>Principio de mínimo privilegio</li>
@@ -40,8 +40,8 @@ export default function ModeloAAAPage() {
             </div>
             
             <div className="bg-white p-4 rounded shadow">
-              <h4 className="font-bold text-lg mb-2 text-blue-700">3. Auditoría</h4>
-              <ul className="list-disc pl-5 space-y-1 text-sm">
+              <h4 className="font-bold text-base sm:text-lg mb-2 text-blue-700">3. Auditoría</h4>
+              <ul className="list-disc pl-5 space-y-1 text-xs sm:text-sm">
                 <li>Registro de actividades</li>
                 <li>Traza de eventos críticos</li>
                 <li>Cumplimiento normativo</li>
@@ -51,12 +51,12 @@ export default function ModeloAAAPage() {
         </section>
 
         <section>
-          <h3 className="text-xl font-semibold mb-4">Implementación Práctica</h3>
+          <h3 className="text-lg sm:text-xl font-semibold mb-4">Implementación Práctica</h3>
           
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div>
               <h4 className="font-medium mb-3 text-gray-900">En Sistemas Corporativos:</h4>
-              <ul className="list-disc pl-5 space-y-2">
+              <ul className="list-disc pl-5 space-y-2 text-sm">
                 <li>Active Directory/LDAP para autenticación centralizada</li>
                 <li>PAM para gestión de accesos privilegiados</li>
                 <li>SIEM para consolidación de logs</li>
@@ -65,7 +65,7 @@ export default function ModeloAAAPage() {
             
             <div>
               <h4 className="font-medium mb-3 text-gray-900">En Aplicaciones Web:</h4>
-              <ul className="list-disc pl-5 space-y-2">
+              <ul className="list-disc pl-5 space-y-2 text-sm">
                 <li>JWT para autorización stateless</li>
                 <li>OAuth 2.0 para delegación de accesos</li>
                 <li>Logging estructurado para auditoría</li>
@@ -75,7 +75,7 @@ export default function ModeloAAAPage() {
         </section>
 
         <section className="border-t pt-6">
-          <h3 className="text-xl font-semibold mb-3">Estándares Relacionados</h3>
+          <h3 className="text-lg sm:text-xl font-semibold mb-3">Estándares Relacionados</h3>
           
           <div className="space-y-4">
             <div className="flex items-start">

@@ -8,14 +8,14 @@ export default function GestionRiesgosPage() {
       description="Proceso sistemático para identificar, analizar, evaluar y tratar riesgos de seguridad de la información"
       backUrl="/recursos/wiki/fundamentos"
     >
-      <div className="space-y-10 text-gray-800">
+      <div className="space-y-10 text-gray-800 px-4 sm:px-6">
         <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4">¿Qué es la Gestión de Riesgos?</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">¿Qué es la Gestión de Riesgos?</h2>
           <div className="prose max-w-none">
-            <p className="mb-4">
+            <p className="mb-4 text-sm sm:text-base">
               La <strong>Gestión de Riesgos en Ciberseguridad</strong> es un proceso estructurado que permite a las organizaciones:
             </p>
-            <ul className="list-disc pl-6 space-y-2 mb-4">
+            <ul className="list-disc pl-6 space-y-2 mb-4 text-sm sm:text-base">
               <li>Identificar activos, amenazas y vulnerabilidades potenciales</li>
               <li>Evaluar la probabilidad e impacto de incidentes de seguridad</li>
               <li>Priorizar riesgos basados en su criticidad</li>
@@ -23,7 +23,7 @@ export default function GestionRiesgosPage() {
               <li>Monitorear y revisar continuamente el entorno de riesgo</li>
             </ul>
             <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-500">
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">
                 <strong>Definición formal (ISO 31000):</strong> "Proceso coordinado para dirigir y controlar una organización con respecto al riesgo."
               </p>
             </div>

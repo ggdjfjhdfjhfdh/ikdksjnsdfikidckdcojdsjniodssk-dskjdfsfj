@@ -8,21 +8,21 @@ export default function KerckhoffsPage() {
       description="Fundamentos de diseño criptográfico basados en seguridad por transparencia"
       backUrl="/recursos/wiki/fundamentos"
     >
-      <div className="space-y-10 text-gray-800">
+      <div className="space-y-10 text-gray-800 px-4 sm:px-6">
         <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4">¿Qué son los Principios de Kerckhoffs?</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">¿Qué son los Principios de Kerckhoffs?</h2>
           <div className="prose max-w-none">
-            <p className="mb-4">
+            <p className="mb-4 text-sm sm:text-base">
               Formulados por Auguste Kerckhoffs en 1883, estos principios establecen que:
             </p>
-            <ul className="list-disc pl-6 space-y-2 mb-4">
+            <ul className="list-disc pl-6 space-y-2 mb-4 text-sm sm:text-base">
               <li>Un sistema criptográfico debe ser seguro incluso si todo su diseño es público</li>
               <li>La seguridad debe residir únicamente en la clave secreta</li>
               <li>El sistema debe ser comprensible y verificable por expertos</li>
             </ul>
             
             <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-500">
-              <p className="text-sm">
+              <p className="text-xs sm:text-sm">
                 <strong>Contraste con "seguridad por oscuridad":</strong> Kerckhoffs argumentaba que depender del secreto del diseño es inherentemente inseguro.
               </p>
             </div>

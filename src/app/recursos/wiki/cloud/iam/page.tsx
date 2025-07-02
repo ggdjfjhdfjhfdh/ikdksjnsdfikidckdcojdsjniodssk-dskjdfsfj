@@ -1,5 +1,6 @@
 import ArticleLayout from '@/components/wiki/ArticleLayout';
 import { FiExternalLink } from 'react-icons/fi';
+import { ResponsiveTable, TableCell } from '@/components/wiki/ResponsiveTable';
 
 export default function IAMRolesPage() {
   return (
@@ -41,6 +42,27 @@ export default function IAMRolesPage() {
               </ul>
             </div>
           </div>
+        </section>
+
+        <section className="bg-gray-100 p-4 rounded-lg border border-gray-200 mb-6">
+          <ResponsiveTable>
+            <table className="min-w-full border border-gray-200">
+              <thead>
+                <tr>
+                  <TableCell header>Servicio</TableCell>
+                  <TableCell header>Mejores Prácticas</TableCell>
+                  <TableCell header>Ejemplo de Política</TableCell>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <TableCell>Compute</TableCell>
+                  <TableCell>Roles temporales, MFA</TableCell>
+                  <TableCell>Deny ec2:* sin MFA</TableCell>
+                </tr>
+              </tbody>
+            </table>
+          </ResponsiveTable>
         </section>
 
         <section className="border-t pt-6">

@@ -1,5 +1,6 @@
 import ArticleLayout from '@/components/wiki/ArticleLayout';
 import { FiExternalLink } from 'react-icons/fi';
+import { ResponsiveTable, TableCell } from '@/components/wiki/ResponsiveTable';
 
 export default function SharedResponsibilityPage() {
   return (
@@ -22,19 +23,35 @@ export default function SharedResponsibilityPage() {
 
         <section className="bg-blue-50 p-6 rounded-lg border border-blue-200">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Responsabilidades del Cliente</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-white p-3 rounded shadow text-center">
-              <p className="font-semibold text-sm text-gray-900">IaaS</p>
-              <p className="text-xs text-gray-600">Sistema operativo, aplicaciones, datos</p>
-            </div>
-            <div className="bg-white p-3 rounded shadow text-center">
-              <p className="font-semibold text-sm text-gray-900">PaaS</p>
-              <p className="text-xs text-gray-600">Aplicaciones, datos, configuración</p>
-            </div>
-            <div className="bg-white p-3 rounded shadow text-center">
-              <p className="font-semibold text-sm text-gray-900">SaaS</p>
-              <p className="text-xs text-gray-600">Datos y configuración</p>
-            </div>
+          <div className="bg-gray-100 p-4 rounded-lg border border-gray-200 mb-6">
+            <ResponsiveTable>
+              <table className="min-w-full border border-gray-200">
+                <thead>
+                  <tr>
+                    <TableCell header>Servicio</TableCell>
+                    <TableCell header>Responsabilidad Cliente</TableCell>
+                    <TableCell header>Responsabilidad Proveedor</TableCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <TableCell>IaaS</TableCell>
+                    <TableCell>SO, Apps, Data, Config</TableCell>
+                    <TableCell>Hardware, Red, Virtualización</TableCell>
+                  </tr>
+                  <tr>
+                    <TableCell>PaaS</TableCell>
+                    <TableCell>Apps, Data, Config</TableCell>
+                    <TableCell>SO, Hardware, Red, Virtualización</TableCell>
+                  </tr>
+                  <tr>
+                    <TableCell>SaaS</TableCell>
+                    <TableCell>Data, Config</TableCell>
+                    <TableCell>Apps, SO, Hardware, Red, Virtualización</TableCell>
+                  </tr>
+                </tbody>
+              </table>
+            </ResponsiveTable>
           </div>
         </section>
 

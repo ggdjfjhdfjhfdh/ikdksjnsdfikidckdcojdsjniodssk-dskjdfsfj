@@ -1,5 +1,6 @@
 import ArticleLayout from '@/components/wiki/ArticleLayout';
 import { FiExternalLink } from 'react-icons/fi';
+import { ResponsiveTable, TableCell } from '@/components/wiki/ResponsiveTable';
 
 export default function ModosCifradoPage() {
   return (
@@ -49,31 +50,25 @@ export default function ModosCifradoPage() {
 
         <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
           <h2 className="text-2xl font-bold mb-4">Comparativa Técnica</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Modo</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Autenticación</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paralelizable</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recomendado</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">GCM</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Sí</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Sí</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">✓ (NIST)</td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">CBC</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">No</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">No</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">✗ (Obsoleto)</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="bg-gray-100 p-4 rounded-lg border border-gray-200 mb-6">
+            <ResponsiveTable>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <TableCell header>Modo</TableCell>
+                    <TableCell header>Seguridad</TableCell>
+                    <TableCell header>Uso Recomendado</TableCell>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <TableCell>GCM</TableCell>
+                    <TableCell>Alta (Autenticado)</TableCell>
+                    <TableCell>TLS, almacenamiento</TableCell>
+                  </tr>
+                </tbody>
+              </table>
+            </ResponsiveTable>
           </div>
         </section>
 

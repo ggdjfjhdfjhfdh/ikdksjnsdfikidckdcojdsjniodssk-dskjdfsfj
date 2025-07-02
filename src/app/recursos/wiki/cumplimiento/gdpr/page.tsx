@@ -1,5 +1,6 @@
 import ArticleLayout from '@/components/wiki/ArticleLayout';
 import { FiExternalLink } from 'react-icons/fi';
+import { ResponsiveTable, TableCell } from '@/components/wiki/ResponsiveTable';
 
 export default function GDPRPage() {
   return (
@@ -41,6 +42,27 @@ export default function GDPRPage() {
               </ul>
             </div>
           </div>
+        </section>
+
+        <section className="bg-gray-100 p-4 rounded-lg border border-gray-200 mb-6">
+          <ResponsiveTable>
+            <table className="min-w-full border border-gray-200">
+              <thead>
+                <tr>
+                  <TableCell header>Artículo GDPR</TableCell>
+                  <TableCell header>Requisito</TableCell>
+                  <TableCell header>Implementación</TableCell>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <TableCell>Art. 5</TableCell>
+                  <TableCell>Principios de procesamiento</TableCell>
+                  <TableCell>Políticas de privacidad</TableCell>
+                </tr>
+              </tbody>
+            </table>
+          </ResponsiveTable>
         </section>
 
         <section className="border-t pt-6">

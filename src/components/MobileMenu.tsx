@@ -3,10 +3,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiChevronRight } from 'react-icons/fi';
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
 interface Link {
   href: string;
   label: string;
+  subLinks?: Link[];
 }
 
 interface MobileMenuProps {
@@ -14,123 +16,113 @@ interface MobileMenuProps {
   onClose: () => void;
 }
 
+interface NavItem {
+  path: string;
+  name: string;
+}
+
+const navItems: NavItem[] = [
+  { path: '/about', name: 'Sobre nosotros' },
+  { path: '/solutions', name: 'Soluciones' },
+  { path: '/contact', name: 'Contacto' }
+];
+
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const pathname = usePathname();
+  const menuRef = useRef<HTMLDivElement>(null);
   
-  const links: Link[] = [
-    { href: '/about', label: 'Sobre nosotros' },
-    { href: '/solutions', label: 'Soluciones' }, 
-    { href: '/contact', label: 'Contacto' }
-  ];
+  // Close menu when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
 
-  const menuVariants = {
-    open: {
-      x: 0,
-      transition: { 
-        type: 'spring',
-        stiffness: 300,
-        damping: 30
-      }
-    },
-    closed: {
-      x: '100%',
-      transition: {
-        delay: 0.15,
-        type: 'spring',
-        stiffness: 300,
-        damping: 30
-      }
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('mousedown', handleClickOutside);
+      menuRef.current?.focus();
+      document.body.style.overflow = 'hidden';
     }
-  };
-
-  const itemVariants = {
-    open: {
-      opacity: 1,
-      y: 0,
-      transition: { 
-        type: 'spring',
-        stiffness: 300,
-        damping: 15
-      }
-    },
-    closed: {
-      opacity: 0,
-      y: 20
-    }
-  };
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Overlay with fade-in animation */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
+            aria-hidden="true"
           />
           
-          <motion.nav
-            initial="closed"
-            animate="open" 
-            exit="closed"
-            variants={menuVariants}
-            className="fixed right-0 top-0 h-full w-72 bg-white/95 backdrop-blur-xl shadow-2xl flex flex-col p-6 z-50 border-l border-gray-100/20"
-            role="navigation"
-            aria-label="Menú móvil"
+          {/* Menu panel with slide-in animation */}
+          <motion.div
+            ref={menuRef}
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 30, stiffness: 400 }}
+            className="fixed inset-y-0 right-0 z-50 w-full max-w-xs bg-white shadow-xl focus:outline-none"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú de navegación"
           >
-            <motion.button
-              whileHover={{ rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
-              className="self-end p-2 rounded-full hover:bg-gray-100 focus:outline-none"
-              onClick={onClose}
-              aria-label="Cerrar menú"
-            >
-              <FiX className="w-6 h-6 text-gray-600" />
-            </motion.button>
-
-            <div className="flex flex-col gap-3 mt-4">
-              {links.map((link, index) => (
-                <motion.a
-                  key={link.href}
-                  variants={itemVariants}
-                  initial="closed"
-                  animate="open"
-                  transition={{ delay: 0.1 * index }}
-                  whileHover={{ 
-                    x: 5,
-                    backgroundColor: 'rgba(239, 246, 255, 0.8)'
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  href={link.href}
-                  className={`flex items-center justify-between px-4 py-3 text-lg rounded-xl transition-all ${
-                    pathname === link.href
-                      ? 'bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-600'
-                      : 'text-gray-700 hover:bg-blue-50/50'
-                  }`}
+            <div className="flex h-full flex-col overflow-y-auto">
+              {/* Header with close button */}
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-lg font-semibold text-gray-900">Menú</h2>
+                <button
+                  onClick={onClose}
+                  className="rounded-md p-2 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  aria-label="Cerrar menú"
                 >
-                  <span>{link.label}</span>
-                  <FiChevronRight className="text-gray-400" />
-                </motion.a>
-              ))}
+                  <FiX className="h-6 w-6" />
+                </button>
+              </div>
+              
+              {/* Navigation links */}
+              <nav className="flex-1 px-4 py-6 space-y-2">
+                {navItems.map((item) => (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    className={`block rounded-lg px-4 py-3 text-lg font-medium transition-colors ${pathname === item.path ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                    onClick={onClose}
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </nav>
+              
+              {/* Footer with contact CTA */}
+              <div className="border-t p-4">
+                <a
+                  href="/contact"
+                  className="block w-full px-6 py-3 text-center text-white bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg shadow hover:shadow-md transition-all"
+                  onClick={onClose}
+                >
+                  Contactar Ahora
+                </a>
+              </div>
             </div>
-
-            <motion.div
-              variants={itemVariants}
-              transition={{ delay: 0.4 }}
-              className="mt-auto pt-4"
-            >
-              <motion.a
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                href="/contact"
-                className="block w-full px-6 py-3 text-center text-white bg-gradient-to-r from-blue-600 to-cyan-500 rounded-xl shadow-lg hover:shadow-xl transition-all"
-              >
-                Contactar Ahora
-              </motion.a>
-            </motion.div>
-          </motion.nav>
+          </motion.div>
         </>
       )}
     </AnimatePresence>

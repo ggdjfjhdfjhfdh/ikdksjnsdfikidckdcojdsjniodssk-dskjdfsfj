@@ -1,5 +1,6 @@
 import BackButton from '@/components/BackButton';
 import { BookOpenIcon, CodeBracketIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import SafeHtmlRenderer from '@/components/SafeHtmlRenderer';
 
 // @ts-ignore
 export default function ArticlePage({
@@ -450,10 +451,9 @@ export default function ArticlePage({
             </div>
           </div>
           
-          <div 
-            className="prose prose-lg max-w-none text-gray-700"
-            dangerouslySetInnerHTML={{ __html: safeArticle.content }}
-          />
+          <div className="prose prose-lg max-w-none text-gray-700">
+            <SafeHtmlRenderer html={safeArticle.content} />
+          </div>
         </div>
       </div>
     </main>

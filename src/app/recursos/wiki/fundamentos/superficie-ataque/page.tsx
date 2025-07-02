@@ -8,14 +8,14 @@ export default function SuperficieAtaquePage() {
       description="Conjunto de puntos donde un atacante podría intentar explotar vulnerabilidades en un sistema"
       backUrl="/recursos/wiki/fundamentos"
     >
-      <div className="space-y-10 text-gray-800">
+      <div className="space-y-10 text-gray-800 px-4 sm:px-6">
         <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4">Definición y Conceptos Clave</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">Definición y Conceptos Clave</h2>
           <div className="prose max-w-none">
-            <p className="mb-4">
+            <p className="mb-4 text-sm sm:text-base">
               La <strong>Superficie de Ataque</strong> representa todos los posibles vectores de ataque en un sistema, incluyendo:
             </p>
-            <ul className="list-disc pl-6 space-y-2 mb-4">
+            <ul className="list-disc pl-6 space-y-2 mb-4 text-sm sm:text-base">
               <li>Interfaces físicas y lógicas expuestas</li>
               <li>Protocolos de comunicación vulnerables</li>
               <li>Credenciales, tokens y mecanismos de autenticación</li>
@@ -23,14 +23,14 @@ export default function SuperficieAtaquePage() {
               <li>Componentes con vulnerabilidades conocidas</li>
             </ul>
             
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
               <div className="bg-blue-50 p-4 rounded border-l-4 border-blue-500">
-                <p className="text-sm font-medium mb-2">Superficie de Ataque Absoluta:</p>
-                <p className="text-sm">Todos los posibles puntos de entrada, incluyendo aquellos protegidos por controles de seguridad.</p>
+                <p className="text-xs sm:text-sm font-medium mb-2">Superficie de Ataque Absoluta:</p>
+                <p className="text-xs sm:text-sm">Todos los posibles puntos de entrada, incluyendo aquellos protegidos por controles de seguridad.</p>
               </div>
               <div className="bg-green-50 p-4 rounded border-l-4 border-green-500">
-                <p className="text-sm font-medium mb-2">Superficie de Ataque Relativa:</p>
-                <p className="text-sm">Solo los puntos de entrada explotables dada la configuración actual de seguridad.</p>
+                <p className="text-xs sm:text-sm font-medium mb-2">Superficie de Ataque Relativa:</p>
+                <p className="text-xs sm:text-sm">Solo los puntos de entrada explotables dada la configuración actual de seguridad.</p>
               </div>
             </div>
           </div>
@@ -38,7 +38,7 @@ export default function SuperficieAtaquePage() {
 
         <section className="bg-blue-50 p-6 rounded-lg border border-blue-200">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Componentes Detallados</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
               <h3 className="font-semibold mb-2 text-blue-700">Física</h3>
               <ul className="list-disc pl-5 space-y-1 text-sm">
@@ -86,7 +86,7 @@ export default function SuperficieAtaquePage() {
             </ol>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div>
               <h3 className="font-semibold mb-3">Técnicas de Reducción</h3>
               <ul className="list-disc pl-5 space-y-2 text-sm">
@@ -114,7 +114,7 @@ export default function SuperficieAtaquePage() {
         <section className="border-t pt-6">
           <h2 className="text-2xl font-bold mb-4">Casos de Estudio</h2>
           
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
               <h3 className="font-semibold mb-2 text-blue-700">Infraestructura On-Premise</h3>
               <ul className="list-disc pl-5 space-y-1 text-sm">
