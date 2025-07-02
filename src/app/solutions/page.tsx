@@ -4,8 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import React from 'react';
 import { useI18n } from '@/lib/i18n';
-import Footer from '../../components/Footer';
-
 
 export default function SolutionsPage() {
   const t = useI18n();
@@ -179,12 +177,6 @@ export default function SolutionsPage() {
           </Link>
         </div>
       </section>
-
-      <Footer bgColor="bg-gray-100" links={[
-        { label: 'Aviso Legal', href: '/legal' },
-        { label: 'Política de Privacidad', href: '/privacy' },
-        { label: 'Política de Cookies', href: '/cookies' }
-      ]} />
     </div>
   );
 }

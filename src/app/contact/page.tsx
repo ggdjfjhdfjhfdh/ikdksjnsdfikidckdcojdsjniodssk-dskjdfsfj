@@ -8,7 +8,6 @@ import { useState } from 'react';
 import Image from 'next/image';
 import React from 'react';
 import { useI18n } from '@/lib/i18n';
-import Footer from '../../components/Footer';
 
 type FormData = {
   name: string;
@@ -54,7 +53,7 @@ export default function ContactPage() {
   const accessKey = '2c1f7424-fab8-41da-8934-12f7fa156646'
 
   if (!accessKey) {
-    console.warn('Web3Forms API key is missing. Añádela en .env o .env.local como NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY');
+    console.warn('Web3Forms API key is missing. Añádala en .env o .env.local como NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY');
   }
 
   const { submit: onSubmit } = useWeb3Forms({
@@ -245,13 +244,6 @@ export default function ContactPage() {
           </div>
         </div>
       </motion.section>
-
-      {/* Modern footer */}
-      <Footer bgColor="bg-white" links={[
-        { label: 'Aviso Legal', href: '/legal' },
-        { label: 'Política de Privacidad', href: '/privacy' },
-        { label: 'Política de Cookies', href: '/cookies' }
-      ]} />
     </div>
   );
 }
