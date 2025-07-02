@@ -619,6 +619,15 @@ export default function SecurityQuiz() {
       <main className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div className="mb-6 flex justify-between">
+              <button
+                onClick={() => window.location.href = '/recursos/herramientas'}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                ← Volver a herramientas
+              </button>
+            </div>
+            
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Test de Ciberseguridad</h1>
             <p className="text-gray-600 mb-6">Selecciona las categorías que deseas incluir en el test:</p>
             
