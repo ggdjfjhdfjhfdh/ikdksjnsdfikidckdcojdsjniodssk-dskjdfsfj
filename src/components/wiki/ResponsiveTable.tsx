@@ -87,13 +87,13 @@ export const ResponsiveTable = ({
                   {bodyRows.map((row, rowIndex) => {
                     if (!isTableRow(row)) return null;
                     return (
-                      <div key={`row-${rowIndex}-${btoa(JSON.stringify(row.props))}`} 
+                      <div key={`row-${rowIndex}`} 
                         className="border border-gray-200 rounded p-4">
                         {Children.map(row.props.children, (cell, i) => {
                           if (!isTableCell(cell)) return null;
                           const headerText = headerCells[i]?.props.children || `Column ${i+1}`;
                           return (
-                            <div key={`cell-${rowIndex}-${i}-${btoa(JSON.stringify(cell.props))}`} 
+                            <div key={`cell-${rowIndex}-${i}`} 
                               className="mb-2 last:mb-0">
                               <div className="font-medium text-gray-900">{headerText}</div>
                               <div className="text-gray-700">
