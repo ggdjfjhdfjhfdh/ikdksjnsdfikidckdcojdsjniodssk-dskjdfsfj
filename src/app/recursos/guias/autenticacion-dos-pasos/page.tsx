@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import DownloadButton from '@/components/DownloadButton';
 import ShareButton from '@/components/ShareButton';
 import BackButton from '@/components/BackButton';
 import {
@@ -207,7 +206,6 @@ export default function AutenticacionDosPasos() {
           {/* SIDEBAR */}
           <aside className="lg:w-64">
             <div className="bg-white border border-gray-200 p-6 rounded-lg sticky top-4">
-              <DownloadButton />
               <ShareButton />
               <nav className="mt-6">
                 <h3 className="text-xs font-medium text-gray-900 uppercase tracking-wider mb-2">Contenido</h3>

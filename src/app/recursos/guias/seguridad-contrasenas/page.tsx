@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import DownloadButton from '@/components/DownloadButton';
 import ShareButton from '@/components/ShareButton';
 import BackButton from '@/components/BackButton';
 import {
@@ -537,7 +536,6 @@ export default function SeguridadContrasenas() {
           {/* SIDEBAR */}
           <aside className="lg:w-64">
             <div className="bg-white border border-gray-200 p-6 rounded-lg sticky top-4 space-y-6">
-              <DownloadButton />
               <ShareButton />
               <nav>
                 <h3 className="text-xs font-medium text-gray-900 uppercase tracking-wider mb-3">Contenido</h3>
