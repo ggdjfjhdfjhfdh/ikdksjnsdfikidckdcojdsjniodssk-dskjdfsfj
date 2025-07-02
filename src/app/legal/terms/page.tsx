@@ -34,7 +34,7 @@ export default function Terms() {
         <Link href="/" className="text-blue-600 hover:underline block mt-8 text-lg font-medium">Volver al inicio</Link>
       </div>
       
-      <Footer />
+    
     </div>
   );
 }

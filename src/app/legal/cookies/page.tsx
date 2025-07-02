@@ -68,7 +68,6 @@ export default function CookiesPolicy() {
       </div>
       
       {/* Footer */}
-      <Footer />
     </div>
   );
 }

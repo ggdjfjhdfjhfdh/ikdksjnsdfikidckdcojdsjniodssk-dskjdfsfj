@@ -4,10 +4,13 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ArticleCard from '@/components/wiki/ArticleCard';
 import BackButton from '@/components/BackButton';
+import DOMPurify from 'dompurify';
 
 function SearchContent() {
   const searchParams = useSearchParams();
-  const query = searchParams.get('q') || '';
+  const rawQuery = searchParams.get('q') || '';
+  // Sanitizar y validar la consulta
+  const query = DOMPurify.sanitize(rawQuery.substring(0, 100)).trim();
   const [results, setResults] = useState<Array<{title: string, description: string, href: string}>>([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,7 +49,7 @@ function SearchContent() {
         </div>
       ) : (
         <p className="text-center py-12 text-gray-500">
-          No se encontraron resultados para "{query}"
+          No se encontraron resultados para "{query.replace(/</g, '&lt;').replace(/>/g, '&gt;')}"
         </p>
       )}
     </>

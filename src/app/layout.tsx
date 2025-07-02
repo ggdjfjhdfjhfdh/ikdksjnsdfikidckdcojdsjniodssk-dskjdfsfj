@@ -3,12 +3,19 @@ import CookieConsent from '../components/CookieConsent';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./globals.css";
-import { metadata } from './metadata';
 import { LanguageProvider } from "../lib/LanguageContext";
 
-const inter = Inter({ subsets: ['latin'] });
+export const metadata = {
+  metadataBase: new URL('https://tudominio.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    images: '/og-image.jpg',
+  },
+};
 
-export { metadata };
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
@@ -18,7 +25,10 @@ export default function RootLayout({
   return (
     <html lang="es" className={inter.className}>
       <head>
-        {/* Manifest removed to prevent 429 errors */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
       </head>
       <body className="antialiased flex flex-col min-h-screen">
         <LanguageProvider>

@@ -14,7 +14,7 @@ interface FooterProps {
 }
 
 export default function Footer({ bgColor = 'bg-gray-900/95', links = [
-  { label: 'Aviso Legal', href: '/legal' },
+  { label: 'Aviso Legal', href: '/legal/terms' },
   { label: 'Política de Privacidad', href: '/legal/privacy' },
   { label: 'Política de Cookies', href: '/legal/cookies' }
 ] }: FooterProps) {
