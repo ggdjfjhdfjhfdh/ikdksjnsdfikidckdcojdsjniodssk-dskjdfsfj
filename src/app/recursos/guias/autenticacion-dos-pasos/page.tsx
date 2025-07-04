@@ -70,7 +70,7 @@ export default function AutenticacionDosPasos() {
                   <Lock className="w-10 h-10 text-blue-600" />
                 </div>
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Guía de Autenticación en Dos Pasos</h1>
-                <p className="text-gray-900 mb-4 text-lg max-w-2xl mx-auto">Añade una capa extra que bloquea el 96% de los ataques de phishing con un esfuerzo mínimo.</p>
+                <p className="text-gray-800 mb-4 text-lg max-w-2xl mx-auto">Añade una capa extra que bloquea el 96% de los ataques de phishing con un esfuerzo mínimo.</p>
               </div>
 
               {/* ¿QUÉ ES? */}
@@ -84,7 +84,7 @@ export default function AutenticacionDosPasos() {
                   </div>
                   
                   <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-6">
-                    <p className="text-gray-900 mb-4">
+                    <p className="text-gray-800 mb-4">
                       2FA combina algo que <em>sabes</em> (contraseña) con algo que <em>tienes</em> (código, llave, notificación).
                     </p>
                     
@@ -93,10 +93,10 @@ export default function AutenticacionDosPasos() {
                         <InfoIcon className="w-5 h-5" />
                         ¿Por qué es crucial?
                       </h3>
-                      <ul className="list-disc pl-5 space-y-2 text-gray-900">
+                      <ul className="list-disc pl-5 space-y-2 text-gray-800">
                         <li>Bloquea el 100% de bots automatizados</li>
                         <li>Neutraliza el 96% de ataques de phishing</li>
-                        <li>Requerido por PCI-DSS e ISO 27001</li>
+                        <li>Mitiga el riesgo de contraseñas comprometidas</li>
                       </ul>
                     </div>
                   </div>
@@ -118,7 +118,7 @@ export default function AutenticacionDosPasos() {
                           <Icon className={`w-5 h-5 text-${color}-600`} />
                           <h3 className="font-bold text-gray-900">{title}</h3>
                         </div>
-                        <p className="text-gray-900 mb-4 text-sm">{desc}</p>
+                        <p className="text-gray-800 mb-4 text-sm">{desc}</p>
                         <div className="flex justify-between text-xs font-medium">
                           <span>Seguridad: <span className={`text-${color}-600`}>{sec}</span></span>
                           <span>Facilidad: <span className="text-green-600">{ease}</span></span>
@@ -137,42 +137,44 @@ export default function AutenticacionDosPasos() {
                     <h2 className="text-2xl font-bold text-gray-900">Comparativa rápida</h2>
                   </div>
                   
-                  <table className="w-full text-sm border-separate border-spacing-0 rounded-lg overflow-hidden">
-                    <thead>
-                      <tr className="bg-blue-600 text-white">
-                        <th className="p-3 text-left font-medium">Método</th>
-                        <th className="p-3 font-medium text-center">Seguridad</th>
-                        <th className="p-3 font-medium text-center">Facilidad</th>
-                        <th className="p-3 font-medium text-left">Recomendado para</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="even:bg-gray-50 hover:bg-blue-50/50">
-                        <td className="p-3 border-b border-gray-200">SMS / Email</td>
-                        <td className="p-3 border-b border-gray-200 text-center text-yellow-600 font-medium">Media</td>
-                        <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Alta</td>
-                        <td className="p-3 border-b border-gray-200">Cuentas de bajo riesgo</td>
-                      </tr>
-                      <tr className="even:bg-gray-50 hover:bg-blue-50/50">
-                        <td className="p-3 border-b border-gray-200">TOTP (App)</td>
-                        <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Alta</td>
-                        <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Media</td>
-                        <td className="p-3 border-b border-gray-200">Usuarios generales</td>
-                      </tr>
-                      <tr className="even:bg-gray-50 hover:bg-blue-50/50">
-                        <td className="p-3 border-b border-gray-200">Push</td>
-                        <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Alta</td>
-                        <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Alta</td>
-                        <td className="p-3 border-b border-gray-200">Entornos corporativos</td>
-                      </tr>
-                      <tr className="even:bg-gray-50 hover:bg-blue-50/50">
-                        <td className="p-3">Llave FIDO2</td>
-                        <td className="p-3 text-center text-indigo-600 font-medium">Muy alta</td>
-                        <td className="p-3 text-center text-green-600 font-medium">Media</td>
-                        <td className="p-3">Admins y financieros</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[500px] md:min-w-0">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="p-3 text-left text-sm font-semibold text-gray-900">Método</th>
+                          <th className="p-3 text-center text-sm font-semibold text-gray-900">Seguridad</th>
+                          <th className="p-3 text-center text-sm font-semibold text-gray-900">Facilidad</th>
+                          <th className="p-3 text-left text-sm font-semibold text-gray-900">Recomendado para</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="even:bg-gray-50 hover:bg-blue-50/50">
+                          <td className="p-3 border-b border-gray-200">SMS / Email</td>
+                          <td className="p-3 border-b border-gray-200 text-center text-yellow-600 font-medium">Media</td>
+                          <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Alta</td>
+                          <td className="p-3 border-b border-gray-200">Cuentas de bajo riesgo</td>
+                        </tr>
+                        <tr className="even:bg-gray-50 hover:bg-blue-50/50">
+                          <td className="p-3 border-b border-gray-200">TOTP (App)</td>
+                          <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Alta</td>
+                          <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Media</td>
+                          <td className="p-3 border-b border-gray-200">Usuarios generales</td>
+                        </tr>
+                        <tr className="even:bg-gray-50 hover:bg-blue-50/50">
+                          <td className="p-3 border-b border-gray-200">Push</td>
+                          <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Alta</td>
+                          <td className="p-3 border-b border-gray-200 text-center text-green-600 font-medium">Alta</td>
+                          <td className="p-3 border-b border-gray-200">Entornos corporativos</td>
+                        </tr>
+                        <tr className="even:bg-gray-50 hover:bg-blue-50/50">
+                          <td className="p-3">Llave FIDO2</td>
+                          <td className="p-3 text-center text-indigo-600 font-medium">Muy alta</td>
+                          <td className="p-3 text-center text-green-600 font-medium">Media</td>
+                          <td className="p-3">Admins y financieros</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </section>
 
                 {/* CONFIGURAR */}
@@ -184,7 +186,7 @@ export default function AutenticacionDosPasos() {
                     <h2 className="text-2xl font-bold text-gray-900">Configurar 2FA en 3 pasos</h2>
                   </div>
                   
-                  <ol className="list-decimal pl-6 space-y-3 text-gray-900">
+                  <ol className="list-decimal pl-6 space-y-3 text-gray-800">
                     <li>Activa 2FA en la sección <strong>Seguridad</strong> de tu servicio.</li>
                     <li>Escanea el QR con tu app Authenticator o registra tu llave FIDO2.</li>
                     <li>Guarda los códigos de recuperación en tu gestor de contraseñas.</li>

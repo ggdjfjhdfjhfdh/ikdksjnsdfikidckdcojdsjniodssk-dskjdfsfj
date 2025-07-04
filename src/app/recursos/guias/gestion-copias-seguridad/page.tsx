@@ -17,28 +17,28 @@ interface SectionProps {
 export default function GestionCopiasSeguridad() {
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        <BackButton href="/recursos/guias" label="Volver a guías" className="mb-8" />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <BackButton href="/recursos/guias" label="Volver a guías" className="mb-6 sm:mb-8" />
         
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
           <article className="flex-1">
             <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <header className="bg-gradient-to-r from-blue-50 to-blue-100 p-8 border-b border-gray-200">
+              <header className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 sm:p-8 border-b border-gray-200">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-blue-100 rounded-lg">
-                      <HardDrive className="w-8 h-8 text-blue-600" />
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
+                      <HardDrive className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900">Gestión de Copias de Seguridad</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Gestión de Copias de Seguridad</h1>
                   </div>
                 </div>
-                <p className="mt-4 text-gray-700 text-lg">
+                <p className="mt-3 sm:mt-4 text-gray-800 text-base sm:text-lg">
                   Protección completa contra pérdida de datos con estrategias profesionales
                 </p>
               </header>
               
               <div className="divide-y divide-gray-100">
-                <div id="content" className="p-8">
+                <div id="content" className="p-4 sm:p-6 md:p-8">
                   <Section 
                     title="Importancia de las copias" 
                     icon={<Shield className="w-6 h-6 text-blue-600" />}
@@ -52,18 +52,18 @@ export default function GestionCopiasSeguridad() {
                     <p className="text-gray-700 mb-6">
                       Las copias de seguridad son su última línea de defensa contra pérdida de datos por fallos hardware, ransomware o errores humanos.
                     </p>
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-3 text-lg">Riesgos comunes:</h3>
-                        <ul className="list-disc pl-5 space-y-2 text-gray-800">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                      <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-base sm:text-lg">Riesgos comunes:</h3>
+                        <ul className="list-disc pl-4 space-y-1 sm:space-y-2 text-gray-800 text-sm sm:text-base">
                           <li>Fallos de hardware</li>
                           <li>Ataques de ransomware</li>
                           <li>Errores humanos</li>
                         </ul>
                       </div>
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-3 text-lg">Beneficios:</h3>
-                        <ul className="list-disc pl-5 space-y-2 text-gray-800">
+                      <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-base sm:text-lg">Beneficios:</h3>
+                        <ul className="list-disc pl-4 space-y-1 sm:space-y-2 text-gray-800 text-sm sm:text-base">
                           <li>Recuperación rápida</li>
                           <li>Protección contra ransomware</li>
                           <li>Continuidad del negocio</li>
@@ -82,22 +82,22 @@ export default function GestionCopiasSeguridad() {
                         La estrategia mínima recomendada por expertos en seguridad
                       </p>
                     </div>
-                    <div className="grid md:grid-cols-3 gap-6 mb-6">
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">3 Copias</h3>
-                        <p className="text-gray-700">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
+                      <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-base sm:text-lg">3 Copias</h3>
+                        <p className="text-gray-700 text-sm sm:text-base">
                           Mantenga al menos 3 copias de sus datos importantes
                         </p>
                       </div>
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">2 Medios</h3>
-                        <p className="text-gray-700">
+                      <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-base sm:text-lg">2 Medios</h3>
+                        <p className="text-gray-700 text-sm sm:text-base">
                           Use al menos 2 tipos diferentes de almacenamiento
                         </p>
                       </div>
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-gray-900 mb-2">1 Externa</h3>
-                        <p className="text-gray-700">
+                      <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                        <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-base sm:text-lg">1 Externa</h3>
+                        <p className="text-gray-700 text-sm sm:text-base">
                           Guarde al menos 1 copia fuera del sitio principal
                         </p>
                       </div>
@@ -114,7 +114,7 @@ export default function GestionCopiasSeguridad() {
                           ¿Con qué frecuencia debo probar mis copias?
                           <ChevronDown className="w-5 h-5 text-gray-500" />
                         </summary>
-                        <p className="mt-3 text-gray-700 pl-2">
+                        <p className="mt-3 text-gray-700 pl-2 text-sm sm:text-base">
                           <strong>Recomendamos:</strong> Pruebas mensuales para backups críticos y trimestrales para otros datos.
                         </p>
                       </details>
@@ -123,7 +123,7 @@ export default function GestionCopiasSeguridad() {
                           ¿Es seguro almacenar copias en la nube?
                           <ChevronDown className="w-5 h-5 text-gray-500" />
                         </summary>
-                        <p className="mt-3 text-gray-700 pl-2">
+                        <p className="mt-3 text-gray-700 pl-2 text-sm sm:text-base">
                           Los proveedores profesionales usan cifrado AES-256. Para máxima seguridad, encripte sus datos localmente antes de subirlos.
                         </p>
                       </details>

@@ -399,14 +399,14 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
           <button 
             onClick={() => window.location.href='/recursos/herramientas/test-ciberseguridad'}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition-all shadow-sm border border-gray-200"
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition-all shadow-sm border border-gray-200 w-full sm:w-auto"
           >
             <ArrowLeft className="w-5 h-5" />
             Volver a categorías
           </button>
           <button 
             onClick={onRestart}
-            className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-medium rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md"
+            className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-medium rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all shadow-md w-full sm:w-auto"
           >
             <RefreshCw className="w-5 h-5" />
             Reiniciar test
@@ -415,7 +415,7 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
           <div className="relative">
             <button
               onClick={() => setShowShareOptions(!showShareOptions)}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-all shadow-md"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-all shadow-md w-full sm:w-auto"
             >
               <Share2 className="w-5 h-5" />
               {shareState === 'copied' ? '✓ Copiado' : 
@@ -721,20 +721,20 @@ export default function SecurityQuiz() {
             </div>
           )}
           
-          <div className="flex justify-between mt-8">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
             {current > 0 ? (
               <button
                 onClick={() => setCurrent(prev => prev - 1)}
-                className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition-colors shadow-sm"
+                className="flex items-center justify-center px-4 py-3 sm:px-6 bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition-colors shadow-sm w-full sm:w-auto"
               >
                 <ArrowLeft className="w-5 h-5 mr-2" />
                 Atrás
               </button>
             ) : (
-              <div />
+              <div className="hidden sm:block" />
             )}
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <button
                 onClick={() => {
                   if (selected === -1) {
@@ -743,7 +743,7 @@ export default function SecurityQuiz() {
                   }
                   handleNext();
                 }}
-                className="flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md"
+                className="flex items-center justify-center px-4 py-3 sm:px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md w-full sm:w-auto"
               >
                 {current < filteredQuestions.length - 1 ? 'Siguiente' : 'Ver resultados'}
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -755,7 +755,7 @@ export default function SecurityQuiz() {
                     handleRestart();
                   }
                 }}
-                className="flex items-center px-4 py-3 bg-red-100 text-red-700 font-medium rounded-lg hover:bg-red-200 transition-colors shadow-sm"
+                className="flex items-center justify-center px-4 py-3 bg-red-100 text-red-700 font-medium rounded-lg hover:bg-red-200 transition-colors shadow-sm w-full sm:w-auto"
               >
                 <RefreshCw className="w-5 h-5 mr-2" />
                 Reiniciar
