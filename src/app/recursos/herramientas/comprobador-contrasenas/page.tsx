@@ -14,7 +14,10 @@ import {
   InformationCircleIcon,
   DocumentMagnifyingGlassIcon,
   Cog6ToothIcon,
-  ChevronLeftIcon
+  ChevronLeftIcon,
+  EyeIcon,
+  EyeSlashIcon,
+  ClipboardDocumentIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -93,153 +96,165 @@ export default function PasswordChecker() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-100 flex flex-col items-center px-4 py-16">
+    <main className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-100 flex flex-col items-center px-4 sm:px-6 py-8 sm:py-16">
       <div className="absolute inset-0 pointer-events-none select-none opacity-60" aria-hidden>
         <div className="absolute w-96 h-96 bg-gray-300 rounded-full blur-3xl top-[-10%] left-[-10%]" />
         <div className="absolute w-48 h-48 bg-gray-200 rounded-full blur-2xl top-[60%] left-[70%]" />
       </div>
 
       {/* Back button */}
-      <Link href="/recursos/herramientas" className="self-start mb-6 ml-16 flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors">
+      <Link href="/recursos/herramientas" className="self-start mb-4 sm:mb-6 ml-4 sm:ml-16 flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors">
         <ChevronLeftIcon className="h-5 w-5" />
         Volver
       </Link>
 
       {/* Main checker section */}
-      <section className="w-full max-w-6xl mx-auto px-4 md:px-10 relative mb-16">
+      <section className="w-full max-w-2xl sm:max-w-4xl mx-auto px-4 relative mb-8 sm:mb-16">
         {/* Simple title section */}
-        <div className="mb-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Evalúa la fortaleza de tu clave</h1>
-          <p className="text-2xl md:text-3xl text-gray-800 mb-3">Analiza qué tan robusta es tu contraseña actual y genera una nueva más segura en segundos</p>
-          <p className="text-base text-gray-600">Tus contraseñas no se almacenan.</p>
+        <div className="mb-8 sm:mb-10 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">Evalúa la fortaleza de tu clave</h1>
+          <p className="text-gray-700 text-lg sm:text-xl max-w-2xl mx-auto">
+            Comprueba si tu contraseña es segura y recibe recomendaciones para mejorarla
+          </p>
         </div>
 
-        {/* Contenido principal */}
-        <div className="bg-white/80 backdrop-blur-sm shadow-xl p-6 md:p-8 grid gap-8 md:grid-cols-2">
-          {/* Panel de generación */}
-          <div className="space-y-6">
-            <div className="flex flex-col gap-4">
-              <div className="flex gap-3">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="flex-1 border border-gray-200 rounded-lg p-3 text-gray-900 focus:ring-2 focus:ring-gray-400 focus:border-transparent transition-all"
-                  placeholder="Introduce o genera una contraseña"
-                />
-                <button
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-                >
-                  {showPassword ? '👁️' : '👁️‍🗨️'}
-                </button>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={handleGenerate}
-                  className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-colors shadow-md"
-                >
-                  <span>Generar</span>
-                </button>
-                <button
-                  onClick={handleCopy}
-                  disabled={!password}
-                  className={`flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-blue-500 to-sky-600 hover:from-blue-600 hover:to-sky-700 text-white font-medium rounded-lg transition-colors shadow-md ${copied ? 'ring-2 ring-green-400' : ''}`}
-                >
-                  <span>{copied ? 'Copiado!' : 'Copiar'}</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-800 mb-1">Longitud: {length}</label>
-                <input
-                  type="range"
-                  min="4"
-                  max="50"
-                  value={length}
-                  onChange={(e) => setLength(parseInt(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-3">
-                  <input 
-                    type="checkbox" 
-                    id="useUpper" 
-                    checked={useUpper} 
-                    onChange={() => setUseUpper(!useUpper)} 
-                    className="text-gray-800"
-                  />
-                  <label htmlFor="useUpper" className="text-gray-800">Mayúsculas</label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input 
-                    type="checkbox" 
-                    id="useLower" 
-                    checked={useLower} 
-                    onChange={() => setUseLower(!useLower)} 
-                    className="text-gray-800"
-                  />
-                  <label htmlFor="useLower" className="text-gray-800">Minúsculas</label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input 
-                    type="checkbox" 
-                    id="useNumbers" 
-                    checked={useNumbers} 
-                    onChange={() => setUseNumbers(!useNumbers)} 
-                    className="text-gray-800"
-                  />
-                  <label htmlFor="useNumbers" className="text-gray-800">Números</label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input 
-                    type="checkbox" 
-                    id="useSymbols" 
-                    checked={useSymbols} 
-                    onChange={() => setUseSymbols(!useSymbols)} 
-                    className="text-gray-800"
-                  />
-                  <label htmlFor="useSymbols" className="text-gray-800">Símbolos</label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Panel de resultados */}
-          <div className="space-y-6">
-            <div className="bg-gray-50 p-5 rounded-xl">
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="font-medium text-gray-800 mb-2">Fortaleza</h4>
-                <span className={`font-bold capitalize px-3 py-1 rounded-full text-xs ${color.replace('bg-', 'text-')} ${color.replace('bg-', 'bg-').replace('-500', '-100')}`}>
-                  {label}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div className={`h-2.5 rounded-full ${color}`} style={{ width: `${progress}%` }}></div>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 p-5 rounded-xl space-y-3">
-              <h4 className="font-medium text-gray-800 mb-2">Recomendaciones</h4>
-              <ul className="space-y-2 text-sm text-gray-600 list-disc list-inside">
-                {password && (
-                  <>
-                    <li>Longitud mínima recomendada: 12 caracteres</li>
-                    <li>Usa una combinación de mayúsculas, minúsculas, números y símbolos</li>
-                    <li>Evita información personal o patrones comunes</li>
-                    <li>Considera usar un gestor de contraseñas</li>
-                  </>
+        {/* Password input */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8 sm:mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="flex-1 relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setCopied(false);
+                }}
+                placeholder="Introduce tu contraseña"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <button
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
                 )}
-                {!password && <li className="text-gray-700">Introduce o genera una contraseña para ver recomendaciones</li>}
-              </ul>
+              </button>
+            </div>
+            <button
+              onClick={handleCopy}
+              disabled={!password}
+              className={`px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 ${password
+                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
+            >
+              {copied ? (
+                <>
+                  <CheckCircleIcon className="h-5 w-5" />
+                  Copiada
+                </>
+              ) : (
+                <>
+                  <ClipboardDocumentIcon className="h-5 w-5" />
+                  Copiar
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-800 mb-1">Longitud: {length}</label>
+              <input
+                type="range"
+                min="4"
+                max="50"
+                value={length}
+                onChange={(e) => setLength(parseInt(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-3">
+                <input 
+                  type="checkbox" 
+                  id="useUpper" 
+                  checked={useUpper} 
+                  onChange={() => setUseUpper(!useUpper)} 
+                  className="text-gray-800"
+                />
+                <label htmlFor="useUpper" className="text-gray-800">Mayúsculas</label>
+              </div>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="checkbox" 
+                  id="useLower" 
+                  checked={useLower} 
+                  onChange={() => setUseLower(!useLower)} 
+                  className="text-gray-800"
+                />
+                <label htmlFor="useLower" className="text-gray-800">Minúsculas</label>
+              </div>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="checkbox" 
+                  id="useNumbers" 
+                  checked={useNumbers} 
+                  onChange={() => setUseNumbers(!useNumbers)} 
+                  className="text-gray-800"
+                />
+                <label htmlFor="useNumbers" className="text-gray-800">Números</label>
+              </div>
+              <div className="flex items-center gap-3">
+                <input 
+                  type="checkbox" 
+                  id="useSymbols" 
+                  checked={useSymbols} 
+                  onChange={() => setUseSymbols(!useSymbols)} 
+                  className="text-gray-800"
+                />
+                <label htmlFor="useSymbols" className="text-gray-800">Símbolos</label>
+              </div>
             </div>
           </div>
+
+          <button
+            onClick={handleGenerate}
+            className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-colors shadow-md"
+          >
+            <span>Generar</span>
+          </button>
+        </div>
+
+        {/* Panel de resultados */}
+        <div className="bg-gray-50 p-5 rounded-xl">
+          <div className="flex justify-between items-center mb-2">
+            <h4 className="font-medium text-gray-800 mb-2">Fortaleza</h4>
+            <span className={`font-bold capitalize px-3 py-1 rounded-full text-xs ${color.replace('bg-', 'text-')} ${color.replace('bg-', 'bg-').replace('-500', '-100')}`}>
+              {label}
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className={`h-2.5 rounded-full ${color}`} style={{ width: `${progress}%` }}></div>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 p-5 rounded-xl space-y-3">
+          <h4 className="font-medium text-gray-800 mb-2">Recomendaciones</h4>
+          <ul className="space-y-2 text-sm text-gray-600 list-disc list-inside">
+            {password && (
+              <>
+                <li>Longitud mínima recomendada: 12 caracteres</li>
+                <li>Usa una combinación de mayúsculas, minúsculas, números y símbolos</li>
+                <li>Evita información personal o patrones comunes</li>
+                <li>Considera usar un gestor de contraseñas</li>
+              </>
+            )}
+            {!password && <li className="text-gray-700">Introduce o genera una contraseña para ver recomendaciones</li>}
+          </ul>
         </div>
       </section>
 
