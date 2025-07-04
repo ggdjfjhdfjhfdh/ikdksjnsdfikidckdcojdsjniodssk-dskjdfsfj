@@ -80,9 +80,17 @@ export default function GuiasPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+    <div className="bg-gray-50 min-h-screen py-8">
+      <Link 
+        href="/recursos"
+        className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium mb-6"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7" />
+        </svg>
+        Volver
+      </Link>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Guías de Seguridad Digital
@@ -127,8 +135,8 @@ export default function GuiasPage() {
             Sugerir un Tema
           </Link>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
 

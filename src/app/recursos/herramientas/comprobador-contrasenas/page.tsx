@@ -223,16 +223,16 @@ export default function PasswordChecker() {
 
           <button
             onClick={handleGenerate}
-            className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-colors shadow-md"
+            className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-colors shadow-md w-full sm:w-auto"
           >
             <span>Generar</span>
           </button>
         </div>
 
         {/* Panel de resultados */}
-        <div className="bg-gray-50 p-5 rounded-xl">
-          <div className="flex justify-between items-center mb-2">
-            <h4 className="font-medium text-gray-800 mb-2">Fortaleza</h4>
+        <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
+          <div className="flex justify-between items-center">
+            <h4 className="font-medium text-gray-800">Fortaleza</h4>
             <span className={`font-bold capitalize px-3 py-1 rounded-full text-xs ${color.replace('bg-', 'text-')} ${color.replace('bg-', 'bg-').replace('-500', '-100')}`}>
               {label}
             </span>
@@ -240,20 +240,28 @@ export default function PasswordChecker() {
           <div className="w-full bg-gray-200 rounded-full h-2.5">
             <div className={`h-2.5 rounded-full ${color}`} style={{ width: `${progress}%` }}></div>
           </div>
-        </div>
 
-        <div className="bg-gray-50 p-5 rounded-xl space-y-3">
-          <h4 className="font-medium text-gray-800 mb-2">Recomendaciones</h4>
-          <ul className="space-y-2 text-sm text-gray-600 list-disc list-inside">
-            {password && (
-              <>
+          {password && (
+            <div className="mt-4 space-y-2">
+              <h4 className="font-medium text-gray-800">Recomendaciones</h4>
+              <ul className="space-y-2 text-sm text-gray-600 list-disc list-inside">
                 <li>Longitud mínima recomendada: 12 caracteres</li>
                 <li>Usa una combinación de mayúsculas, minúsculas, números y símbolos</li>
                 <li>Evita información personal o patrones comunes</li>
                 <li>Considera usar un gestor de contraseñas</li>
-              </>
-            )}
-            {!password && <li className="text-gray-700">Introduce o genera una contraseña para ver recomendaciones</li>}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
+          <h4 className="font-medium text-gray-800">Criterios de seguridad</h4>
+          <ul className="space-y-2 text-sm text-gray-600 list-disc list-inside">
+            {criteria.map((criterion, i) => (
+              <li key={i} className={criterion.met ? 'text-green-600' : 'text-red-600'}>
+                {criterion.label}
+              </li>
+            ))}
           </ul>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SearchBar from '@/components/wiki/SearchBar';
+import BackButton from '@/components/BackButton'; // Import BackButton component
 import { getAllWikiArticles } from '@/lib/wikiSearch';
 
 export default async function WikiPage() {
@@ -83,8 +84,9 @@ export default async function WikiPage() {
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
+      <BackButton href="/recursos" className="mb-6" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Wiki de Ciberseguridad</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Wiki de Ciberseguridad</h1>
         
         <SearchBar allArticles={allArticles} />
         

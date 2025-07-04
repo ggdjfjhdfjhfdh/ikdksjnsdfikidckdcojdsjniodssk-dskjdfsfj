@@ -144,7 +144,26 @@ const translations = {
     allRightsReserved: 'Todos los derechos reservados.',
     customSolutionTitle: '¿Necesitas una Solución a Medida?',
     customSolutionDesc: 'Cada organización es única. Nuestro equipo de expertos está listo para diseñar una estrategia personalizada que se adapte perfectamente a tus desafíos y objetivos.',
-    customSolutionButton: 'Solicita una Consulta Gratuita'
+    customSolutionButton: 'Solicita una Consulta Gratuita',
+    // Resources
+    guides: 'Guías',
+    tools: 'Herramientas',
+    wiki: 'Base de Conocimientos',
+    twoFactorAuth: 'Autenticación de Dos Factores',
+    backupManagement: 'Gestión de Copias de Seguridad',
+    passwordSecurity: 'Seguridad de Contraseñas',
+    cybersecurityTest: 'Prueba de Ciberseguridad',
+    passwordChecker: 'Verificador de Contraseñas',
+    evaluateStrength: 'Evalúa la fuerza de tu contraseña',
+    passwordRecommendations: 'Recomendaciones de contraseñas',
+    quickConfigComparison: 'Comparación Rápida de Configuraciones',
+    backupStrategies: 'Estrategias de Copias de Seguridad',
+    restoreProcedures: 'Procedimientos de Restauración',
+    securityBestPractices: 'Mejores Prácticas de Seguridad',
+    identityManagement: 'Gestión de Identidades',
+    cryptography: 'Criptografía',
+    malwareAnalysis: 'Análisis de Malware',
+    securityFundamentals: 'Fundamentos de Seguridad'
   },
   EN: {
     purpose: 'Purpose',
@@ -152,7 +171,7 @@ const translations = {
     links: 'Links',
     news: 'News',
     contact: 'Contact',
-    resources: 'Recursos',
+    resources: 'Resources',
     all: 'All',
     filterByDate: 'Filter by date',
     from: 'From:',
@@ -217,7 +236,7 @@ const translations = {
     // Solutions
     heroAlt: 'Cybersecurity',
     heroTitle: 'Comprehensive Cybersecurity Solutions',
-
+    heroDescription: 'At Sesecpro, we offer a complete portfolio of advanced services, designed to protect your organization against the most sophisticated cyber threats.',
     solution1Title: 'Risk Assessment and Management',
     solution1Description: 'We thoroughly identify vulnerabilities in your systems, applications, and processes',
     solution1Why: 'For a clear understanding of your weak points and how to strengthen them',
@@ -276,7 +295,7 @@ const translations = {
     solutionsTitle: 'Our Solutions',
     solutionsSubtitle: 'Advanced, simple, and business-adapted solutions. Real security with cutting-edge technology.',
     ctaTitle: 'Ready to strengthen your digital security?',
-    ctaSubtitle: 'Contact us today and find out how we can protect your business’s most valuable assets',
+    ctaSubtitle: 'Contact us today and find out how we can protect your business\'s most valuable assets',
     ctaButton: 'Speak with an expert',
     footerSlogan1: 'Digital protection with cutting-edge technology.',
     footerSlogan2: 'Your security, our priority.',
@@ -287,7 +306,26 @@ const translations = {
     allRightsReserved: 'All rights reserved.',
     customSolutionTitle: 'Need a Custom Solution?',
     customSolutionDesc: 'Every organization is unique. Our team of experts is ready to design a personalized strategy tailored perfectly to your challenges and goals.',
-    customSolutionButton: 'Request a Free Consultation'
+    customSolutionButton: 'Request a Free Consultation',
+    // Resources
+    guides: 'Guides',
+    tools: 'Tools',
+    wiki: 'Knowledge Base',
+    twoFactorAuth: 'Two-Factor Authentication',
+    backupManagement: 'Backup Management',
+    passwordSecurity: 'Password Security',
+    cybersecurityTest: 'Cybersecurity Test',
+    passwordChecker: 'Password Checker',
+    evaluateStrength: 'Evaluate your password strength',
+    passwordRecommendations: 'Password recommendations',
+    quickConfigComparison: 'Quick Configuration Comparison',
+    backupStrategies: 'Backup Strategies',
+    restoreProcedures: 'Restore Procedures',
+    securityBestPractices: 'Security Best Practices',
+    identityManagement: 'Identity Management',
+    cryptography: 'Cryptography',
+    malwareAnalysis: 'Malware Analysis',
+    securityFundamentals: 'Security Fundamentals'
   }
 };
 
