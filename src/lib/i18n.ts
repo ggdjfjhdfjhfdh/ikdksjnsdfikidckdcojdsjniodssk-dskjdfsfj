@@ -61,7 +61,6 @@ const translations = {
     contactHeroDescription: '¿Listo para fortalecer tu seguridad digital? Nuestros expertos están preparados para ayudarte.',
     contactFormTitle: 'Envíanos un mensaje',
     contactFormNameLabel: 'Nombre completo',
-    // Home
     heroTitle1: 'Protege tu empresa con',
     heroTitle2: 'ciberseguridad inteligente',
     askUs: 'Pregúntanos',
@@ -71,7 +70,6 @@ const translations = {
     mission2: 'Nuestro equipo especializado implementa soluciones de seguridad proactivas, identificando vulnerabilidades antes de que sean explotadas y monitoreando amenazas en tiempo real.',
     mission3: 'Creemos firmemente en la prevención estratégica y en empoderar a tu equipo con conocimientos prácticos de ciberseguridad adaptados a tus necesidades específicas.',
     mission4: 'Nuestra misión es transformar la seguridad de un gasto necesario a un activo diferenciador que fortalezca tu posición competitiva en el mercado.',
-    // Solutions
     heroAlt: 'Ciberseguridad',
     heroTitle: 'Soluciones Integrales de Ciberseguridad',
     heroDescription: 'En Sesecpro, ofrecemos un portfolio completo de servicios avanzados, diseñados para proteger tu organización contra las ciberamenazas más sofisticadas.',
@@ -129,7 +127,6 @@ const translations = {
     solution9Feature1: 'Análisis de impacto',
     solution9Feature2: 'Planes de contingencia',
     solution9Feature3: 'Pruebas periódicas',
-    // Home CTA & Footer
     solutionsTitle: 'Nuestras Soluciones',
     solutionsSubtitle: 'Soluciones avanzadas, simples y adaptadas a tu negocio. Seguridad real con tecnología de última generación.',
     ctaTitle: '¿Listo para fortalecer tu seguridad digital?',
@@ -145,7 +142,6 @@ const translations = {
     customSolutionTitle: '¿Necesitas una Solución a Medida?',
     customSolutionDesc: 'Cada organización es única. Nuestro equipo de expertos está listo para diseñar una estrategia personalizada que se adapte perfectamente a tus desafíos y objetivos.',
     customSolutionButton: 'Solicita una Consulta Gratuita',
-    // Resources
     guides: 'Guías',
     tools: 'Herramientas',
     wiki: 'Base de Conocimientos',
@@ -222,7 +218,6 @@ const translations = {
     contactHeroDescription: 'Ready to strengthen your digital security? Our experts are ready to help you.',
     contactFormTitle: 'Send us a message',
     contactFormNameLabel: 'Full name',
-    // Home
     heroTitle1: 'Protect your business with',
     heroTitle2: 'smart cybersecurity',
     heroDescription: 'Advanced, simple, and business-adapted solutions. Real security with cutting-edge technology.',
@@ -233,10 +228,8 @@ const translations = {
     mission2: 'Our specialized team implements proactive security solutions, identifying vulnerabilities before they are exploited and monitoring threats in real time.',
     mission3: 'We firmly believe in strategic prevention and in empowering your team with practical cybersecurity knowledge tailored to your specific needs.',
     mission4: 'Our mission is to transform security from a necessary expense to a differentiating asset that strengthens your competitive position in the market.',
-    // Solutions
     heroAlt: 'Cybersecurity',
     heroTitle: 'Comprehensive Cybersecurity Solutions',
-    heroDescription: 'At Sesecpro, we offer a complete portfolio of advanced services, designed to protect your organization against the most sophisticated cyber threats.',
     solution1Title: 'Risk Assessment and Management',
     solution1Description: 'We thoroughly identify vulnerabilities in your systems, applications, and processes',
     solution1Why: 'For a clear understanding of your weak points and how to strengthen them',
@@ -291,7 +284,6 @@ const translations = {
     solution9Feature1: 'Impact analysis',
     solution9Feature2: 'Contingency plans',
     solution9Feature3: 'Periodic testing',
-    // Home CTA & Footer
     solutionsTitle: 'Our Solutions',
     solutionsSubtitle: 'Advanced, simple, and business-adapted solutions. Real security with cutting-edge technology.',
     ctaTitle: 'Ready to strengthen your digital security?',
@@ -307,7 +299,6 @@ const translations = {
     customSolutionTitle: 'Need a Custom Solution?',
     customSolutionDesc: 'Every organization is unique. Our team of experts is ready to design a personalized strategy tailored perfectly to your challenges and goals.',
     customSolutionButton: 'Request a Free Consultation',
-    // Resources
     guides: 'Guides',
     tools: 'Tools',
     wiki: 'Knowledge Base',
