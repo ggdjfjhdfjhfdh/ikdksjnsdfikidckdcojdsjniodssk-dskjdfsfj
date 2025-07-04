@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import BackButton from '@/components/BackButton'; 
 
 interface Guia {
   id: number;
@@ -81,15 +82,7 @@ export default function GuiasPage() {
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
-      <Link 
-        href="/recursos"
-        className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium mb-6"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7" />
-        </svg>
-        Volver
-      </Link>
+      <BackButton href="/recursos" className="mb-6" />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
