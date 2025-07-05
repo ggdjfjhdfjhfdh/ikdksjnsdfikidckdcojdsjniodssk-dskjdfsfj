@@ -1,18 +1,17 @@
 'use client';
-import Link from 'next/link';
-import { AtSymbolIcon, PhoneIcon, ChatBubbleOvalLeftEllipsisIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import useWeb3Forms from '@web3forms/react';
-import { useState } from 'react';
-import Image from 'next/image';
 import React from 'react';
+import { motion } from 'framer-motion';
+import { Mail, Phone, MapPin, MessageSquare, AtSign, MessageCircle } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
+import Footer from '@/components/Footer';
+import { useForm, FieldErrors } from 'react-hook-form';
+import useWeb3Forms from '@web3forms/react';
+import Image from 'next/image';
+import { contactTranslations } from '@/lib/contactTranslations';
 
 type FormData = {
   name: string;
   email: string;
-
   subject: string;
   message: string;
 };
@@ -40,8 +39,10 @@ const itemVariants = {
 
 export default function ContactPage() {
   const { t } = useI18n();
-  const [result, setResult] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const lang = t('currentLanguage') as 'ES' | 'EN';
+  const translations = contactTranslations[lang];
+  const [result, setResult] = React.useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = React.useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -83,16 +84,16 @@ export default function ContactPage() {
       <section className="relative h-[320px] md:h-[380px] flex items-center justify-center">
         <Image
           src="/hero-contact.png"
-          alt={t('contactHeroAlt')}
+          alt={translations.contactHeroAlt}
           fill
           className="object-cover object-center z-0"
           priority
         />
         <div className="absolute inset-0 bg-blue-900/30 backdrop-blur-sm z-10" aria-hidden="true"></div>
         <div className="relative z-20 w-full text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-blue-200 drop-shadow-lg tracking-tight">{t('contactHeroTitle')}</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-blue-200 drop-shadow-lg tracking-tight">{translations.title}</h1>
           <p className="text-xl md:text-2xl max-w-2xl mx-auto text-white/90 drop-shadow-sm font-light">
-            {t('contactHeroDescription')}
+            {translations.subtitle}
           </p>
         </div>
       </section>
@@ -117,19 +118,19 @@ export default function ContactPage() {
 
               <div className="flex items-center mb-8">
                 <div className="bg-blue-100 w-14 h-14 rounded-lg flex items-center justify-center mr-6">
-                  <ChatBubbleOvalLeftEllipsisIcon className="w-7 h-7 text-blue-600" />
+                  <MessageCircle className="w-7 h-7 text-blue-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800">{t('contactFormTitle')}</h2>
+                <h2 className="text-2xl font-bold text-gray-800">{translations.formTitle}</h2>
               </div>
               
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">{t('contactFormNameLabel')}</label>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">{translations.nameLabel}</label>
                     <input 
-                      {...register('name', { required: 'Este campo es obligatorio' })}
+                      {...register('name', { required: translations.validation.nameRequired })}
                       className={`w-full px-5 py-3 border border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-black ${errors.name ? 'border-red-500' : ''}`}
-                      placeholder="Ana García López"
+                      placeholder={translations.namePlaceholder}
                     />
                     {errors.name && <motion.p 
                       initial={{ opacity: 0, y: -10 }}
@@ -141,11 +142,17 @@ export default function ContactPage() {
                   </div>
                   
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">{translations.emailLabel}</label>
                     <input 
-                      {...register('email', { required: 'Este campo es obligatorio', pattern: { value: /.+@.+\..+/, message: 'Introduce un email válido' } })}
+                      {...register('email', { 
+                        required: translations.validation.emailRequired,
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: translations.validation.emailInvalid
+                        }
+                      })}
                       className={`w-full px-5 py-3 border border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-black ${errors.email ? 'border-red-500' : ''}`}
-                      placeholder="ana@email.com"
+                      placeholder={translations.emailPlaceholder}
                       type="email"
                     />
                     {errors.email && <motion.p 
@@ -159,11 +166,11 @@ export default function ContactPage() {
                 </motion.div>
                 
                 <motion.div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">Asunto</label>
+                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">{translations.subjectLabel}</label>
                   <input 
-                    {...register('subject', { required: 'Por favor especifica el asunto' })}
+                    {...register('subject', { required: translations.validation.subjectRequired })}
                     className={`w-full px-5 py-3 border border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-black ${errors.subject ? 'border-red-500' : ''}`}
-                    placeholder="Consulta sobre servicios de ciberseguridad"
+                    placeholder={translations.subjectPlaceholder}
                   />
                   {errors.subject && <motion.p 
                     initial={{ opacity: 0, y: -10 }}
@@ -175,18 +182,18 @@ export default function ContactPage() {
                 </motion.div>
                 
                 <motion.div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Mensaje</label>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">{translations.messageLabel}</label>
                   <textarea 
                     {...register('message', { 
-                      required: 'Por favor escribe tu mensaje',
+                      required: translations.validation.messageRequired,
                       minLength: {
                         value: 20,
-                        message: 'El mensaje debe tener al menos 20 caracteres'
+                        message: translations.validation.messageMinLength
                       }
                     })}
                     className={`w-full px-5 py-3 border border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-black ${errors.message ? 'border-red-500' : ''}`}
                     rows={5}
-                    placeholder="Describe tu consulta en detalle..."
+                    placeholder={translations.messagePlaceholder}
                   ></textarea>
                   {errors.message && <motion.p 
                     initial={{ opacity: 0, y: -10 }}
@@ -210,7 +217,7 @@ export default function ContactPage() {
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                   ) : (
-                    'Enviar mensaje'
+                    translations.submitButton
                   )}
                 </motion.button>
                 {isSubmitSuccessful && isSuccess && (
@@ -233,12 +240,12 @@ export default function ContactPage() {
               className="bg-white/60 backdrop-blur-xl border border-blue-100 rounded-3xl shadow-2xl p-10 flex flex-col items-center justify-center gap-4 animate-fade-in"
             >
               <div className="bg-gradient-to-br from-blue-200 via-blue-100 to-yellow-50 w-16 h-16 rounded-2xl flex items-center justify-center mb-4 shadow-md animate-pop">
-                <AtSymbolIcon className="w-8 h-8 text-blue-600" />
+                <AtSign className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-1 tracking-tight">Correo electrónico</h3>
-              <p className="text-gray-600 mb-3 text-center">¿Prefieres escribirnos directamente? Haz clic en el email y te respondemos rápido.</p>
+              <h3 className="text-2xl font-bold text-gray-800 mb-1 tracking-tight">{translations.directEmailTitle}</h3>
+              <p className="text-gray-600 mb-3 text-center">{translations.directEmailText}</p>
               <a href="mailto:contacto@sesecpro.es" className="inline-block text-xl font-semibold px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-400 text-white shadow-lg hover:from-blue-700 hover:to-blue-500 transition-all focus:outline-none focus:ring-2 focus:ring-blue-300 animate-cta">
-                contacto@sesecpro.es
+                {translations.directEmailAddress}
               </a>
             </motion.div>
           </div>

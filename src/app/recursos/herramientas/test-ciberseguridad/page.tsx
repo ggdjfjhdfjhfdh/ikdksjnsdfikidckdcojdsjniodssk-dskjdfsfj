@@ -780,7 +780,7 @@ const shuffleArray = (array: any[]) => {
   return shuffled;
 };
 
-export default function SecurityQuiz() {
+export default function SecurityQuizPage() {
   const { lang } = useLanguage();
   const t = securityQuizTranslations[lang as 'ES' | 'EN'];
 

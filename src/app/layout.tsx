@@ -6,11 +6,15 @@ import "./globals.css";
 import { LanguageProvider } from "../lib/LanguageContext";
 
 export const metadata = {
-  metadataBase: new URL('https://tudominio.com'),
+  title: 'SESECPRO | Soluciones Integrales de Ciberseguridad',
+  description: 'Protección avanzada contra ciberamenazas para empresas y particulares con soluciones personalizadas de seguridad digital.',
+  metadataBase: new URL('https://sesecpro.es'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
+    title: 'SESECPRO | Soluciones Integrales de Ciberseguridad',
+    description: 'Protección avanzada contra ciberamenazas para empresas y particulares con soluciones personalizadas de seguridad digital.',
     images: '/og-image.jpg',
   },
 };

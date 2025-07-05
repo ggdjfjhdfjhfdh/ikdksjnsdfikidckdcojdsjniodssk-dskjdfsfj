@@ -6,6 +6,7 @@ type Lang = Language;
 
 const translations = {
   ES: {
+    currentLanguage: 'ES',
     purpose: 'Propósito',
     solutions: 'Soluciones',
     links: 'Enlaces',
@@ -483,6 +484,7 @@ const translations = {
     ...passwordCheckerTranslations.ES
   },
   EN: {
+    currentLanguage: 'EN',
     purpose: 'Purpose',
     solutions: 'Solutions',
     links: 'Links',
@@ -962,7 +964,7 @@ const translations = {
 };
 
 type AllTranslations = typeof translations.ES & typeof translations.EN & typeof passwordCheckerTranslations.ES & typeof passwordCheckerTranslations.EN;
-export type TranslationKey = keyof AllTranslations;
+export type TranslationKey = keyof AllTranslations | 'currentLanguage';
 
 export function useI18n() {
   const { lang } = useLanguage();

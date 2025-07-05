@@ -18,7 +18,6 @@ import {
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-
 import { useI18n } from '@/lib/i18n';
 
 export default function HomePage(): React.ReactElement {
