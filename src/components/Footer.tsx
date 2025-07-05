@@ -18,7 +18,7 @@ export default function Footer({ bgColor = 'bg-gray-900/95', links = [
   { label: 'Política de Privacidad', href: '/legal/privacy' },
   { label: 'Política de Cookies', href: '/legal/cookies' }
 ] }: FooterProps) {
-  const t = useI18n();
+  const { t } = useI18n();
 
   return (
     <footer className={`${bgColor} text-white py-16 px-4 md:px-0`}>

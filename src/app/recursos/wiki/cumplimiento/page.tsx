@@ -1,84 +1,93 @@
+'use client';
+
 import ArticleCard from '@/components/wiki/ArticleCard';
 import BackButton from '@/components/BackButton';
+import { useI18n } from '@/lib/i18n';
 
 export default function CumplimientoPage() {
+  const { t } = useI18n();
+
   const articles = [
     {
-      title: 'ISO 27002',
-      description: 'Estándar internacional de seguridad de la información',
+      title: t('wikiArticleComplianceISO27002Title'),
+      description: t('wikiArticleComplianceISO27002Desc'),
       href: '/recursos/wiki/cumplimiento/iso27002'
     },
     {
-      title: 'SOC 2',
-      description: 'Reportes de controles organizacionales',
+      title: t('wikiArticleComplianceSOC2Title'),
+      description: t('wikiArticleComplianceSOC2Desc'),
       href: '/recursos/wiki/cumplimiento/soc2'
     },
     {
-      title: 'HIPAA',
-      description: 'Protección de datos de salud (ePHI)',
+      title: t('wikiArticleComplianceHIPAATitle'),
+      description: t('wikiArticleComplianceHIPAADesc'),
       href: '/recursos/wiki/cumplimiento/hipaa'
     },
     {
-      title: 'FedRAMP',
-      description: 'Seguridad para proveedores cloud del gobierno US',
+      title: t('wikiArticleComplianceFedRAMPTitle'),
+      description: t('wikiArticleComplianceFedRAMPDesc'),
       href: '/recursos/wiki/cumplimiento/fedramp'
     },
     {
-      title: 'CCPA/CPRA',
-      description: 'Protección de datos en California',
-      href: '/recursos/wiki/cumplimiento/ccpa'
+      title: t('wikiArticleComplianceCCPA_CPRA'),
+      description: t('wikiArticleComplianceCCPA_CPRADesc'),
+      href: '/recursos/wiki/cumplimiento/ccpa-cpra'
     },
     {
-      title: 'GDPR',
-      description: 'Reglamento general de protección de datos UE',
+      title: t('wikiArticleComplianceGDPRTitle'),
+      description: t('wikiArticleComplianceGDPRDesc'),
       href: '/recursos/wiki/cumplimiento/gdpr'
     },
     {
-      title: 'CMMC',
-      description: 'Modelo de madurez para contratistas de defensa US',
+      title: t('wikiArticleComplianceCMMCTitle'),
+      description: t('wikiArticleComplianceCMMCDesc'),
       href: '/recursos/wiki/cumplimiento/cmmc'
     },
     {
-      title: 'Privacy by Design',
-      description: 'Principios de privacidad desde el diseño',
+      title: t('wikiArticleCompliancePrivacyByDesignTitle'),
+      description: t('wikiArticleCompliancePrivacyByDesignDesc'),
       href: '/recursos/wiki/cumplimiento/privacy-design'
     },
     {
-      title: 'NIS2',
-      description: 'Directiva UE sobre seguridad de redes y sistemas',
+      title: t('wikiArticleComplianceNIS2Title'),
+      description: t('wikiArticleComplianceNIS2Desc'),
       href: '/recursos/wiki/cumplimiento/nis2'
     },
     {
-      title: 'DORA',
-      description: 'Resiliencia operacional en sector financiero UE',
+      title: t('wikiArticleComplianceDORATitle'),
+      description: t('wikiArticleComplianceDORADesc'),
       href: '/recursos/wiki/cumplimiento/dora'
     },
     {
-      title: 'PCI DSS',
-      description: 'Estándar de seguridad para datos de tarjetas',
+      title: t('wikiArticleCompliancePCIDSSTitle'),
+      description: t('wikiArticleCompliancePCIDSSDesc'),
       href: '/recursos/wiki/cumplimiento/pci-dss'
     },
     {
-      title: 'POPIA',
-      description: 'Protección de datos personales (Sudáfrica)',
+      title: t('wikiArticleCompliancePOPIATitle'),
+      description: t('wikiArticleCompliancePOPIADesc'),
       href: '/recursos/wiki/cumplimiento/popia'
     },
     {
-      title: 'Data Classification',
-      description: 'Retention & Minimization policies',
+      title: t('wikiArticleComplianceDataClassificationTitle'),
+      description: t('wikiArticleComplianceDataClassificationDesc'),
       href: '/recursos/wiki/cumplimiento/data-classification'
     }
   ];
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
+      <BackButton href="/recursos/wiki" className="mb-6" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <BackButton href="/recursos/wiki" className="mb-6" />
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Cumplimiento y Regulaciones</h1>
-        
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">{t('wikiCategoryCompliance')}</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map((article) => (
-            <ArticleCard key={article.title} {...article} />
+          {articles.map(({title, description, href}) => (
+            <ArticleCard 
+              key={href}
+              title={title}
+              description={description}
+              href={href}
+            />
           ))}
         </div>
       </div>

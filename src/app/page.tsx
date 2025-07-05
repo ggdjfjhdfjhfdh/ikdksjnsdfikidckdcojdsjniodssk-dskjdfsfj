@@ -22,7 +22,7 @@ import Image from 'next/image';
 import { useI18n } from '@/lib/i18n';
 
 export default function HomePage(): React.ReactElement {
-  const t = useI18n();
+  const { t } = useI18n();
 
   const [isClient, setIsClient] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

@@ -33,7 +33,7 @@ const NewsSidebar: React.FC<NewsSidebarProps> = ({
   setDateFrom,
   setDateTo
 }) => {
-  const t = useI18n();
+  const { t } = useI18n();
   const uniqueCategories = Array.from(new Set(news.map(n => (n.category || 'otros').toLowerCase())));
   uniqueCategories.sort((a, b) => (a === 'otros' ? 1 : b === 'otros' ? -1 : a.localeCompare(b, 'es')));
 

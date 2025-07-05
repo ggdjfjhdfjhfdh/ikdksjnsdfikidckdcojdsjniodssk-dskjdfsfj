@@ -17,9 +17,12 @@ import {
   ChevronLeftIcon,
   EyeIcon,
   EyeSlashIcon,
-  ClipboardDocumentIcon
+  ClipboardDocumentIcon,
+  XCircleIcon,
+  LightBulbIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 
 type StrengthInfo = { score: number; label: string; color: string };
 
@@ -63,6 +66,7 @@ function generatePassword(
 }
 
 export default function PasswordChecker() {
+  const { t } = useI18n();
   const [password, setPassword] = useState('');
   const [copied, setCopied] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -76,11 +80,10 @@ export default function PasswordChecker() {
   const progress = `${(score / 5) * 100}%`;
 
   const criteria = [
-    { key: 'length', label: 'Al menos 8 caracteres', met: password.length >= 8 },
-    { key: 'upper', label: 'Incluye letra mayúscula', met: /[A-Z]/.test(password) },
-    { key: 'lower', label: 'Incluye letra minúscula', met: /[a-z]/.test(password) },
-    { key: 'number', label: 'Incluye número', met: /[0-9]/.test(password) },
-    { key: 'symbol', label: 'Incluye símbolo especial', met: /[^A-Za-z0-9]/.test(password) },
+    { key: 'upper', label: t('passwordUppercase'), met: /[A-Z]/.test(password) },
+    { key: 'lower', label: t('passwordLowercase'), met: /[a-z]/.test(password) },
+    { key: 'number', label: t('passwordNumber'), met: /[0-9]/.test(password) },
+    { key: 'symbol', label: t('passwordSymbol'), met: /[^A-Za-z0-9]/.test(password) },
   ];
 
   const handleGenerate = () => {
@@ -105,16 +108,16 @@ export default function PasswordChecker() {
       {/* Back button */}
       <Link href="/recursos/herramientas" className="self-start mb-4 sm:mb-6 ml-4 sm:ml-16 flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors">
         <ChevronLeftIcon className="h-5 w-5" />
-        Volver
+        {t('backButton')}
       </Link>
 
       {/* Main checker section */}
       <section className="w-full max-w-2xl sm:max-w-4xl mx-auto px-4 relative mb-8 sm:mb-16">
         {/* Simple title section */}
         <div className="mb-8 sm:mb-10 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">Evalúa la fortaleza de tu clave</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">{t('passwordCheckerTitle')}</h1>
           <p className="text-gray-700 text-lg sm:text-xl max-w-2xl mx-auto">
-            Comprueba si tu contraseña es segura y recibe recomendaciones para mejorarla
+            {t('passwordCheckerSubtitle')}
           </p>
         </div>
 
@@ -124,13 +127,10 @@ export default function PasswordChecker() {
             <div className="flex-1 relative">
               <input
                 type={showPassword ? 'text' : 'password'}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder={t('passwordPlaceholder')}
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setCopied(false);
-                }}
-                placeholder="Introduce tu contraseña"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => setPassword(e.target.value)}
               />
               <button
                 onClick={() => setShowPassword(!showPassword)}
@@ -153,12 +153,12 @@ export default function PasswordChecker() {
               {copied ? (
                 <>
                   <CheckCircleIcon className="h-5 w-5" />
-                  Copiada
+                  {t('copiedButton')}
                 </>
               ) : (
                 <>
                   <ClipboardDocumentIcon className="h-5 w-5" />
-                  Copiar
+                  {t('copyButton')}
                 </>
               )}
             </button>
@@ -166,14 +166,16 @@ export default function PasswordChecker() {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-800 mb-1">Longitud: {length}</label>
+              <label className="block text-sm font-medium text-gray-800 mb-1">
+                {t('length')}: {length} {t('passwordLengthUnit')}
+              </label>
               <input
                 type="range"
                 min="4"
                 max="50"
                 value={length}
                 onChange={(e) => setLength(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                className="w-full h-2.5 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               />
             </div>
 
@@ -186,7 +188,7 @@ export default function PasswordChecker() {
                   onChange={() => setUseUpper(!useUpper)} 
                   className="text-gray-800"
                 />
-                <label htmlFor="useUpper" className="text-gray-800">Mayúsculas</label>
+                <label htmlFor="useUpper" className="text-gray-800">{t('passwordUppercase')}</label>
               </div>
               <div className="flex items-center gap-3">
                 <input 
@@ -196,7 +198,7 @@ export default function PasswordChecker() {
                   onChange={() => setUseLower(!useLower)} 
                   className="text-gray-800"
                 />
-                <label htmlFor="useLower" className="text-gray-800">Minúsculas</label>
+                <label htmlFor="useLower" className="text-gray-800">{t('passwordLowercase')}</label>
               </div>
               <div className="flex items-center gap-3">
                 <input 
@@ -206,7 +208,7 @@ export default function PasswordChecker() {
                   onChange={() => setUseNumbers(!useNumbers)} 
                   className="text-gray-800"
                 />
-                <label htmlFor="useNumbers" className="text-gray-800">Números</label>
+                <label htmlFor="useNumbers" className="text-gray-800">{t('passwordNumber')}</label>
               </div>
               <div className="flex items-center gap-3">
                 <input 
@@ -216,53 +218,98 @@ export default function PasswordChecker() {
                   onChange={() => setUseSymbols(!useSymbols)} 
                   className="text-gray-800"
                 />
-                <label htmlFor="useSymbols" className="text-gray-800">Símbolos</label>
+                <label htmlFor="useSymbols" className="text-gray-800">{t('passwordSymbol')}</label>
               </div>
             </div>
           </div>
 
           <button
+            className="flex items-center justify-center gap-2 py-3 px-6 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium rounded-lg shadow-md w-full sm:w-auto text-base mt-6 md:mt-8"
             onClick={handleGenerate}
-            className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium rounded-lg transition-colors shadow-md w-full sm:w-auto"
           >
-            <span>Generar</span>
+            <span>{t('generate')}</span>
           </button>
         </div>
 
         {/* Panel de resultados */}
         <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
           <div className="flex justify-between items-center">
-            <h4 className="font-medium text-gray-800">Fortaleza</h4>
-            <span className={`font-bold capitalize px-3 py-1 rounded-full text-xs ${color.replace('bg-', 'text-')} ${color.replace('bg-', 'bg-').replace('-500', '-100')}`}>
-              {label}
-            </span>
+            <h4 className="text-lg font-semibold tracking-wide text-gray-800">{t('passwordStrength')}</h4>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
-            <div className={`h-2.5 rounded-full ${color}`} style={{ width: `${progress}%` }}></div>
+          <div className="mt-4 flex items-center gap-4">
+            <div className="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
+              <div 
+                className={`h-full rounded-full transition-all duration-500 ${
+                  score <= 1 ? 'bg-gradient-to-r from-red-500 to-red-600' :
+                  score <= 2 ? 'bg-gradient-to-r from-orange-400 to-orange-500' :
+                  score <= 3 ? 'bg-gradient-to-r from-yellow-300 to-yellow-400' :
+                  score <= 4 ? 'bg-gradient-to-r from-green-400 to-green-500' :
+                  'bg-gradient-to-r from-green-500 to-green-600'
+                }`}
+                style={{ width: `${(score / 5) * 100}%` }}
+              ></div>
+            </div>
+            
+            <span className={`text-base font-extrabold whitespace-nowrap ${
+              score <= 1 ? 'text-red-600' :
+              score <= 2 ? 'text-orange-500' :
+              score <= 3 ? 'text-yellow-500' :
+              score <= 4 ? 'text-green-500' :
+              'text-green-600'
+            }`}>
+              {score <= 1 && t('veryWeak')}
+              {score === 2 && t('weak')}
+              {score === 3 && t('medium')}
+              {score === 4 && t('strong')}
+              {score >= 5 && t('veryStrong')}
+            </span>
           </div>
 
           {password && (
-            <div className="mt-4 space-y-2">
-              <h4 className="font-medium text-gray-800">Recomendaciones</h4>
-              <ul className="space-y-2 text-sm text-gray-600 list-disc list-inside">
-                <li>Longitud mínima recomendada: 12 caracteres</li>
-                <li>Usa una combinación de mayúsculas, minúsculas, números y símbolos</li>
-                <li>Evita información personal o patrones comunes</li>
-                <li>Considera usar un gestor de contraseñas</li>
-              </ul>
+            <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
+              <h4 className="font-medium text-gray-800 text-lg mb-2">{t('securityCriteriaAndRecommendations')}</h4>
+              
+              <div>
+                <h5 className="font-medium text-gray-700 mb-2">{t('securityCriteria')}</h5>
+                <ul className="space-y-2 mt-4">
+                  <li key="length" className="flex items-center gap-2">
+                    <CheckCircleIcon className={`w-5 h-5 ${password.length >= 16 ? 'text-green-500' : 'text-gray-300'}`} />
+                    <span className={password.length >= 16 ? 'text-green-600 font-medium' : 'text-gray-900'}>
+                      {t('length')}: {password.length}
+                    </span>
+                  </li>
+                  {criteria.map((criterion) => (
+                    <li key={criterion.key} className="flex items-center gap-2">
+                      <CheckCircleIcon className={`w-5 h-5 ${criterion.met ? 'text-green-500' : 'text-gray-300'}`} />
+                      <span className={criterion.met ? 'text-green-600 font-medium' : 'text-gray-700'}>{criterion.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div>
+                <h5 className="font-medium text-gray-700 mb-2">{t('recommendations')}</h5>
+                <ul className="space-y-2">
+                  <li className="flex items-start">
+                    <LightBulbIcon className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" />
+                    <span className="text-gray-700">{t('passwordRecommendation1')}</span>
+                  </li>
+                  <li className="flex items-start">
+                    <LightBulbIcon className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" />
+                    <span className="text-gray-700">{t('passwordRecommendation2')}</span>
+                  </li>
+                  <li className="flex items-start">
+                    <LightBulbIcon className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" />
+                    <span className="text-gray-700">{t('passwordRecommendation3')}</span>
+                  </li>
+                  <li className="flex items-start">
+                    <LightBulbIcon className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0" />
+                    <span className="text-gray-700">{t('passwordRecommendation4')}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           )}
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
-          <h4 className="font-medium text-gray-800">Criterios de seguridad</h4>
-          <ul className="space-y-2 text-sm text-gray-600 list-disc list-inside">
-            {criteria.map((criterion, i) => (
-              <li key={i} className={criterion.met ? 'text-green-600' : 'text-red-600'}>
-                {criterion.label}
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
@@ -274,8 +321,8 @@ export default function PasswordChecker() {
               <ShieldCheckIcon className="h-12 w-12 text-purple-600" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2"><span className="text-purple-600">ProtonPass</span></h2>
-              <p className="text-gray-600 text-lg">El gestor de contraseñas más seguro con cifrado de extremo a extremo y código abierto.</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2"><span className="text-purple-600">{t('protonPassTitle')}</span></h2>
+              <p className="text-gray-600 text-lg">{t('protonPassSubtitle')}</p>
             </div>
           </div>
 
@@ -284,60 +331,60 @@ export default function PasswordChecker() {
             <div className="bg-white p-6 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center gap-3 mb-3">
                 <ShieldCheckIcon className="h-6 w-6 text-purple-500" />
-                <h3 className="font-semibold text-gray-900">Gestión de Equipos</h3>
+                <h3 className="font-semibold text-gray-900">{t('protonPassFeature1Title')}</h3>
               </div>
-              <p className="text-gray-600 text-sm">Control centralizado de accesos con roles personalizados y auditoría detallada para empresas.</p>
+              <p className="text-gray-600 text-sm">{t('protonPassFeature1Description')}</p>
             </div>
 
             <div className="bg-white p-6 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center gap-3 mb-3">
                 <UserGroupIcon className="h-6 w-6 text-purple-500" />
-                <h3 className="font-semibold text-gray-900">Comparte sin Riesgos</h3>
+                <h3 className="font-semibold text-gray-900">{t('protonPassFeature2Title')}</h3>
               </div>
-              <p className="text-gray-600 text-sm">Envía credenciales de forma segura mediante enlaces temporales y con control de accesos.</p>
+              <p className="text-gray-600 text-sm">{t('protonPassFeature2Description')}</p>
             </div>
 
             <div className="bg-white p-6 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center gap-3 mb-3">
                 <LockClosedIcon className="h-6 w-6 text-purple-500" />
-                <h3 className="font-semibold text-gray-900">Llaves de Seguridad</h3>
+                <h3 className="font-semibold text-gray-900">{t('protonPassFeature3Title')}</h3>
               </div>
-              <p className="text-gray-600 text-sm">Protección adicional con YubiKey y autenticación en dos pasos para máxima seguridad.</p>
+              <p className="text-gray-600 text-sm">{t('protonPassFeature3Description')}</p>
             </div>
 
             <div className="bg-white p-6 rounded-xl border border-purple-100 shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center gap-3 mb-3">
                 <GlobeAltIcon className="h-6 w-6 text-purple-500" />
-                <h3 className="font-semibold text-gray-900">Asistencia Premium</h3>
+                <h3 className="font-semibold text-gray-900">{t('protonPassFeature4Title')}</h3>
               </div>
-              <p className="text-gray-600 text-sm">Soporte técnico prioritario con respuesta garantizada en menos de 4 horas.</p>
+              <p className="text-gray-600 text-sm">{t('protonPassFeature4Description')}</p>
             </div>
           </div>
 
           {/* Buttons */}
           <div className="flex flex-wrap gap-4">
             <a 
-              href=" https://go.getproton.me/SH1Xr" 
+              href="https://go.getproton.me/SH1Xr" 
               target="_blank" 
               rel="noopener noreferrer"
               className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg shadow-md transition-colors flex items-center justify-center gap-2"
             >
               <ArrowTopRightOnSquareIcon className="h-5 w-5" />
-              Probar ProtonPass
+              {t('protonPassButton')}
             </a>
             <button 
               className="px-6 py-3 bg-white border border-purple-200 hover:bg-purple-50 text-purple-600 font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2"
               onClick={() => setShowPassInfo(!showPassInfo)}
             >
               <InformationCircleIcon className="h-5 w-5" />
-              Más información
+              {t('moreInfoButton')}
             </button>
           </div>
 
           {/* Info Section */}
           {showPassInfo && (
             <div className="mt-6 bg-purple-50 p-6 rounded-xl border border-purple-100">
-              <h3 className="font-semibold text-gray-900 mb-3">Tecnología de ProtonPass</h3>
+              <h3 className="font-semibold text-gray-900 mb-3">{t('protonPassInfoTitle')}</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Security Features */}
@@ -345,24 +392,24 @@ export default function PasswordChecker() {
                   <div className="flex items-start gap-3">
                     <LockClosedIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Cifrado de extremo a extremo</h4>
-                      <p className="text-gray-700 text-sm">Todos los datos se cifran en tu dispositivo antes de enviarse a los servidores.</p>
+                      <h4 className="font-medium text-gray-900">{t('protonPassSecurityFeature1Title')}</h4>
+                      <p className="text-gray-700 text-sm">{t('protonPassSecurityFeature1Description')}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
                     <ShieldCheckIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Almacenamiento seguro</h4>
-                      <p className="text-gray-700 text-sm">Bóvedas cifradas con AES-GCM de 256 bits y claves generadas aleatoriamente.</p>
+                      <h4 className="font-medium text-gray-900">{t('protonPassSecurityFeature2Title')}</h4>
+                      <p className="text-gray-700 text-sm">{t('protonPassSecurityFeature2Description')}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
                     <KeyIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Generación de contraseñas</h4>
-                      <p className="text-gray-700 text-sm">Crea contraseñas seguras y únicas para cada cuenta.</p>
+                      <h4 className="font-medium text-gray-900">{t('protonPassSecurityFeature3Title')}</h4>
+                      <p className="text-gray-700 text-sm">{t('protonPassSecurityFeature3Description')}</p>
                     </div>
                   </div>
                 </div>
@@ -372,24 +419,46 @@ export default function PasswordChecker() {
                   <div className="flex items-start gap-3">
                     <DevicePhoneMobileIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Autocompletado seguro</h4>
-                      <p className="text-gray-700 text-sm">Rellena automáticamente credenciales en todos tus dispositivos.</p>
+                      <h4 className="font-medium text-gray-900">{t('protonPassConvenienceFeature1Title')}</h4>
+                      <p className="text-gray-700 text-sm">
+                        {t('protonPassConvenienceFeature1Description').split('ProtonPass').map((part, i) => (
+                          i > 0 ? (
+                            <>
+                              <a href="https://go.getproton.me/SH1Xr" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">
+                                ProtonPass
+                              </a>
+                              {part}
+                            </>
+                          ) : part
+                        ))}
+                      </p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
                     <UserGroupIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Uso compartido seguro</h4>
-                      <p className="text-gray-700 text-sm">Comparte credenciales sin revelar el contenido real.</p>
+                      <h4 className="font-medium text-gray-900">{t('protonPassConvenienceFeature2Title')}</h4>
+                      <p className="text-gray-700 text-sm">
+                        {t('protonPassConvenienceFeature2Description').split('ProtonPass').map((part, i) => (
+                          i > 0 ? (
+                            <>
+                              <a href="https://go.getproton.me/SH1Xr" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">
+                                ProtonPass
+                              </a>
+                              {part}
+                            </>
+                          ) : part
+                        ))}
+                      </p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
                     <EnvelopeIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-medium text-gray-900">Alias de correo</h4>
-                      <p className="text-gray-700 text-sm">Protege tu email real con alias desechables.</p>
+                      <h4 className="font-medium text-gray-900">{t('protonPassConvenienceFeature3Title')}</h4>
+                      <p className="text-gray-700 text-sm">{t('protonPassConvenienceFeature3Description')}</p>
                     </div>
                   </div>
                 </div>
@@ -397,19 +466,19 @@ export default function PasswordChecker() {
               
               {/* Additional Security */}
               <div className="mt-6 pt-6 border-t border-purple-100">
-                <h4 className="font-medium text-gray-900 mb-3">Garantías de seguridad</h4>
+                <h4 className="font-medium text-gray-900 mb-3">{t('protonPassAdditionalSecurityTitle')}</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="flex items-start gap-2">
                     <GlobeAltIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-gray-700 text-sm">Código abierto y auditable públicamente</p>
+                    <p className="text-gray-700 text-sm">{t('protonPassAdditionalSecurity1')}</p>
                   </div>
                   <div className="flex items-start gap-2">
                     <DocumentMagnifyingGlassIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-gray-700 text-sm">Auditorías independientes periódicas</p>
+                    <p className="text-gray-700 text-sm">{t('protonPassAdditionalSecurity2')}</p>
                   </div>
                   <div className="flex items-start gap-2">
                     <Cog6ToothIcon className="h-5 w-5 text-purple-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-gray-700 text-sm">Integración con ecosistema Proton</p>
+                    <p className="text-gray-700 text-sm">{t('protonPassAdditionalSecurity3')}</p>
                   </div>
                 </div>
               </div>
@@ -421,18 +490,14 @@ export default function PasswordChecker() {
       {/* Security information */}
       <div className="mt-16 max-w-4xl mx-auto bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-lg">
         <div className="prose prose-purple max-w-none">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">¿Por qué es importante usar contraseñas únicas para cada servicio?</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">{t('securityInfoTitle')}</h3>
           <p className="text-gray-700 mb-6">
-            El 65% de los usuarios reutiliza contraseñas en múltiples sitios. Cuando una cuenta se ve comprometida,
-            los atacantes prueban esas mismas credenciales en otros servicios. Usar contraseñas únicas previene
-            este "efecto dominó" y limita el daño potencial de cualquier filtración de datos.
+            {t('securityInfoDescription')}
           </p>
           
           <div className="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-100">
             <p className="text-purple-800 font-medium">
-              💡 Consejo profesional: Usar un gestor de contraseñas como 
-              <a href="https://go.getproton.me/SH1Xr" className="text-purple-600 hover:underline font-bold"> ProtonPass</a> te permite generar y almacenar 
-              credenciales complejas y únicas para cada servicio sin necesidad de memorizarlas.
+              💡 {t('securityInfoTip')}
             </p>
           </div>
         </div>

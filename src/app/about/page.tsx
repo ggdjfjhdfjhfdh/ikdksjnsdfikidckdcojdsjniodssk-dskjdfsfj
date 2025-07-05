@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import Footer from '@/components/Footer';
 
 export default function AboutPage() {
-  const t = useI18n();
+  const { t } = useI18n();
   return (
     <>
       <div className="min-h-screen flex flex-col">

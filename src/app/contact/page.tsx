@@ -39,7 +39,7 @@ const itemVariants = {
 };
 
 export default function ContactPage() {
-  const t = useI18n();
+  const { t } = useI18n();
   const [result, setResult] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const {

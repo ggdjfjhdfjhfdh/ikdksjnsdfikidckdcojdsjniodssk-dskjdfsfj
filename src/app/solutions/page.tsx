@@ -6,7 +6,7 @@ import React from 'react';
 import { useI18n } from '@/lib/i18n';
 
 export default function SolutionsPage() {
-  const t = useI18n();
+  const { t } = useI18n();
   const solutions = [
     {
       icon: <Shield className="w-8 h-8 text-blue-600" />,

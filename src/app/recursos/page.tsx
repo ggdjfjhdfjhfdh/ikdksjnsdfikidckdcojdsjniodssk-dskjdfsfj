@@ -1,40 +1,42 @@
 "use client";
 
 import Link from 'next/link';
+import { useI18n } from '@/lib/i18n';
 
 export default function RecursosHome() {
+  const { t } = useI18n();
+  
   const categories = [
     {
       key: 'guias',
       href: '/recursos/guias',
       icon: '📘',
-      title: 'Guías',
-      description: 'Tutoriales paso a paso y mejores prácticas',
+      title: t('resourcesCategoriesGuiasTitle'),
+      description: t('resourcesCategoriesGuiasDescription'),
     },
     {
       key: 'wiki',
       href: '/recursos/wiki',
       icon: '📚',
-      title: 'Wiki',
-      description: 'Definiciones y artículos clave de ciberseguridad',
+      title: t('resourcesCategoriesWikiTitle'),
+      description: t('resourcesCategoriesWikiDescription'),
     },
     {
       key: 'herramientas',
       href: '/recursos/herramientas',
       icon: '🛠️',
-      title: 'Herramientas',
-      description: 'Utilidades interactivas para tu seguridad',
+      title: t('resourcesCategoriesHerramientasTitle'),
+      description: t('resourcesCategoriesHerramientasDescription'),
     },
   ] as const;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start px-4 py-20 bg-white">
       <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 text-center">
-        Recursos de Ciberseguridad
+        {t('resourcesTitle')}
       </h1>
       <p className="text-lg text-gray-600 mb-16 text-center max-w-2xl">
-        Explora nuestras guías, wiki y herramientas para llevar tu estrategia de seguridad al
-        siguiente nivel.
+        {t('resourcesSubtitle')}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">

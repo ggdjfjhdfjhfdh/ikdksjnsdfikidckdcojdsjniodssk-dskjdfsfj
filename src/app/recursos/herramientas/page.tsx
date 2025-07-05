@@ -2,31 +2,42 @@
 
 import Link from 'next/link';
 import BackButton from '@/components/BackButton';
+import { useLanguage } from '@/lib/LanguageContext';
+import { toolsTranslations } from '@/lib/toolsTranslations';
 
 export default function HerramientasPage() {
+  const { lang } = useLanguage();
+  const t = toolsTranslations[lang];
+
   const tools = [
     {
       key: 'password-checker',
       href: '/recursos/herramientas/comprobador-contrasenas',
       icon: '🔒',
-      title: 'Comprobador de Contraseñas',
-      description: 'Comprueba la fortaleza de tus contraseñas al instante',
+      title: t.passwordChecker.title,
+      description: t.passwordChecker.description,
     },
     {
       key: 'security-quiz',
       href: '/recursos/herramientas/test-ciberseguridad',
       icon: '🧠',
-      title: 'Test de Conocimientos',
-      description: 'Evalúa tu conocimiento en ciberseguridad',
+      title: t.securityQuiz.title,
+      description: t.securityQuiz.description,
     },
   ] as const;
 
   return (
     <main className="min-h-screen bg-gray-50 py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <BackButton href="/recursos" label="Volver a recursos" className="mb-4 sm:mb-6" />
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Herramientas de Seguridad</h1>
+        <BackButton href="/recursos" label={t.backToResources} className="mb-4 sm:mb-6" />
         
+        <div className="text-center mb-12">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
+            {t.pageTitle}
+          </h1>
+          <p className="text-lg text-gray-600">{t.pageDescription}</p>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {tools.map((tool) => (
             <Link

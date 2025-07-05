@@ -5,7 +5,7 @@ import { useI18n } from '@/lib/i18n';
 import Link from "next/link";
 
 export default function CookieConsent() {
-  const t = useI18n();
+  const { t } = useI18n();
   const [visible, setVisible] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);

@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { Shield, Key, AlertTriangle, EyeOff, Smartphone, Wifi, HardDrive, ArrowLeft, ChevronDown, ArrowRight, RefreshCw, Share2, Copy, MessageSquare, Mail } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
+import { securityQuizTranslations } from '@/lib/securityQuizTranslations';
 
 interface Question {
   q: string;
-  options: readonly string[];
+  options: { ES: string[]; EN: string[] };
   answer: number;
   explanation: string;
   category: string;
@@ -13,7 +15,6 @@ interface Question {
   questionNumber?: number;
   id: number; // Assuming questions have unique IDs
 }
-
 
 const questionCategories = {
   fundamentals: { name: 'Fundamentos', icon: <Shield className="w-5 h-5" /> },
@@ -25,266 +26,402 @@ const questionCategories = {
   backups:      { name: 'Backups',     icon: <HardDrive className="w-5 h-5" /> }
 } as const;
 
-
 const questions: Question[] = [
-  // FUNDAMENTOS
+  /* ────────── FUNDAMENTOS ────────── */
   {
     id: 1,
     category: 'fundamentals',
-    q: '¿Qué principio exige otorgar solo los permisos estrictamente necesarios?',
-    options: ['Segregación de funciones', 'Principio de mínimo privilegio', 'Control de acceso discrecional'],
+    q: '¿Qué principio prescribe otorgar únicamente los permisos imprescindibles para desempeñar una tarea?',
+    options: {
+      ES: ['Segregación de funciones', 'Principio de mínimo privilegio', 'Defensa en profundidad'],
+      EN: ['Segregation of duties', 'Principle of least privilege', 'Defense in depth']
+    },
     answer: 1,
-    explanation: 'Limita el alcance de daño en caso de cuenta comprometida.'
+    explanation:
+      'Al limitar los privilegios se reduce la superficie de ataque y se acota el daño si una cuenta se ve comprometida.',
   },
   {
     id: 2,
     category: 'fundamentals',
-    q: '¿Qué diferencia hay entre vulnerabilidad y amenaza?',
-    options: ['Ninguna, son sinónimos', 'Vulnerabilidad = debilidad; amenaza = actor/evento explotándola', 'Amenaza = fallo interno; vulnerabilidad = ataque externo'],
+    q: '¿Cuál es la diferencia entre una vulnerabilidad y una amenaza?',
+    options: {
+      ES: [
+        'Ninguna, son sinónimos',
+        'Una vulnerabilidad es una debilidad; una amenaza es el agente o suceso que puede explotarla',
+        'Amenaza = fallo interno; vulnerabilidad = ataque externo',
+      ],
+      EN: [
+        'None, they are synonyms',
+        'A vulnerability is a weakness; a threat is the agent or event that can exploit it',
+        'Threat = internal failure; vulnerability = external attack',
+      ]
+    },
     answer: 1,
-    explanation: 'Una amenaza explota una vulnerabilidad para causar impacto.'
+    explanation:
+      'La amenaza aprovecha la vulnerabilidad para provocar impacto sobre la confidencialidad, integridad o disponibilidad.',
   },
   {
     id: 18,
     category: 'fundamentals',
-    q: '¿Qué es un «token OAuth» comprometido?',
-    options: [
-      'Una contraseña filtrada',
-      'Un identificador que permite acceso a tu cuenta sin contraseña',
-      'Un virus que bloquea tu sesión'
-    ],
+    q: '¿Por qué es crítico que se filtre un token OAuth?',
+    options: {
+      ES: [
+        'Equivale a una contraseña filtrada',
+        'Concede acceso a la cuenta sin necesidad de contraseña ni MFA',
+        'Es un malware que bloquea la sesión',
+      ],
+      EN: [
+        'It is equivalent to a leaked password',
+        'It grants access to the account without the need for a password or MFA',
+        'It is a malware that blocks the session',
+      ]
+    },
     answer: 1,
-    explanation: 'Muchas apps de terceros usan tokens OAuth. Si filtran, un atacante puede acceder sin conocer tu contraseña.'
+    explanation:
+      'Muchos servicios de terceros usan tokens OAuth: con el token, un atacante actúa como el usuario sin conocer la contraseña; revócalo de inmediato en el proveedor.',
   },
   {
     id: 25,
     category: 'fundamentals',
-    q: 'En “Zero Trust”, la verificación de identidad ocurre:',
-    options: [
-      'Solo al iniciar sesión',
-      'De forma continua en cada petición',
-      'Una vez al día'
-    ],
+    q: 'En un modelo «Zero Trust» la verificación de identidad y contexto de riesgo se realiza:',
+    options: {
+      ES: ['Solo al iniciar sesión', 'De forma continua para cada petición', 'Una vez al día'],
+      EN: ['Only at login', 'Continuously for each request', 'Once a day'],
+    },
     answer: 1,
-    explanation: 'La red se considera insegura; se evalúa contexto y riesgo en tiempo real.'
+    explanation:
+      'La red se considera hostil por defecto; cada solicitud se valida en tiempo real'
   },
-  // CONTRASEÑAS
+
+  /* ────────── CONTRASEÑAS ────────── */
   {
     id: 3,
     category: 'passwords',
-    q: '¿Qué algoritmo de hash se recomienda hoy para guardar contraseñas?',
-    options: ['MD5', 'SHA-256', 'Argon2id'],
+    q: '¿Qué algoritmo de hash se recomienda actualmente para almacenar contraseñas?',
+    options: {
+      ES: ['MD5', 'SHA-256', 'Argon2id'],
+      EN: ['MD5', 'SHA-256', 'Argon2id'],
+    },
     answer: 2,
-    explanation: 'Argon2id (o, en su defecto, PBKDF2 con iteraciones altas) resiste ataques GPU.'
+    explanation:
+      'Argon2id —con parámetros exigentes (memoryCost ≥ 2¹⁶ KB, timeCost ≥ 3)— o, en su defecto, PBKDF2 con iteraciones altas, mitiga ataques de fuerza bruta acelerados por GPU/ASIC.',
   },
   {
     id: 4,
     category: 'passwords',
-    q: 'Para una contraseña, ¿qué aporta más entropía real?',
-    options: ['Longitud', 'Símbolos especiales', 'Cambios frecuentes'],
+    q: '¿Qué factor aporta más entropía real a una contraseña?',
+    options: {
+      ES: ['Longitud', 'Símbolos especiales', 'Cambios frecuentes'],
+      EN: ['Length', 'Special characters', 'Frequent changes'],
+    },
     answer: 0,
-    explanation: '16 caracteres aleatorios > 8 caracteres complejos.'
+    explanation:
+      'Una cadena aleatoria (no frase de diccionario) de 16+ caracteres es mucho más resistente que 8 caracteres “complejos”.',
   },
   {
     id: 19,
     category: 'passwords',
-    q: '¿Qué es una «passkey»?',
-    options: [
-      'Un archivo con todas tus contraseñas',
-      'Un estándar FIDO2 que reemplaza a la contraseña usando criptografía de clave pública',
-      'Una clave maestra del gestor de contraseñas'
-    ],
+    q: '¿Qué es exactamente una «passkey»?',
+    options: {
+      ES: [
+        'Un archivo que guarda todas tus contraseñas',
+        'Un mecanismo FIDO2 que sustituye a la contraseña mediante criptografía de clave pública',
+        'La clave maestra de tu gestor de contraseñas',
+      ],
+      EN: [
+        'A file that stores all your passwords',
+        'A FIDO2 mechanism that replaces the password using public key cryptography',
+        'The master key of your password manager',
+      ]
+    },
     answer: 1,
-    explanation: 'Passkeys funcionan con biometría o PIN local; la clave privada nunca sale del dispositivo.'
+    explanation:
+      'La clave privada permanece en el dispositivo y se desbloquea (biometría/PIN); el servidor solo recibe la clave pública.',
   },
 
-  // PHISHING
+  /* ────────── PHISHING ────────── */
   {
     id: 5,
     category: 'phishing',
-    q: '¿Cuál es la señal más fiable de un correo de phishing?',
-    options: ['Faltas de ortografía', 'Dominio del remitente alterado', 'Adjunto PDF'],
+    q: '¿Cuál suele ser el indicio técnico más fiable de un correo de phishing?',
+    options: {
+      ES: ['Errores ortográficos', 'Dominio del remitente ligeramente alterado (typosquatting)', 'Adjunto PDF'],
+      EN: ['Spelling errors', 'Slightly altered sender domain (typosquatting)', 'PDF attachment'],
+    },
     answer: 1,
-    explanation: 'Los atacantes clonan la apariencia, pero no el dominio exacto.'
+    explanation:
+      'La apariencia visual puede clonarse, pero el dominio legítimo no; pequeños cambios (p. ej. “rnicrosoft.com”) delatan el fraude.',
   },
   {
     id: 6,
     category: 'phishing',
-    q: '“Smishing” hace referencia a:',
-    options: ['Phishing por SMS', 'Ingeniería social telefónica', 'Phishing en redes sociales'],
+    q: 'El término «smishing» hace referencia a:',
+    options: {
+      ES: ['Phishing por SMS', 'Ingeniería social telefónica', 'Phishing en redes sociales'],
+      EN: ['SMS phishing', 'Phone social engineering', 'Social media phishing'],
+    },
     answer: 0,
-    explanation: 'Combina “SMS” + “phishing”.'
+    explanation:
+      'Combinación de “SMS” + “phishing”; incluye mensajes RCS y otras apps de mensajería que se comportan como SMS.',
   },
   {
     id: 20,
     category: 'phishing',
-    q: 'El término «BEC» se refiere a:',
-    options: [
-      'Business Email Compromise: fraude de transferencia bancaria',
-      'Botnet Email Campaign: envío masivo de spam',
-      'Binary Exploit Code: archivo adjunto malicioso'
-    ],
+    q: '«BEC» significa:',
+    options: {
+      ES: [
+        'Business Email Compromise: fraude mediante suplantación para desviar fondos',
+        'Botnet Email Campaign: envío masivo de spam',
+        'Binary Exploit Code: archivo adjunto malicioso',
+      ],
+      EN: [
+        'Business Email Compromise: fraud through impersonation to divert funds',
+        'Botnet Email Campaign: massive spam sending',
+        'Binary Exploit Code: malicious attachment',
+      ]
+    },
     answer: 0,
-    explanation: 'BEC suplanta ejecutivos o proveedores para cambiar cuentas bancarias.'
+    explanation:
+      'El atacante suplanta a ejecutivos o proveedores y convence al personal de finanzas para modificar datos bancarios.',
   },
   {
     id: 26,
     category: 'phishing',
     q: 'Un «kit de phishing» es:',
-    options: [
-      'Un paquete listo para clonar páginas y robar credenciales',
-      'Una herramienta de antivirus',
-      'Un informe de seguridad'
-    ],
+    options: {
+      ES: [
+        'Paquete listo para clonar webs y robar credenciales',
+        'Una suite antivirus',
+        'Un informe de seguridad',
+      ],
+      EN: [
+        'A ready-to-use package to clone websites and steal credentials',
+        'An antivirus suite',
+        'A security report',
+      ]
+    },
     answer: 0,
-    explanation: 'Se vende en foros underground, incluye HTML, scripts y panel de credenciales.'
+    explanation:
+      'Incluye HTML, scripts y panel de control; se vende en foros clandestinos y facilita a novatos montar campañas.',
   },
-  // PRIVACIDAD
+
+  /* ────────── PRIVACIDAD ────────── */
   {
     id: 7,
     category: 'privacy',
-    q: '¿Qué ajuste debes desactivar para evitar que te encuentren por tu número?',
-    options: ['Búsqueda inversa', 'Sincronización de contactos', 'Estado de actividad'],
+    q: 'Para evitar que desconocidos localicen tu perfil a partir de tu número de teléfono, debes desactivar:',
+    options: {
+      ES: ['Búsqueda inversa', 'Sincronización o coincidencia de contactos', 'Estado de actividad'],
+      EN: ['Reverse search', 'Contact synchronization or matching', 'Activity status'],
+    },
     answer: 1,
-    explanation: 'Mantén desactivada la coincidencia de teléfono/e-mail en redes sociales.'
+    explanation:
+      'Al impedir la coincidencia de contactos, evitas que alguien cargue tu número y encuentre tu cuenta.',
   },
   {
     id: 8,
     category: 'privacy',
-    q: 'RGPD otorga dos derechos clave, uno es portabilidad. ¿Cuál es el otro?',
-    options: ['Derecho al olvido', 'Right-to-repair', 'Derecho de réplica'],
+    q: 'El RGPD reconoce el derecho a la portabilidad y el derecho a:',
+    options: {
+      ES: ['Ser olvidado (supresión de datos)', 'Right-to-repair', 'Derecho de réplica'],
+      EN: ['Be forgotten (data erasure)', 'Right-to-repair', 'Right of reply'],
+    },
     answer: 0,
-    explanation: 'Puedes solicitar eliminación completa de tus datos personales.'
+    explanation:
+      'Puedes exigir que la organización elimine todos tus datos personales cuando deje de tener base legal para tratarlos.',
   },
   {
     id: 21,
     category: 'privacy',
-    q: 'La huella digital “browser fingerprint” se basa en:',
-    options: [
-      'Datos combinados de navegador, OS, fuentes y extensiones',
-      'Tu dirección IP solamente',
-      'Cookies de sesión'
-    ],
+    q: 'La técnica de «browser fingerprinting» se basa en:',
+    options: {
+      ES: [
+        'Combinar datos de navegador, sistema operativo, fuentes y extensiones',
+        'La dirección IP únicamente',
+        'Cookies de sesión',
+      ],
+      EN: [
+        'Combining browser, operating system, font and extension data',
+        'The IP address only',
+        'Session cookies',
+      ]
+    },
     answer: 0,
-    explanation: 'Permite rastrear usuarios incluso con cookies bloqueadas.'
+    explanation:
+      'El conjunto de parámetros crea un identificador casi único, incluso con cookies bloqueadas.',
   },
-  
-  // DISPOSITIVOS
+
+  /* ────────── DISPOSITIVOS ────────── */
   {
     id: 9,
     category: 'devices',
-    q: '¿Qué ventaja añade el cifrado de disco completo (BitLocker/FileVault)?',
-    options: ['Evita cualquier malware', 'Protege datos si el equipo se roba', 'Acelera el rendimiento SSD'],
+    q: '¿Qué ventaja principal aporta el cifrado de disco completo (BitLocker/FileVault)?',
+    options: {
+      ES: [
+        'Evita cualquier malware',
+        'Protege la información si el equipo se pierde o es robado',
+        'Aumenta el rendimiento del SSD',
+      ],
+      EN: [
+        'Prevents any malware',
+        'Protects information if the device is lost or stolen',
+        'Increases SSD performance',
+      ]
+    },
     answer: 1,
-    explanation: 'Sin la clave, los datos son ilegibles aunque extraigan el disco.'
+    explanation:
+      'Sin la clave de descifrado, los datos permanecen ilegibles aunque extraigan físicamente el disco.',
   },
   {
     id: 10,
     category: 'devices',
-    q: '¿Qué es el “OEM Unlock” en Android?',
-    options: ['Desbloquea la SIM', 'Permite abrir el bootloader', 'Activa modo desarrollador'],
+    q: 'Activar «OEM Unlock» en Android permite:',
+    options: {
+      ES: ['Desbloquear la SIM', 'Abrir el bootloader', 'Activar el modo desarrollador'],
+      EN: ['Unlock the SIM', 'Unlock the bootloader', 'Activate developer mode'],
+    },
     answer: 1,
-    explanation: 'Al habilitarlo pierdes protección Verified Boot.'
+    explanation:
+      'Al desbloquear el bootloader se desactiva Verified Boot y aumenta el riesgo de firmware malicioso.',
   },
   {
     id: 22,
     category: 'devices',
-    q: '¿Cuál es la función de «Secure Boot» en UEFI?',
-    options: [
-      'Arrancar más rápido el sistema',
-      'Permitir solo software firmado durante el arranque',
-      'Actualizar firmware del disco duro'
-    ],
+    q: 'La función de «Secure Boot» en sistemas UEFI es:',
+    options: {
+      ES: [
+        'Arrancar más rápido el sistema',
+        'Permitir solo software firmado durante el arranque',
+        'Actualizar firmware del disco duro',
+      ],
+      EN: [
+        'Boot the system faster',
+        'Allow only signed software during boot',
+        'Update hard drive firmware',
+      ]
+    },
     answer: 1,
-    explanation: 'Evita bootkits reemplazando el gestor de arranque por uno firmado.'
+    explanation:
+      'Evita que bootkits sustituyan el gestor de arranque por cargadores de arranque no firmados.',
   },
   {
     id: 27,
     category: 'devices',
-    q: '¿Qué estándar define la autenticación de huella digital y reconocimiento facial en la web?',
-    options: [
-      'WebAuthn/FIDO2',
-      'OAuth 1.0',
-      'OpenVPN'
-    ],
+    q: '¿Qué estándar habilita autenticación web mediante huella digital o reconocimiento facial sin contraseña?',
+    options: {
+      ES: ['WebAuthn / FIDO2', 'OAuth 1.0', 'OpenVPN'],
+      EN: ['WebAuthn / FIDO2', 'OAuth 1.0', 'OpenVPN'],
+    },
     answer: 0,
-    explanation: 'WebAuthn es parte de FIDO2 y permite autenticación sin contraseña con biometría o llave de hardware.',
+    explanation:
+      'WebAuthn, parte de FIDO2, usa criptografía de clave pública y factores locales (biometría, llave de hardware).',
   },
- 
-  // REDES
+
+  /* ────────── REDES ────────── */
   {
     id: 11,
     category: 'networks',
-    q: '¿Qué puerto TCP usa HTTPS por defecto?',
-    options: ['80', '443', '22'],
+    q: '¿Qué puerto TCP utiliza HTTPS por defecto?',
+    options: {
+      ES: ['80', '443', '22'],
+      EN: ['80', '443', '22'],
+    },
     answer: 1,
-    explanation: 'HTTP sin cifrar usa 80; SSH 22.'
+    explanation: 'HTTP sin cifrar usa 80 y SSH utiliza 22.',
   },
   {
     id: 12,
     category: 'networks',
-    q: '¿Cuál es la diferencia clave entre IDS e IPS?',
-    options: ['IDS bloquea; IPS solo avisa', 'IDS detecta; IPS detecta y bloquea', 'Ninguna'],
+    q: '¿Cuál es la diferencia clave entre un IDS y un IPS?',
+    options: {
+      ES: ['IDS bloquea y IPS solo alerta', 'IDS detecta; IPS detecta y bloquea', 'No hay diferencia'],
+      EN: ['IDS blocks and IPS only alerts', 'IDS detects; IPS detects and blocks', 'No difference'],
+    },
     answer: 1,
-    explanation: 'IPS suele ir “en línea”, deteniendo tráfico malicioso.'
+    explanation:
+      'El IPS se coloca «en línea» y puede descartar tráfico malicioso en tiempo real.',
   },
   {
     id: 23,
     category: 'networks',
-    q: '¿Qué protocolo cifra los nombres de dominio para evitar espionaje DNS?',
-    options: [
-      'DoH (DNS over HTTPS)',
-      'FTP',
-      'SNMPv2'
-    ],
+    q: '¿Qué protocolo cifra las consultas de nombres de dominio para impedir el espionaje DNS?',
+    options: {
+      ES: ['DoH (DNS over HTTPS)', 'FTP', 'SNMPv2'],
+      EN: ['DoH (DNS over HTTPS)', 'FTP', 'SNMPv2'],
+    },
     answer: 0,
-    explanation: 'DoH túnela las peticiones DNS sobre HTTPS 443.'
+    explanation:
+      'DoH encapsula las peticiones DNS dentro de HTTPS en el puerto 443; DoT (DNS over TLS) es otra opción popular, aunque menos adoptada por los navegadores.',
   },
-  // BACKUPS
+
+  /* ────────── BACKUPS ────────── */
   {
     id: 13,
     category: 'backups',
-    q: 'La regla 3-2-1-1-0 añade un “1” extra. ¿Qué significa?',
-    options: ['Una copia incremental', 'Una copia inmutable / air-gapped', 'Un test anual'],
+    q: 'En la regla 3-2-1-1-0, el «1» adicional significa:',
+    options: {
+      ES: ['Backup incremental', 'Copia inmutable o aislada (air-gapped)', 'Test anual'],
+      EN: ['Incremental backup', 'Immutable or isolated copy (air-gapped)', 'Annual test'],
+    },
     answer: 1,
-    explanation: 'Garantiza resistencia a ransomware.'
+    explanation:
+      'Una copia inmutable/off-line evita que el ransomware cifre o borre las copias de seguridad.',
   },
   {
     id: 14,
     category: 'backups',
-    q: '¿Con qué frecuencia debes probar una restauración de backups críticos?',
-    options: ['Anual', 'Mensual', 'Nunca, si está automatizado'],
+    q: '¿Con qué frecuencia debería probarse la restauración de los backups críticos?',
+    options: {
+      ES: ['Anualmente', 'Trimestralmente', 'Nunca, si está automatizado'],
+      EN: ['Annually', 'Quarterly', 'Never, if automated'],
+    },
     answer: 1,
-    explanation: 'Las pruebas detectan corrupciones y tiempos reales de recuperación.'
+    explanation:
+      'Las pruebas trimestrales detectan corrupciones y verifican los tiempos reales de recuperación (RTO/RPO).',
   },
   {
     id: 24,
     category: 'backups',
-    q: '¿Qué es un snapshot inmutable?',
-    options: [
-      'Copia de solo lectura que no puede alterarse ni borrarse dentro del período definido',
-      'Instantánea editable de un sistema',
-      'Backup incremental diferencial'
-    ],
+    q: 'Un «snapshot inmutable» es:',
+    options: {
+      ES: [
+        'Copia de solo lectura que no puede modificarse ni borrarse durante un periodo definido',
+        'Instantánea editable del sistema',
+        'Backup incremental diferencial',
+      ],
+      EN: [
+        'Read-only copy that cannot be modified or deleted for a defined period',
+        'Editable system snapshot',
+        'Incremental differential backup',
+      ]
+    },
     answer: 0,
-    explanation: 'Protege contra ransomware que intenta cifrar o borrar backups.'
+    explanation:
+      'Proporciona resistencia frente a ransomware y borrados accidentales.',
   },
-  
-  // BONUS FUNDAMENTOS
+
+  /* ────────── BONUS FUNDAMENTOS ────────── */
   {
     id: 15,
     category: 'fundamentals',
-    q: '¿Qué es “Zero Trust”?',
-    options: [
-      'Red sin contraseñas',
-      'Modelo que nunca confía y siempre verifica cada petición',
-      'VPN corporativa permanente'
-    ],
+    q: 'Definición concisa de «Zero Trust»:',
+    options: {
+      ES: [
+        'Red sin contraseñas',
+        'Modelo que nunca confía y siempre verifica cada solicitud, independientemente de la ubicación',
+        'VPN corporativa permanente',
+      ],
+      EN: [
+        'Passwordless network',
+        'Model that never trusts and always verifies each request, regardless of location',
+        'Permanent corporate VPN',
+      ]
+    },
     answer: 1,
-    explanation: 'Se asume que la red está comprometida; cada acceso requiere autenticación y evaluación continua.'
-  }
+    explanation:
+      'Asume compromiso interno y externo; combina autenticación fuerte + microsegmentación + análisis continuo'
+  },
 ];
-
 
 interface QuestionResultProps {
   question: Question;
@@ -321,11 +458,11 @@ const QuestionResult = ({ question }: QuestionResultProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-red-50/80 p-4 rounded-lg border border-red-100">
               <p className="text-sm font-medium text-red-800 mb-1">Tu respuesta:</p>
-              <p className="text-gray-900">{question.options[question.userAnswer || 0]}</p>
+              <p className="text-gray-900">{question.options.ES[question.userAnswer || 0]}</p>
             </div>
             <div className="bg-green-50/80 p-4 rounded-lg border border-green-100">
               <p className="text-sm font-medium text-green-800 mb-1">Correcta:</p>
-              <p className="text-gray-900">{question.options[question.answer]}</p>
+              <p className="text-gray-900">{question.options.ES[question.answer]}</p>
             </div>
           </div>
           
@@ -346,6 +483,8 @@ interface ResultsScreenProps {
 }
 
 const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
+  const { lang } = useLanguage();
+  const t = securityQuizTranslations[lang];
   const correctPercentage = Math.round((score / questions.length) * 100);
   const [shareState, setShareState] = useState<'idle' | 'copying' | 'copied' | 'error'>('idle');
   const [showShareOptions, setShowShareOptions] = useState(false);
@@ -354,14 +493,14 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
     try {
       setShareState('copying');
       
-      const resultText = `🔐 Resultado Test Ciberseguridad:\n\n${score}/${questions.length} (${correctPercentage}%)\n\n${correctPercentage >= 80 ? '¡Excelente! 🎉' : correctPercentage >= 60 ? '¡Buen trabajo! 👍' : '¡Sigue practicando! 💪'}\n\nRealiza tu propio test en: ${window.location.origin}/recursos/herramientas/test-ciberseguridad`;
+      const resultText = `🔐 ${t.quizResults.score}: ${score}/${questions.length} (${correctPercentage}%)\n\n${correctPercentage >= 80 ? t.quizResults.excellent : correctPercentage >= 60 ? t.quizResults.goodJob : t.quizResults.keepPracticing}\n\nRealiza tu propio test en: ${window.location.origin}/recursos/herramientas/test-ciberseguridad`;
 
       if (method === 'clipboard') {
         await navigator.clipboard.writeText(resultText);
       } else if (method === 'whatsapp') {
         window.open(`https://wa.me/?text=${encodeURIComponent(resultText)}`);
       } else if (method === 'email') {
-        window.open(`mailto:?subject=Resultado Test Ciberseguridad&body=${encodeURIComponent(resultText)}`);
+        window.open(`mailto:?subject=${t.quizResults.emailSubject}&body=${encodeURIComponent(resultText)}`);
       }
       
       setShareState('copied');
@@ -379,14 +518,14 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
           <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-r from-blue-100 to-green-100 mb-4 shadow-inner">
             <span className="text-3xl font-bold text-gray-800">{correctPercentage}%</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Resultados</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">{t.quizResults.score}: {score} / {questions.length}</h1>
           <div className="text-4xl font-bold text-gray-800">
             {score}<span className="text-2xl text-gray-600">/{questions.length}</span>
           </div>
           <p className="text-gray-600 mt-2">
-            {correctPercentage >= 80 ? '¡Excelente! 🎉' : 
-             correctPercentage >= 60 ? '¡Buen trabajo! 👍' : 
-             '¡Sigue practicando! 💪'}
+            {correctPercentage >= 80 ? t.quizResults.excellent : 
+             correctPercentage >= 60 ? t.quizResults.goodJob : 
+             t.quizResults.keepPracticing}
           </p>
         </div>
 
@@ -468,11 +607,30 @@ interface SecurityQuizProps {
 }
 
 const shuffleArray = (array: any[]) => {
-  return [...array].sort(() => Math.random() - 0.5);
+  if (!array || !Array.isArray(array)) return array;
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 };
 
 export default function SecurityQuiz() {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(Object.keys(questionCategories));
+  const { lang } = useLanguage();
+  const t = securityQuizTranslations[lang];
+
+  const categories = {
+    fundamentals: t.categories.fundamentals,
+    passwords: t.categories.passwords,
+    phishing: t.categories.phishing,
+    privacy: t.categories.privacy,
+    devices: t.categories.devices,
+    networks: t.categories.networks,
+    backups: t.categories.backups
+  } as const;
+
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(Object.keys(categories));
   const [quizStarted, setQuizStarted] = useState(false);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number>(-1);
@@ -501,7 +659,7 @@ export default function SecurityQuiz() {
   const safeCurrent = Math.min(current, filteredQuestions.length - 1);
   const question = filteredQuestions[safeCurrent] || {
     q: 'Pregunta no disponible',
-    options: [],
+    options: { ES: [], EN: [] },
     answer: 0,
     explanation: '',
     category: 'basics'
@@ -534,22 +692,34 @@ export default function SecurityQuiz() {
   };
 
   const startQuiz = () => {
-    if (selectedCategories.length === 0) return;
-    
-    // Get questions from selected categories and shuffle them
-    const categoryQuestions = questions.filter(q => selectedCategories.includes(q.category));
-    const shuffledQuestions = shuffleArray(categoryQuestions).map((q, index) => ({
+    // Filter questions by selected categories
+    const questionsInCategories = selectedCategories.flatMap(category => {
+      const categoryQuestions = questions.filter(q => q.category === category);
+      return categoryQuestions.length > 0 ? categoryQuestions : [];
+    });
+
+    if (questionsInCategories.length === 0) {
+      console.error('No questions found for selected categories');
+      return;
+    }
+
+    // Shuffle and prepare questions
+    const shuffledQuestions = questionsInCategories.map((q, index) => ({
       ...q,
       questionNumber: index + 1,
-      // Shuffle options but keep track of correct answer index
-      options: shuffleArray(q.options),
-      answer: q.options.indexOf(q.options[q.answer]) // Update answer index after shuffle
+      options: {
+        ES: shuffleArray([...q.options.ES]),
+        EN: shuffleArray([...q.options.EN])
+      },
+      answer: q.answer // Keep original answer index
     }));
-    
+
     setFilteredQuestions(shuffledQuestions);
-    setQuizStarted(true);
     setCurrent(0);
     setSelected(-1);
+    setScore(0);
+    setShowResults(false);
+    setQuizStarted(true);
   };
 
   const handleNext = () => {
@@ -600,11 +770,14 @@ export default function SecurityQuiz() {
   const handleRestart = () => {
     // Reuse same categories but reshuffle questions
     const categoryQuestions = questions.filter(q => selectedCategories.includes(q.category));
-    const shuffledQuestions = shuffleArray(categoryQuestions).map((q, index) => ({
+    const shuffledQuestions = categoryQuestions.map((q, index) => ({
       ...q,
       questionNumber: index + 1,
-      options: shuffleArray(q.options),
-      answer: q.options.indexOf(q.options[q.answer])
+      options: {
+        ES: shuffleArray([...q.options.ES]),
+        EN: shuffleArray([...q.options.EN])
+      },
+      answer: q.answer // Keep original answer index
     }));
     
     setFilteredQuestions(shuffledQuestions);
@@ -628,20 +801,22 @@ export default function SecurityQuiz() {
               </button>
             </div>
             
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Test de Ciberseguridad</h1>
-            <p className="text-gray-600 mb-6">Selecciona las categorías que deseas incluir en el test:</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">{t.pageTitle}</h1>
+            <p className="text-gray-600 mb-6">{t.pageDescription}</p>
             
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-              {Object.entries(questionCategories).map(([key, category]) => (
+              {Object.entries(categories).map(([key, categoryName]) => (
                 <button
                   key={key}
                   onClick={() => handleCategorySelect(key)}
-                  className={`flex flex-col items-center p-4 rounded-lg border transition-all ${selectedCategories.includes(key) 
+                  className={`flex flex-col items-center justify-center p-4 border rounded-lg transition-colors ${selectedCategories.includes(key)
                     ? 'bg-blue-50 border-blue-300 text-blue-700' 
                     : 'bg-white border-gray-200 hover:border-blue-200 text-gray-700'}`}
                 >
-                  <div className="text-2xl mb-2">{category.icon}</div>
-                  <span className="text-sm font-medium">{category.name}</span>
+                  <div className="text-2xl mb-2">
+                    {questionCategories[key as keyof typeof questionCategories].icon}
+                  </div>
+                  <span className="text-sm font-medium">{categoryName}</span>
                 </button>
               ))}
             </div>
@@ -651,7 +826,7 @@ export default function SecurityQuiz() {
               disabled={selectedCategories.length === 0}
               className={`w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md`}
             >
-              Comenzar Test
+              {t.startQuiz}
             </button>
           </div>
         </div>
@@ -676,14 +851,19 @@ export default function SecurityQuiz() {
           {/* Simple back button at top */}
           <button
             onClick={() => setQuizStarted(false)}
-            className="mb-6 text-blue-600 hover:text-blue-800"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-6"
           >
-            ← Volver
+            <ArrowLeft className="w-4 h-4" />
+            {t.buttons.backToTools[lang]}
           </button>
           
-          <div className="flex justify-between text-sm text-gray-600 mb-4">
-            <span>Pregunta {safeCurrent + 1} de {filteredQuestions.length}</span>
-            <span>{Math.round(progress)}% completado</span>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 w-full">
+            <div className="text-sm font-medium text-gray-700">
+              {t.progress.question[lang]} {current + 1} {t.progress.of[lang]} {filteredQuestions.length}
+            </div>
+            <div className="text-sm font-medium text-gray-700">
+              {Math.round(((current + 1) / filteredQuestions.length) * 100)}% {t.progress.completed[lang]}
+            </div>
           </div>
           
           <div className="w-full bg-gray-200 h-2 rounded-full mb-6">
@@ -696,27 +876,22 @@ export default function SecurityQuiz() {
           <h2 className="text-xl font-semibold text-gray-900 mb-6">{question?.q}</h2>
           
           <div className="space-y-3 mb-6">
-            {question?.options?.map((opt, idx) => (
+            {question?.options?.ES?.map((option, index) => (
               <button
-                key={idx}
-                onClick={() => !showExplanation && setSelected(idx)}
-                className={`w-full text-left p-4 rounded-lg border transition ${selected === idx 
-                  ? showExplanation 
-                    ? idx === question.answer 
-                      ? 'bg-green-50 border-green-200 text-gray-900' 
-                      : 'bg-red-50 border-red-200 text-gray-900'
-                    : 'bg-blue-50 border-blue-200 text-gray-900'
-                  : 'bg-white border-gray-200 hover:border-blue-200 text-gray-800'}`}
-                disabled={showExplanation}
+                key={index}
+                onClick={() => setSelected(index)}
+                className={`w-full text-left p-4 border rounded-lg transition-colors ${selected === index
+                  ? 'bg-blue-50 border-blue-300 text-blue-700'
+                  : 'bg-white border-gray-200 hover:border-blue-200 text-gray-700'}`}
               >
-                {opt}
+                {option}
               </button>
             ))}
           </div>
           
           {showExplanation && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <h3 className="font-medium text-blue-800 mb-2">Explicación:</h3>
+              <h3 className="font-medium text-blue-800 mb-2">{t.quizResults.explanation}</h3>
               <p className="text-gray-900">{question?.explanation}</p>
             </div>
           )}
@@ -728,7 +903,7 @@ export default function SecurityQuiz() {
                 className="flex items-center justify-center px-4 py-3 sm:px-6 bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition-colors shadow-sm w-full sm:w-auto"
               >
                 <ArrowLeft className="w-5 h-5 mr-2" />
-                Atrás
+                {t.buttons.back[lang]}
               </button>
             ) : (
               <div className="hidden sm:block" />
@@ -745,7 +920,7 @@ export default function SecurityQuiz() {
                 }}
                 className="flex items-center justify-center px-4 py-3 sm:px-6 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md w-full sm:w-auto"
               >
-                {current < filteredQuestions.length - 1 ? 'Siguiente' : 'Ver resultados'}
+                {current < filteredQuestions.length - 1 ? t.buttons.next[lang] : t.buttons.viewResults[lang]}
                 <ArrowRight className="w-5 h-5 ml-2" />
               </button>
 
@@ -758,7 +933,7 @@ export default function SecurityQuiz() {
                 className="flex items-center justify-center px-4 py-3 bg-red-100 text-red-700 font-medium rounded-lg hover:bg-red-200 transition-colors shadow-sm w-full sm:w-auto"
               >
                 <RefreshCw className="w-5 h-5 mr-2" />
-                Reiniciar
+                {t.buttons.restart[lang]}
               </button>
             </div>
           </div>

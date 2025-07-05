@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useLanguage } from '../lib/LanguageContext';
 import { useI18n } from '../lib/i18n';
+import type { TranslationKey } from '../lib/i18n';
 
 const navKeys = [
   { key: 'purpose', href: '/about', name: 'Sobre nosotros' },
@@ -14,7 +15,7 @@ const navKeys = [
 ];
 
 export default function Navbar() {
-  const t = useI18n();
+  const { t } = useI18n();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -52,7 +53,7 @@ export default function Navbar() {
                     className={`relative px-4 py-2 text-gray-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition-all duration-200 hover:text-blue-600 hover:bg-blue-50 group ${isActive ? 'text-blue-700' : ''}`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    {t(item.key as any)}
+                    {t(item.key as TranslationKey)}
                     {/* Underline animada si activo */}
                     <span className={`absolute left-2 right-2 -bottom-1 h-0.5 rounded bg-blue-500 transition-all duration-300 ${isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'} group-hover:opacity-60 group-hover:scale-x-100`}></span>
                   </Link>
@@ -122,7 +123,7 @@ export default function Navbar() {
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {t(item.key as any)}
+                  {t(item.key as TranslationKey)}
                 </Link>
               );
             })}
