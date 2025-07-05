@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1600" height="1200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#051937" />
+      <stop offset="100%" stop-color="#003566" />
+    </linearGradient>
+    <pattern id="diag" patternUnits="userSpaceOnUse" width="40" height="40" patternTransform="rotate(45)">
+      <rect width="20" height="40" fill="rgba(255,255,255,0.03)" />
+    </pattern>
+    <mask id="mask"><rect width="100%" height="100%" fill="url(#diag)" /></mask>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad)" />
+  <rect width="100%" height="100%" fill="url(#grad)" mask="url(#mask)" />
+</svg>

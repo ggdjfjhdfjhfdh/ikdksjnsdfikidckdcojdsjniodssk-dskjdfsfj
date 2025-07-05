@@ -481,6 +481,8 @@ const translations = {
     passwordCheckerCopy: 'Copiar',
     passwordCheckerCopied: 'Copiada',
     passwordCheckerLength: 'Longitud',
+    keyBenefits: 'Beneficios clave',
+    learnMore: 'Saber más',
     ...passwordCheckerTranslations.ES
   },
   EN: {
@@ -959,6 +961,8 @@ const translations = {
     passwordCheckerCopy: 'Copy',
     passwordCheckerCopied: 'Copied',
     passwordCheckerLength: 'Length',
+    keyBenefits: 'Key Benefits',
+    learnMore: 'Learn More',
     ...passwordCheckerTranslations.EN
   },
 };
