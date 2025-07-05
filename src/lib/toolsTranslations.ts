@@ -9,6 +9,7 @@ export const toolsTranslations = {
     privacyPolicy: 'Política de Privacidad',
     cookiePolicy: 'Política de Cookies',
     copyright: ' 2025 Se.Sec.Pro. Todos los derechos reservados.',
+    exploreSolutions: 'Explorar soluciones',
     passwordChecker: {
       title: 'Comprobador de Contraseñas',
       description: 'Comprueba la fortaleza de tus contraseñas al instante'
@@ -28,6 +29,7 @@ export const toolsTranslations = {
     privacyPolicy: 'Privacy Policy',
     cookiePolicy: 'Cookie Policy',
     copyright: ' 2025 Se.Sec.Pro. All rights reserved.',
+    exploreSolutions: 'Explore solutions',
     passwordChecker: {
       title: 'Password Checker',
       description: 'Check your password strength instantly'

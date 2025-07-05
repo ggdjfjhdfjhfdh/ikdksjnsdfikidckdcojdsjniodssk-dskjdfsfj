@@ -111,7 +111,7 @@ export default function HomePage(): React.ReactElement {
               {t('askUs')}
             </Link>
             <Link href="/solutions" className="bg-white/90 hover:bg-gray-100 text-cyan-600 font-bold py-3 px-8 rounded-full border border-cyan-400 shadow transition-all text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 flex items-center justify-center">
-              {t('seeSolutions')}
+              {t('exploreSolutions')}
             </Link>
           </div>
 
@@ -210,7 +210,7 @@ export default function HomePage(): React.ReactElement {
               href="/solutions"
               className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 flex items-center justify-center"
             >
-              Explorar soluciones
+              {t('exploreSolutions')}
             </Link>
           </div>
         </div>
