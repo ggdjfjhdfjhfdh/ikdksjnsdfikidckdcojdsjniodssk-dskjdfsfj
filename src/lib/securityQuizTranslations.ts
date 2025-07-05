@@ -13,14 +13,50 @@ export const securityQuizTranslations = {
       backups: 'Copias de seguridad'
     },
     quizResults: {
-      score: 'Puntuación',
-      correctAnswers: 'respuestas correctas',
-      tryAgain: 'Intentar de nuevo',
-      explanation: 'Explicación',
-      excellent: '¡Excelente! 🎉',
-      goodJob: '¡Buen trabajo! 👍',
-      keepPracticing: '¡Sigue practicando! 💪',
-      emailSubject: 'Resultado Test Ciberseguridad'
+      score: {
+        ES: 'Puntuación',
+        EN: 'Score'
+      },
+      correctAnswers: {
+        ES: 'respuestas correctas',
+        EN: 'correct answers'
+      },
+      tryAgain: {
+        ES: 'Intentar de nuevo',
+        EN: 'Try again'
+      },
+      explanation: {
+        ES: 'Explicación',
+        EN: 'Explanation'
+      },
+      excellent: {
+        ES: '¡Excelente! 🎉',
+        EN: 'Excellent! 🎉'
+      },
+      goodJob: {
+        ES: '¡Buen trabajo! 👍',
+        EN: 'Good job! 👍'
+      },
+      keepPracticing: {
+        ES: '¡Sigue practicando! 💪',
+        EN: 'Keep practicing! 💪'
+      },
+      emailSubject: {
+        ES: 'Resultado Test Ciberseguridad',
+        EN: 'Cybersecurity Quiz Results'
+      },
+      yourAnswer: {
+        ES: 'Tu respuesta',
+        EN: 'Your answer'
+      },
+      correct: {
+        ES: 'Correcta',
+        EN: 'Correct'
+      },
+      incorrect: {
+        ES: 'Incorrecta',
+        EN: 'Incorrect'
+      }
     },
     questions: {
       fundamentals: [
@@ -226,6 +262,29 @@ export const securityQuizTranslations = {
             ES: 'Un respaldo de datos es una copia de seguridad de los datos que se almacena en un dispositivo externo o en la nube, para poder recuperarlos en caso de pérdida o daño.',
             EN: 'A data backup is a security copy of the data that is stored on an external device or in the cloud, so that it can be recovered in case of loss or damage.'
           }
+        },
+        {
+          q: {
+            ES: '¿Qué es la regla 3-2-1 para copias de seguridad?',
+            EN: 'What is the 3-2-1 backup rule?'
+          },
+          options: {
+            ES: [
+              '3 copias, 2 formatos, 1 ubicación',
+              '3 copias, 2 ubicaciones, 1 fuera del sitio',
+              '3 días, 2 horas, 1 minuto'
+            ],
+            EN: [
+              '3 copies, 2 formats, 1 location',
+              '3 copies, 2 locations, 1 off-site',
+              '3 days, 2 hours, 1 minute'
+            ]
+          },
+          answer: 1,
+          explanation: {
+            ES: 'La regla 3-2-1 recomienda: 3 copias de los datos, en 2 tipos diferentes de medios de almacenamiento, con al menos 1 copia almacenada fuera del sitio.',
+            EN: 'The 3-2-1 rule recommends: 3 copies of data, on 2 different storage media types, with at least 1 copy stored off-site.'
+          }
         }
       ]
     },
@@ -249,6 +308,60 @@ export const securityQuizTranslations = {
       backToTools: {
         ES: 'Volver',
         EN: 'Back'
+      },
+      share: {
+        ES: 'Compartir',
+        EN: 'Share'
+      }
+    },
+    results: {
+      yourScore: {
+        ES: 'Tu puntuación',
+        EN: 'Your score'
+      },
+      outOf: {
+        ES: 'de',
+        EN: 'out of'
+      },
+      questionsCorrect: {
+        ES: 'preguntas correctas',
+        EN: 'questions correct'
+      },
+      reviewQuestions: {
+        ES: 'Revisión de preguntas',
+        EN: 'Question review'
+      },
+      yourAnswer: {
+        ES: 'Tu respuesta',
+        EN: 'Your answer'
+      },
+      correctAnswer: {
+        ES: 'Respuesta correcta',
+        EN: 'Correct answer'
+      },
+      explanation: {
+        ES: 'Explicación',
+        EN: 'Explanation'
+      },
+      excellent: {
+        ES: '¡Excelente!',
+        EN: 'Excellent!'
+      },
+      good: {
+        ES: '¡Buen trabajo!',
+        EN: 'Good job!'
+      },
+      average: {
+        ES: 'Promedio',
+        EN: 'Average'
+      },
+      needsImprovement: {
+        ES: 'Necesita mejorar',
+        EN: 'Needs improvement'
+      },
+      shareSuccess: {
+        ES: 'Enlace copiado al portapapeles',
+        EN: 'Link copied to clipboard'
       }
     },
     progress: {
@@ -326,14 +439,50 @@ export const securityQuizTranslations = {
       backups: 'Backups'
     },
     quizResults: {
-      score: 'Score',
-      correctAnswers: 'correct answers',
-      tryAgain: 'Try again',
-      explanation: 'Explanation',
-      excellent: 'Excellent! 🎉',
-      goodJob: 'Good job! 👍',
-      keepPracticing: 'Keep practicing! 💪',
-      emailSubject: 'Cybersecurity Quiz Results'
+      score: {
+        ES: 'Puntuación',
+        EN: 'Score'
+      },
+      correctAnswers: {
+        ES: 'respuestas correctas',
+        EN: 'correct answers'
+      },
+      tryAgain: {
+        ES: 'Intentar de nuevo',
+        EN: 'Try again'
+      },
+      explanation: {
+        ES: 'Explicación',
+        EN: 'Explanation'
+      },
+      excellent: {
+        ES: '¡Excelente! 🎉',
+        EN: 'Excellent! 🎉'
+      },
+      goodJob: {
+        ES: '¡Buen trabajo! 👍',
+        EN: 'Good job! 👍'
+      },
+      keepPracticing: {
+        ES: '¡Sigue practicando! 💪',
+        EN: 'Keep practicing! 💪'
+      },
+      emailSubject: {
+        ES: 'Resultado Test Ciberseguridad',
+        EN: 'Cybersecurity Quiz Results'
+      },
+      yourAnswer: {
+        ES: 'Tu respuesta',
+        EN: 'Your answer'
+      },
+      correct: {
+        ES: 'Correcta',
+        EN: 'Correct'
+      },
+      incorrect: {
+        ES: 'Incorrecta',
+        EN: 'Incorrect'
+      }
     },
     questions: {
       fundamentals: [
@@ -539,6 +688,29 @@ export const securityQuizTranslations = {
             ES: 'Un respaldo de datos es una copia de seguridad de los datos que se almacena en un dispositivo externo o en la nube, para poder recuperarlos en caso de pérdida o daño.',
             EN: 'A data backup is a security copy of the data that is stored on an external device or in the cloud, so that it can be recovered in case of loss or damage.'
           }
+        },
+        {
+          q: {
+            ES: '¿Qué es la regla 3-2-1 para copias de seguridad?',
+            EN: 'What is the 3-2-1 backup rule?'
+          },
+          options: {
+            ES: [
+              '3 copias, 2 formatos, 1 ubicación',
+              '3 copias, 2 ubicaciones, 1 fuera del sitio',
+              '3 días, 2 horas, 1 minuto'
+            ],
+            EN: [
+              '3 copies, 2 formats, 1 location',
+              '3 copies, 2 locations, 1 off-site',
+              '3 days, 2 hours, 1 minute'
+            ]
+          },
+          answer: 1,
+          explanation: {
+            ES: 'La regla 3-2-1 recomienda: 3 copias de los datos, en 2 tipos diferentes de medios de almacenamiento, con al menos 1 copia almacenada fuera del sitio.',
+            EN: 'The 3-2-1 rule recommends: 3 copies of data, on 2 different storage media types, with at least 1 copy stored off-site.'
+          }
         }
       ]
     },
@@ -562,6 +734,60 @@ export const securityQuizTranslations = {
       backToTools: {
         ES: 'Volver',
         EN: 'Back'
+      },
+      share: {
+        ES: 'Compartir',
+        EN: 'Share'
+      }
+    },
+    results: {
+      yourScore: {
+        ES: 'Tu puntuación',
+        EN: 'Your score'
+      },
+      outOf: {
+        ES: 'de',
+        EN: 'out of'
+      },
+      questionsCorrect: {
+        ES: 'preguntas correctas',
+        EN: 'questions correct'
+      },
+      reviewQuestions: {
+        ES: 'Revisión de preguntas',
+        EN: 'Question review'
+      },
+      yourAnswer: {
+        ES: 'Tu respuesta',
+        EN: 'Your answer'
+      },
+      correctAnswer: {
+        ES: 'Respuesta correcta',
+        EN: 'Correct answer'
+      },
+      explanation: {
+        ES: 'Explicación',
+        EN: 'Explanation'
+      },
+      excellent: {
+        ES: '¡Excelente!',
+        EN: 'Excellent!'
+      },
+      good: {
+        ES: '¡Buen trabajo!',
+        EN: 'Good job!'
+      },
+      average: {
+        ES: 'Promedio',
+        EN: 'Average'
+      },
+      needsImprovement: {
+        ES: 'Necesita mejorar',
+        EN: 'Needs improvement'
+      },
+      shareSuccess: {
+        ES: 'Enlace copiado al portapapeles',
+        EN: 'Link copied to clipboard'
       }
     },
     progress: {
