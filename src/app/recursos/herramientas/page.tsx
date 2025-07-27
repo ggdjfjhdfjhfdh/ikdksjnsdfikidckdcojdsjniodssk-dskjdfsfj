@@ -6,8 +6,8 @@ import { useLanguage } from '@/lib/LanguageContext';
 import { toolsTranslations } from '@/lib/toolsTranslations';
 
 export default function HerramientasPage() {
-  const { lang } = useLanguage();
-  const t = toolsTranslations[lang];
+  const { language } = useLanguage();
+  const t = toolsTranslations[language];
 
   const tools = [
     {

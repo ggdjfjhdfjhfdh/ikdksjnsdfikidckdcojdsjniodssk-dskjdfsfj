@@ -620,20 +620,20 @@ interface ResultsScreenProps {
 }
 
 const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
-  const { lang } = useLanguage();
-  const t = securityQuizTranslations[lang as 'ES' | 'EN'];
+  const { language } = useLanguage();
+  const t = securityQuizTranslations[language as 'ES' | 'EN'];
   
   const percentage = Math.round((score / questions.length) * 100);
   const performanceMessage = 
-    percentage >= 90 ? t.results.excellent[lang as 'ES' | 'EN'] :
-    percentage >= 70 ? t.results.good[lang as 'ES' | 'EN'] :
-    percentage >= 50 ? t.results.average[lang as 'ES' | 'EN'] : t.results.needsImprovement[lang as 'ES' | 'EN'];
+    percentage >= 90 ? t.results.excellent[language as 'ES' | 'EN'] :
+    percentage >= 70 ? t.results.good[language as 'ES' | 'EN'] :
+    percentage >= 50 ? t.results.average[language as 'ES' | 'EN'] : t.results.needsImprovement[language as 'ES' | 'EN'];
 
   const handleShare = async () => {
     try {
       const shareData: ShareData = {
-        title: String(t.pageTitle[lang as keyof typeof t.pageTitle]),
-        text: `${String(t.results.yourScore[lang as keyof typeof t.results.yourScore])}: ${score} ${String(t.results.outOf[lang as keyof typeof t.results.outOf])} ${questions.length} (${percentage}%)`,
+        title: String(t.pageTitle[language as keyof typeof t.pageTitle]),
+        text: `${String(t.results.yourScore[language as keyof typeof t.results.yourScore])}: ${score} ${String(t.results.outOf[language as keyof typeof t.results.outOf])} ${questions.length} (${percentage}%)`,
         url: window.location.href
       };
       
@@ -642,7 +642,7 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
       } else {
         // Fallback for browsers that don't support Web Share API
         await navigator.clipboard.writeText(`${shareData.text} - ${shareData.url}`);
-        alert(t.results.shareSuccess[lang as keyof typeof t.results.shareSuccess]);
+        alert(t.results.shareSuccess[language as keyof typeof t.results.shareSuccess]);
       }
     } catch (err) {
       console.error('Error sharing:', err);
@@ -685,9 +685,9 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
             </svg>
           </div>
           
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">{t.results.yourScore[lang as 'ES' | 'EN']}</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">{t.results.yourScore[language as 'ES' | 'EN']}</h2>
           <p className="text-lg text-gray-600 mb-4">
-            {score} {t.results.outOf[lang as 'ES' | 'EN']} {questions.length} {t.results.questionsCorrect[lang as 'ES' | 'EN']}
+            {score} {t.results.outOf[language as 'ES' | 'EN']} {questions.length} {t.results.questionsCorrect[language as 'ES' | 'EN']}
           </p>
           <div className="inline-block px-4 py-2 bg-blue-50 rounded-full">
             <p className="text-blue-600 font-medium">{performanceMessage}</p>
@@ -696,7 +696,7 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
 
         {/* Questions Review */}
         <div className="space-y-4 mb-8">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">{t.results.reviewQuestions[lang as 'ES' | 'EN']}</h3>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">{t.results.reviewQuestions[language as 'ES' | 'EN']}</h3>
           
           {questions.map((q, index) => (
             <div 
@@ -714,28 +714,28 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-lg font-medium text-gray-800">{q.q[lang as 'ES' | 'EN']}</h4>
+                  <h4 className="text-lg font-medium text-gray-800">{q.q[language as 'ES' | 'EN']}</h4>
                   
                   <div className="mt-3 space-y-2">
                     <div>
-                      <p className="text-sm font-medium text-gray-500">{t.results.yourAnswer[lang as 'ES' | 'EN']}:</p>
+                      <p className="text-sm font-medium text-gray-500">{t.results.yourAnswer[language as 'ES' | 'EN']}:</p>
                       <p className={`${q.userAnswer === q.answer ? 'text-green-700' : 'text-red-700'} font-medium`}>
-                        {q.options[lang as 'ES' | 'EN'][q.userAnswer ?? -1]}
+                        {q.options[language as 'ES' | 'EN'][q.userAnswer ?? -1]}
                       </p>
                     </div>
                     
                     {q.userAnswer !== q.answer && (
                       <div>
-                        <p className="text-sm font-medium text-gray-500">{t.results.correctAnswer[lang as 'ES' | 'EN']}:</p>
+                        <p className="text-sm font-medium text-gray-500">{t.results.correctAnswer[language as 'ES' | 'EN']}:</p>
                         <p className="text-green-700 font-medium">
-                          {q.options[lang as 'ES' | 'EN'][q.answer]}
+                          {q.options[language as 'ES' | 'EN'][q.answer]}
                         </p>
                       </div>
                     )}
                     
                     <div>
-                      <p className="text-sm font-medium text-gray-500">{t.results.explanation[lang as 'ES' | 'EN']}:</p>
-                      <p className="text-gray-700">{q.explanation[lang as 'ES' | 'EN']}</p>
+                      <p className="text-sm font-medium text-gray-500">{t.results.explanation[language as 'ES' | 'EN']}:</p>
+                      <p className="text-gray-700">{q.explanation[language as 'ES' | 'EN']}</p>
                     </div>
                   </div>
                 </div>
@@ -751,7 +751,7 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
             className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors shadow-md flex items-center justify-center"
           >
             <RefreshCw className="w-5 h-5 mr-2" />
-            {t.buttons.restart[lang as 'ES' | 'EN']}
+            {t.buttons.restart[language as 'ES' | 'EN']}
           </button>
           
           <button 
@@ -759,7 +759,7 @@ const ResultsScreen = ({ questions, score, onRestart }: ResultsScreenProps) => {
             className="bg-white hover:bg-gray-50 text-gray-800 font-medium py-3 px-8 rounded-lg transition-colors shadow-sm border border-gray-300 flex items-center justify-center"
           >
             <Share2 className="w-5 h-5 mr-2" />
-            {t.buttons.share[lang as 'ES' | 'EN']}
+            {t.buttons.share[language as 'ES' | 'EN']}
           </button>
         </div>
       </div>
@@ -781,8 +781,8 @@ const shuffleArray = (array: any[]) => {
 };
 
 export default function SecurityQuizPage() {
-  const { lang } = useLanguage();
-  const t = securityQuizTranslations[lang as 'ES' | 'EN'];
+  const { language } = useLanguage();
+  const t = securityQuizTranslations[language as 'ES' | 'EN'];
 
   const categories: Record<CategoryKey, string> = {
     fundamentals: t.categories.fundamentals,
@@ -1024,15 +1024,15 @@ export default function SecurityQuizPage() {
             className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
-            {t.buttons.backToTools[lang as 'ES' | 'EN']}
+            {t.buttons.backToTools[language as 'ES' | 'EN']}
           </button>
           
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 w-full">
             <div className="text-sm font-medium text-gray-700">
-              {t.progress.question[lang as 'ES' | 'EN']} {current + 1} {t.progress.of[lang as 'ES' | 'EN']} {filteredQuestions.length}
+              {t.progress.question[language as 'ES' | 'EN']} {current + 1} {t.progress.of[language as 'ES' | 'EN']} {filteredQuestions.length}
             </div>
             <div className="text-sm font-medium text-gray-700">
-              {Math.round(((current + 1) / filteredQuestions.length) * 100)}% {t.progress.completed[lang as 'ES' | 'EN']}
+              {Math.round(((current + 1) / filteredQuestions.length) * 100)}% {t.progress.completed[language as 'ES' | 'EN']}
             </div>
           </div>
           
@@ -1043,10 +1043,10 @@ export default function SecurityQuizPage() {
             />
           </div>
           
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">{filteredQuestions[current as number].q[lang as 'ES' | 'EN']}</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">{filteredQuestions[current as number].q[language as 'ES' | 'EN']}</h2>
           
           <div className="space-y-3 mb-6">
-            {filteredQuestions[current as number].options[lang as 'ES' | 'EN'].map((option, index) => (
+            {filteredQuestions[current as number].options[language as 'ES' | 'EN'].map((option, index) => (
               <button
                 key={index}
                 onClick={() => setSelected(index)}
@@ -1061,8 +1061,8 @@ export default function SecurityQuizPage() {
           
           {showExplanation && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <h3 className="font-medium text-blue-800 mb-2">{t.quizResults.explanation[lang as 'ES' | 'EN']}</h3>
-              <p className="text-gray-900">{filteredQuestions[current as number].explanation[lang as 'ES' | 'EN']}</p>
+              <h3 className="font-medium text-blue-800 mb-2">{t.quizResults.explanation[language as 'ES' | 'EN']}</h3>
+            <p className="text-gray-900">{filteredQuestions[current as number].explanation[language as 'ES' | 'EN']}</p>
             </div>
           )}
           
@@ -1073,7 +1073,7 @@ export default function SecurityQuizPage() {
                 className="flex items-center justify-center px-4 py-3 sm:px-6 bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition-colors shadow-sm w-full sm:w-auto"
               >
                 <ArrowLeft className="w-5 h-5 mr-2" />
-                {t.buttons.back[lang as 'ES' | 'EN']}
+                {t.buttons.back[language as 'ES' | 'EN']}
               </button>
             ) : (
               <div className="hidden sm:block" />
@@ -1090,7 +1090,7 @@ export default function SecurityQuizPage() {
                 }}
                 className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md w-full sm:w-auto"
               >
-                {current < filteredQuestions.length - 1 ? t.buttons.next[lang as 'ES' | 'EN'] : t.buttons.viewResults[lang as 'ES' | 'EN']}
+                {current < filteredQuestions.length - 1 ? t.buttons.next[language as 'ES' | 'EN'] : t.buttons.viewResults[language as 'ES' | 'EN']}
                 <ArrowRight className="w-5 h-5 ml-2" />
               </button>
 
@@ -1103,7 +1103,7 @@ export default function SecurityQuizPage() {
                 className="flex items-center justify-center px-4 py-3 bg-red-100 text-red-700 font-medium rounded-lg hover:bg-red-200 transition-colors shadow-sm border border-gray-300 w-full sm:w-auto"
               >
                 <RefreshCw className="w-5 h-5 mr-2" />
-                {t.buttons.restart[lang as 'ES' | 'EN']}
+                {t.buttons.restart[language as 'ES' | 'EN']}
               </button>
             </div>
           </div>
