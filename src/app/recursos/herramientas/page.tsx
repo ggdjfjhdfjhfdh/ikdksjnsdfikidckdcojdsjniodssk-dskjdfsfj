@@ -24,6 +24,13 @@ export default function HerramientasPage() {
       title: t.securityQuiz.title,
       description: t.securityQuiz.description,
     },
+    {
+      key: 'risk-calculator',
+      href: '/recursos/herramientas/calculadora-riesgo',
+      icon: '🛡️',
+      title: 'Calculadora de Riesgo',
+      description: 'Evalúe el nivel de ciberseguridad de su organización y reciba recomendaciones personalizadas.',
+    },
   ] as const;
 
   return (

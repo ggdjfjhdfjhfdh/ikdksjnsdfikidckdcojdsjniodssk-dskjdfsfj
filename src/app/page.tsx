@@ -151,6 +151,52 @@ export default function HomePage(): React.ReactElement {
         </div>
       </section>
 
+      {/* Calculadora de Riesgo Section */}
+      <section className="w-screen relative left-1/2 right-1/2 bg-gradient-to-br from-blue-50 to-cyan-50 flex flex-col justify-center items-center px-4 py-20 text-center overflow-hidden" style={{transform: 'translateX(-50%)'}}>
+        <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center">
+          <div className="flex items-center justify-center mb-6">
+            <ShieldCheckIcon className="h-16 w-16 text-blue-600 mr-4" />
+            <div className="text-left">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
+                Evalúe su Nivel de Ciberseguridad
+              </h2>
+              <p className="text-lg text-blue-600 font-semibold">
+                Calculadora Gratuita de Riesgo
+              </p>
+            </div>
+          </div>
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-8">
+            Descubra qué tan protegida está su empresa contra ciberataques. Nuestra calculadora gratuita evalúa 18 aspectos críticos de seguridad y le proporciona recomendaciones personalizadas.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <Link 
+               href="/recursos/herramientas/calculadora-riesgo" 
+               className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 flex items-center justify-center"
+             >
+              <ShieldCheckIcon className="h-5 w-5 mr-2" />
+              Evaluar Ahora Gratis
+            </Link>
+            <div className="text-sm text-gray-600 flex items-center justify-center">
+              ✓ Sin registro requerido • ✓ Resultados inmediatos • ✓ 100% confidencial
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-3xl">
+            <div className="bg-white p-4 rounded-lg shadow-md">
+              <div className="text-2xl font-bold text-blue-600 mb-1">18</div>
+              <div className="text-sm text-gray-600">Aspectos Evaluados</div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-md">
+              <div className="text-2xl font-bold text-green-600 mb-1">5 min</div>
+              <div className="text-sm text-gray-600">Tiempo Estimado</div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-md">
+              <div className="text-2xl font-bold text-purple-600 mb-1">100%</div>
+              <div className="text-sm text-gray-600">Personalizado</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="w-screen relative left-1/2 right-1/2 bg-white flex flex-col justify-center items-center px-4 py-16 text-center mb-0 overflow-hidden" style={{transform: 'translateX(-50%)'}}>
         <div className="w-full flex flex-col items-center justify-center">
