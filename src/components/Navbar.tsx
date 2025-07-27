@@ -4,18 +4,15 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useLanguage } from '../lib/LanguageContext';
-import { useI18n } from '../lib/i18n';
-import type { TranslationKey } from '../lib/i18n';
 
-const navKeys = [
-  { key: 'purpose', href: '/about', name: 'Sobre nosotros' },
-  { key: 'solutions', href: '/solutions', name: 'Soluciones' },
-  { key: 'resources', href: '/recursos', name: 'Recursos' },
-  { key: 'contact', href: '/contact', name: 'Contacto' },
+const getNavItems = (t: (key: any) => string) => [
+  { key: 'navAbout', href: '/about', name: t('navAbout') },
+  { key: 'navSolutions', href: '/solutions', name: t('navSolutions') },
+  { key: 'navResources', href: '/recursos', name: t('navResources') },
+  { key: 'navContact', href: '/contact', name: t('navContact') },
 ];
 
 export default function Navbar() {
-  const { t } = useI18n();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
@@ -23,7 +20,8 @@ export default function Navbar() {
   if (pathname === '/enlaces') {
     return null;
   }
-  const { lang, setLang } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
+  const navItems = getNavItems(t);
 
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-100 transition-all">
@@ -44,7 +42,7 @@ export default function Navbar() {
             </Link>
             {/* Menú desktop */}
             <nav className="hidden md:flex items-center gap-2" role="navigation" aria-label="Menú principal">
-              {navKeys.map((item) => {
+              {navItems.map((item) => {
                 const isActive = pathname.startsWith(item.href);
                 return (
                   <Link
@@ -53,7 +51,7 @@ export default function Navbar() {
                     className={`relative px-4 py-2 text-gray-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition-all duration-200 hover:text-blue-600 hover:bg-blue-50 group ${isActive ? 'text-blue-700' : ''}`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    {t(item.key as TranslationKey)}
+                    {item.name}
                     {/* Underline animada si activo */}
                     <span className={`absolute left-2 right-2 -bottom-1 h-0.5 rounded bg-blue-500 transition-all duration-300 ${isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'} group-hover:opacity-60 group-hover:scale-x-100`}></span>
                   </Link>
@@ -66,17 +64,17 @@ export default function Navbar() {
             {/* Toggle idioma pill */}
             <button
               className={`relative flex items-center w-20 h-9 rounded-full border-2 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 shadow-inner overflow-hidden
-                ${lang === 'EN' ? 'bg-gradient-to-r from-blue-200 to-blue-400 border-blue-400' : 'bg-gradient-to-l from-yellow-100 to-red-300 border-yellow-400'}`}
+                ${language === 'EN' ? 'bg-gradient-to-r from-blue-200 to-blue-400 border-blue-400' : 'bg-gradient-to-l from-yellow-100 to-red-300 border-yellow-400'}`}
               aria-label="Cambiar idioma"
-              onClick={() => setLang(lang === 'ES' ? 'EN' : 'ES')}
+              onClick={() => setLanguage(language === 'ES' ? 'EN' : 'ES')}
               tabIndex={0}
             >
               {/* Switch pill */}
               <span className={`absolute top-0.5 left-1 transition-transform duration-300 h-7 w-7 rounded-full shadow-lg flex items-center justify-center bg-white border border-gray-200
-                ${lang === 'EN' ? 'translate-x-10' : 'translate-x-0'}`}
+                ${language === 'EN' ? 'translate-x-10' : 'translate-x-0'}`}
                 aria-hidden="true"
               >
-                {lang === 'ES' ? (
+                {language === 'ES' ? (
                   // Bandera España
                   <svg viewBox="0 0 24 24" width="22" height="22" className="rounded-full" aria-hidden="true"><rect width="24" height="24" fill="#C60B1E"/><rect y="8" width="24" height="8" fill="#FFC400"/></svg>
                 ) : (
@@ -113,7 +111,7 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            {navKeys.map((item) => {
+            {navItems.map((item) => {
               const isActive = pathname.startsWith(item.href);
               return (
                 <Link
@@ -123,7 +121,7 @@ export default function Navbar() {
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  {t(item.key as TranslationKey)}
+                  {item.name}
                 </Link>
               );
             })}

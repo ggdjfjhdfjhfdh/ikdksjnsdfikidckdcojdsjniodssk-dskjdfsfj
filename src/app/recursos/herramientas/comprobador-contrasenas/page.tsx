@@ -22,7 +22,7 @@ import {
   LightBulbIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useI18n } from '@/lib/i18n';
+import { useI18n } from '@/lib/LanguageContext';
 
 type StrengthInfo = { score: number; label: string; color: string };
 

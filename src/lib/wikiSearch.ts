@@ -26,16 +26,21 @@ export async function getAllWikiArticles(): Promise<WikiArticle[]> {
         try {
           const content = fs.readFileSync(fullPath, 'utf-8');
           // Extraer título y descripción del archivo
-          const titleMatch = content.match(/title: ['"](.+?)['"]/);
-          const descMatch = content.match(/description: ['"](.+?)['"]/);
+          // Buscar en props de ArticleLayout
+          const titleMatch = content.match(/title=['"]([^'"]*)['"]/) || content.match(/title: ['"](.*?)['"]/);
+          const descMatch = content.match(/description=['"]([^'"]*)['"]/) || content.match(/description: ['"](.*?)['"]/);
           
           if (titleMatch && descMatch) {
-            articles.push({
-              title: titleMatch[1],
-              description: descMatch[1],
-              href: `/recursos/wiki/${relativePath.replace(/\\/g, '/').replace(/\/page\.tsx$/, '')}`,
-              content
-            });
+            const href = `/recursos/wiki/${relativePath.replace(/\\/g, '/').replace(/\/page\.tsx$/, '')}`;
+            // Solo agregar si no es una página de categoría principal
+            if (!href.match(/^\/recursos\/wiki\/[^/]+$/)) {
+              articles.push({
+                title: titleMatch[1],
+                description: descMatch[1],
+                href,
+                content
+              });
+            }
           }
         } catch (error) {
           console.error(`Error reading ${fullPath}:`, error);

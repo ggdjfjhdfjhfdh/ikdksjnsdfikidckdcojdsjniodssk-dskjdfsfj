@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import ShareButton from '@/components/ShareButton';
 import BackButton from '@/components/BackButton';
@@ -11,6 +13,17 @@ import {
   KeySquare,
   BellRing,
   Dot,
+  Star,
+  BookOpen,
+  Download,
+  ExternalLink,
+  ArrowRight,
+  Zap,
+  CheckCircle,
+  AlertTriangle,
+  Clock,
+  Users,
+  Key
 } from 'lucide-react';
 
 export default function AutenticacionDosPasos() {
@@ -57,7 +70,7 @@ export default function AutenticacionDosPasos() {
   ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8 scroll-smooth">
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8 scroll-smooth">
       <div className="max-w-6xl mx-auto">
         <BackButton href="/recursos/guias" label="Volver a guías" />
         <div className="flex flex-col lg:flex-row gap-8 mt-8">
@@ -65,12 +78,44 @@ export default function AutenticacionDosPasos() {
           <article className="flex-1">
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
               {/* HERO */}
-              <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-10 text-center border-b border-gray-200">
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Lock className="w-10 h-10 text-blue-600" />
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-100 p-10 text-center border-b border-gray-200">
+                <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <Lock className="w-10 h-10 text-white" />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Guía de Autenticación en Dos Pasos</h1>
-                <p className="text-gray-800 mb-4 text-lg max-w-2xl mx-auto">Añade una capa extra que bloquea el 96% de los ataques de phishing con un esfuerzo mínimo.</p>
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Guía de Autenticación en Dos Pasos</h1>
+                <p className="text-gray-800 mb-6 text-lg max-w-2xl mx-auto leading-relaxed">Añade una capa extra que bloquea el 96% de los ataques de phishing con un esfuerzo mínimo.</p>
+                
+                {/* Metadatos de la guía */}
+                <div className="flex flex-wrap items-center justify-center gap-6 mb-8 text-sm text-gray-500">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4" />
+                    <span>6 min de lectura</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <span>88% de valoración</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4" />
+                    <span>Nivel intermedio</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <BookOpen className="w-4 h-4" />
+                    <span>Actualizada ene 2024</span>
+                  </div>
+                </div>
+                
+                {/* Botones de acción */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <button className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg">
+                    <ArrowRight className="w-5 h-5 mr-2" />
+                    Comenzar guía
+                  </button>
+                  <button className="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors shadow-sm">
+                    <Download className="w-5 h-5 mr-2" />
+                    Descargar PDF
+                  </button>
+                </div>
               </div>
 
               {/* ¿QUÉ ES? */}

@@ -1,3 +1,82 @@
+export interface PasswordCheckerTranslations {
+  title: string;
+  subtitle: string;
+  placeholder: string;
+  copy: string;
+  copied: string;
+  length: string;
+  uppercase: string;
+  lowercase: string;
+  numbers: string;
+  symbols: string;
+  generate: string;
+  strength: string;
+  recommendations: string;
+  recommendation1: string;
+  recommendation2: string;
+  recommendation3: string;
+  recommendation4: string;
+  securityCriteria: string;
+  securityCriteriaAndRecommendations: string;
+  protonPassInfoTitle: string;
+  protonPassSecurityFeature1Title: string;
+  protonPassSecurityFeature1Description: string;
+  protonPassSecurityFeature2Title: string;
+  protonPassSecurityFeature2Description: string;
+  protonPassSecurityFeature3Title: string;
+  protonPassSecurityFeature3Description: string;
+  protonPassConvenienceFeature1Title: string;
+  protonPassConvenienceFeature1Description: string;
+  protonPassConvenienceFeature2Title: string;
+  protonPassConvenienceFeature2Description: string;
+  protonPassConvenienceFeature3Title: string;
+  protonPassConvenienceFeature3Description: string;
+  protonPassAdditionalSecurityTitle: string;
+  protonPassAdditionalSecurity1: string;
+  protonPassAdditionalSecurity2: string;
+  protonPassAdditionalSecurity3: string;
+  protonPass: string;
+  protonPassDescription: string;
+  back: string;
+  backButton: string;
+  passwordPlaceholder: string;
+  copyButton: string;
+  copiedButton: string;
+  passwordLengthLabel: string;
+  passwordUppercase: string;
+  passwordLowercase: string;
+  passwordNumber: string;
+  passwordSymbol: string;
+  generateButton: string;
+  passwordStrength: string;
+  passwordCriteria: string;
+  passwordRecommendation1: string;
+  passwordRecommendation2: string;
+  passwordRecommendation3: string;
+  passwordRecommendation4: string;
+  protonPassTitle: string;
+  protonPassSubtitle: string;
+  protonPassFeature1Title: string;
+  protonPassFeature1Description: string;
+  protonPassFeature2Title: string;
+  protonPassFeature2Description: string;
+  protonPassFeature3Title: string;
+  protonPassFeature3Description: string;
+  protonPassFeature4Title: string;
+  protonPassFeature4Description: string;
+  protonPassButton: string;
+  moreInfoButton: string;
+  securityInfoTitle: string;
+  securityInfoDescription: string;
+  securityInfoTip: string;
+  passwordLengthUnit: string;
+  veryWeak: string;
+  weak: string;
+  medium: string;
+  strong: string;
+  veryStrong: string;
+}
+
 export const passwordCheckerTranslations = {
   ES: {
     title: 'Evalúa la fortaleza de tu clave',
@@ -76,7 +155,7 @@ export const passwordCheckerTranslations = {
     medium: 'Medio',
     strong: 'Fuerte',
     veryStrong: 'Muy Fuerte',
-  },
+  } as PasswordCheckerTranslations,
   EN: {
     title: 'Evaluate Your Password Strength',
     subtitle: 'Check if your password is secure and receive improvement recommendations',
@@ -154,5 +233,5 @@ export const passwordCheckerTranslations = {
     medium: 'Medium',
     strong: 'Strong',
     veryStrong: 'Very Strong',
-  }
+  } as PasswordCheckerTranslations
 };

@@ -1,4 +1,4 @@
-import { TranslationKey } from './i18n';
+import { TranslationKey } from './i18n/index';
 
 export const contactTranslations = {
   ES: {

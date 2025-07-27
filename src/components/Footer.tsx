@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import React from 'react';
-import { useI18n } from '@/lib/i18n';
+import { useI18n } from '@/lib/LanguageContext';
 
 interface FooterLink {
   label: string;

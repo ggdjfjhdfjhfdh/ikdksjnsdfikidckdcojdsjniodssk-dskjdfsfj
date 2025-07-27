@@ -1,273 +1,205 @@
 'use client';
-import React from 'react';
-import { useI18n } from '@/lib/i18n';
-import Image from 'next/image';
-import { ClipboardDocumentCheckIcon, ShieldCheckIcon, ScaleIcon, LockOpenIcon, DocumentTextIcon, AcademicCapIcon, CpuChipIcon, DevicePhoneMobileIcon, KeyIcon, CloudIcon, ShieldExclamationIcon, CodeBracketIcon, EyeIcon, LockClosedIcon, ServerIcon, CogIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
+
+import { Metadata } from 'next';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import HeroSection from './HeroSection';
+import { useLanguage } from '@/lib/LanguageContext';
+
+
+
+const teamMembers = [
+  {
+    name: 'Alejandro Martínez',
+    role: 'Director de Seguridad',
+    bio: 'Más de 10 años en ciberseguridad, especializado en inteligencia de amenazas',
+  },
+  {
+    name: 'María López',
+    role: 'Desarrolladora Principal',
+    bio: 'Desarrolladora full-stack apasionada por prácticas de codificación segura',
+  },
+  {
+    name: 'Samuel García',
+    role: 'Experto en Cumplimiento',
+    bio: 'Garantiza el cumplimiento normativo en todas las soluciones de seguridad',
+  },
+];
+
+// Note: metadata will be handled differently in client component
 
 export default function AboutPage() {
-  const { t } = useI18n();
+  const { t } = useLanguage();
+
   return (
-    <>
-      {/* Hero Section */}
-      <section className="relative h-[400px] flex items-center justify-center bg-gray-900">
-        <Image
-          src="/about-bg.png"
-          alt="Background"
-          fill
-          className="object-cover object-center opacity-30"
-          priority
-        />
-        <div className="relative z-10 w-full text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            Protegiendo el futuro digital
-          </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto text-gray-200 font-light">
-            Creemos que la ciberseguridad debe ser accesible, proactiva y adaptada
-          </p>
-        </div>
-      </section>
+    <div className="bg-gradient-to-b from-gray-50 to-white">
+      <HeroSection />
 
-      {/* Strategic Tree Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Modelo Integral de Ciberseguridad
+      {/* Hero Section with Integrated Values */}
+      <section className="relative py-20 overflow-hidden bg-white text-gray-900">
+        <div className="absolute inset-0 bg-[#f8fafc] -z-0"></div>
+        <div className="relative container mx-auto px-4 max-w-6xl">
+          <div className="text-center py-12 md:py-16">
+            <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold text-blue-700 bg-blue-100 rounded-full">
+              {t('purpose.badge') || 'Nuestro Propósito'}
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+              {t('purpose.title') || 'Transformando la Seguridad en'} <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">{t('purpose.titleHighlight') || 'Ventaja Competitiva'}</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Un enfoque estratégico multicapa para proteger todos los aspectos de su negocio
+            <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto mb-8 rounded-full"></div>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-16 leading-relaxed">
+              {t('purpose.description') || 'En un panorama de amenazas en constante evolución, las empresas necesitan más que herramientas: necesitan experiencia, estrategia y resultados probados. Nuestra misión es ser el socio de confianza que transforma la complejidad de la ciberseguridad en ventaja competitiva.'}
             </p>
-          </div>
-
-          {/* Core Pillar */}
-          <div className="flex justify-center mb-16">
-            <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-200 w-full max-w-2xl text-center">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <ShieldCheckIcon className="w-10 h-10 text-blue-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Ciberseguridad Integral</h3>
-              <p className="text-gray-600">
-                Protección holística desde la gobernanza hasta la ejecución técnica
-              </p>
-            </div>
-          </div>
-
-          {/* Four Main Pillars */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {[
-              {
-                title: 'Gobierno Estratégico',
-                desc: 'Políticas, gestión de riesgos y marco normativo',
-                icon: <ScaleIcon className="w-8 h-8 text-blue-600" />
-              },
-              {
-                title: 'Defensa Proactiva',
-                desc: 'Monitoreo continuo y protección perimetral',
-                icon: <ShieldCheckIcon className="w-8 h-8 text-blue-600" />
-              },
-              {
-                title: 'Cumplimiento & Riesgo',
-                desc: 'Auditorías, GDPR/ISO 27001 y controles',
-                icon: <DocumentTextIcon className="w-8 h-8 text-blue-600" />
-              },
-              {
-                title: 'Seguridad Ofensiva',
-                desc: 'Pentesting avanzado y hardening de sistemas',
-                icon: <LockOpenIcon className="w-8 h-8 text-blue-600" />
-              }
-            ].map((pillar, i) => (
-              <div 
-                key={i}
-                className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-full"
-              >
-                <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4 shadow-sm mx-auto">
-                  {pillar.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-center text-gray-900 mb-2">{pillar.title}</h3>
-                <p className="text-gray-600 text-center text-sm">{pillar.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Implementation Layer */}
-          <div className="mt-12">
-            <div className="text-center mb-12">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                Nuestro Stack Tecnológico
-              </h3>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Soluciones especializadas para cada capa de seguridad
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Training Card - Highlighted */}
-              <div className="bg-white p-6 rounded-xl border-2 border-blue-200 shadow-sm col-span-1 md:col-span-2">
-                <div className="flex items-start">
-                  <div className="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center mr-4 shadow-sm flex-shrink-0">
-                    <AcademicCapIcon className="w-8 h-8 text-blue-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-2 text-lg">Formación en Ciberseguridad</h4>
-                    <p className="text-sm text-gray-600 mb-3">Programas de concienciación y capacitación técnica</p>
-                    <ul className="text-xs text-gray-700 space-y-1 pl-4 list-disc">
-                      <li>Simulaciones de phishing personalizadas</li>
-                      <li>Talleres prácticos para equipos</li>
-                      <li>Certificaciones especializadas</li>
-                      <li>Programas continuos de actualización</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Technical Solutions */}
+            
+            <div className="grid md:grid-cols-3 gap-8 mt-16">
               {[
-                { 
-                  title: 'SIEM/SOAR', 
-                  desc: 'Monitorización inteligente de amenazas',
-                  icon: <CpuChipIcon className="w-8 h-8 text-blue-600" />,
-                  link: '/wiki/siem-soar'
+                {
+                  icon: '🎯',
+                  title: t('values.measurableResults.title') || 'Resultados Medibles',
+                  description: t('values.measurableResults.description') || 'Métricas claras que demuestran el ROI de tu inversión en seguridad',
+                  bg: 'from-blue-50 to-blue-50/50',
+                  border: 'border-blue-100',
+                  iconBg: 'bg-blue-100',
+                  iconColor: 'text-blue-600',
+                  hoverBg: 'hover:bg-blue-50'
                 },
-                { 
-                  title: 'EDR/XDR', 
-                  desc: 'Protección endpoints avanzada',
-                  icon: <DevicePhoneMobileIcon className="w-8 h-8 text-blue-600" />,
-                  link: '/wiki/edr-xdr'
+                {
+                  icon: '🔬',
+                  title: t('values.continuousInnovation.title') || 'Innovación Continua',
+                  description: t('values.continuousInnovation.description') || 'Adoptamos las últimas tecnologías antes que la competencia',
+                  bg: 'from-cyan-50 to-cyan-50/50',
+                  border: 'border-cyan-100',
+                  iconBg: 'bg-cyan-100',
+                  iconColor: 'text-cyan-600',
+                  hoverBg: 'hover:bg-cyan-50'
                 },
-                { 
-                  title: 'IAM/PAM', 
-                  desc: 'Gestión de identidades y accesos',
-                  icon: <KeyIcon className="w-8 h-8 text-blue-600" />,
-                  link: '/wiki/iam-pam'
-                },
-                { 
-                  title: 'Cloud Security', 
-                  desc: 'Protección entornos cloud',
-                  icon: <CloudIcon className="w-8 h-8 text-blue-600" />,
-                  link: '/wiki/cloud-security'
-                },
-                { 
-                  title: 'BCP/DRP', 
-                  desc: 'Continuidad del negocio',
-                  icon: <ShieldExclamationIcon className="w-8 h-8 text-blue-600" />,
-                  link: '/wiki/bcp-drp'
-                },
-                { 
-                  title: 'DevSecOps', 
-                  desc: 'Seguridad en desarrollo',
-                  icon: <CodeBracketIcon className="w-8 h-8 text-blue-600" />,
-                  link: '/wiki/devsecops'
-                },
-                { 
-                  title: 'Threat Intel', 
-                  desc: 'Inteligencia de amenazas',
-                  icon: <EyeIcon className="w-8 h-8 text-blue-600" />,
-                  link: '/wiki/threat-intelligence'
+                {
+                  icon: '🤝',
+                  title: t('values.strategicPartnership.title') || 'Partnership Estratégico',
+                  description: t('values.strategicPartnership.description') || 'Nos integramos en tu negocio como una extensión de tu equipo',
+                  bg: 'from-indigo-50 to-indigo-50/50',
+                  border: 'border-indigo-100',
+                  iconBg: 'bg-indigo-100',
+                  iconColor: 'text-indigo-600',
+                  hoverBg: 'hover:bg-indigo-50'
                 }
-              ].map((item, i) => (
-                <Link key={i} href={item.link} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4 shadow-sm">
-                    {item.icon}
+              ].map((item, index) => (
+                <div 
+                  key={index}
+                  className={`bg-gradient-to-br ${item.bg} rounded-2xl p-0.5 border ${item.border} hover:shadow-lg transition-all duration-300 hover:-translate-y-1`}
+                >
+                  <div className={`h-full bg-white/80 backdrop-blur-sm p-6 rounded-[15px] ${item.hoverBg} transition-colors`}>
+                    <div className={`w-16 h-16 rounded-xl ${item.iconBg} flex items-center justify-center text-3xl mb-6 mx-auto ${item.iconColor}`}>
+                      {item.icon}
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{item.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{item.description}</p>
                   </div>
-                  <h4 className="font-bold text-gray-900 mb-2">{item.title}</h4>
-                  <p className="text-sm text-gray-600">{item.desc}</p>
-                </Link>
+                </div>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Certifications Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-6 max-w-7xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Certificaciones y Estándares</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Cumplimos con los más altos estándares internacionales de seguridad y calidad
-            </p>
+      {/* Experience Section */}
+      <section className="relative py-20 bg-gray-900 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0 bg-[url('/images/pattern-grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        </div>
+        <div className="relative container mx-auto px-4 max-w-6xl">
+          <div className="text-center mb-16">
+            <span className="inline-block px-4 py-1.5 text-sm font-medium text-blue-300 bg-blue-900/30 rounded-full mb-4">
+              {t('experience.badge') || 'Nuestra Trayectoria'}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {t('experience.title') || 'Experiencia que'} <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">{t('experience.titleHighlight') || 'Inspira Confianza'}</span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-6"></div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: 'ISO 27001',
-                description: 'Gestión de seguridad de la información',
-                link: 'https://www.iso.org/standard/54534.html',
-                icon: <ShieldCheckIcon className="w-10 h-10 text-blue-600" />
-              },
-              {
-                name: 'ISO 9001',
-                description: 'Sistema de gestión de calidad',
-                link: 'https://www.iso.org/standard/62085.html',
-                icon: <ClipboardDocumentCheckIcon className="w-10 h-10 text-blue-600" />
-              },
-              {
-                name: 'GDPR',
-                description: 'Reglamento General de Protección de Datos',
-                link: 'https://gdpr-info.eu',
-                icon: <LockClosedIcon className="w-10 h-10 text-blue-600" />
-              },
-              {
-                name: 'SOC 2',
-                description: 'Controles de seguridad, disponibilidad y confidencialidad',
-                link: 'https://www.aicpa.org/soc2',
-                icon: <ServerIcon className="w-10 h-10 text-blue-600" />
-              },
-              {
-                name: 'NIST CSF',
-                description: 'Marco de ciberseguridad del NIST',
-                link: 'https://www.nist.gov/cyberframework',
-                icon: <CogIcon className="w-10 h-10 text-blue-600" />
-              },
-              {
-                name: 'CIS Controls',
-                description: 'Controles críticos de seguridad',
-                link: 'https://www.cisecurity.org/controls',
-                icon: <ShieldExclamationIcon className="w-10 h-10 text-blue-600" />
-              }
-            ].map((cert, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg transition-all">
-                <div className="flex items-start mb-4">
-                  <div className="bg-blue-50 p-3 rounded-lg mr-4">
-                    {cert.icon}
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="space-y-8">
+              {[
+                {
+                  title: t('experience.items.yearsExperience.title') || "+10 años de experiencia",
+                  description: t('experience.items.yearsExperience.description') || "Protegiendo infraestructuras críticas en diversos sectores"
+                },
+                {
+                  title: t('experience.items.specializedSectors.title') || "Sectores especializados",
+                  description: t('experience.items.specializedSectors.description') || "Banca, Salud, Industria, Tecnología"
+                }
+              ].map((item, index) => (
+                <div key={index} className="group flex items-start p-6 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-800 hover:border-blue-500/30 transition-all duration-300">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white text-xl font-bold mr-5 mt-0.5">
+                    {index + 1}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">{cert.name}</h3>
-                    <p className="text-gray-600 mt-1">{cert.description}</p>
+                    <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-blue-300 transition-colors">{item.title}</h3>
+                    <p className="text-gray-400">{item.description}</p>
                   </div>
                 </div>
-                <Link 
-                  href={cert.link} 
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium mt-4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Ver estándar <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-1" />
-                </Link>
-              </div>
-            ))}
+              ))}
+            </div>
+            
+            <div className="space-y-8">
+              {[
+                {
+                  title: t('experience.items.leadingCertifications.title') || "Certificaciones líderes",
+                  description: t('experience.items.leadingCertifications.description') || "En las principales tecnologías de seguridad del mercado"
+                },
+                {
+                  title: t('experience.items.guaranteedCompliance.title') || "Cumplimiento garantizado",
+                  description: t('experience.items.guaranteedCompliance.description') || "ISO 27001, RGPD, PCI-DSS y más"
+                }
+              ].map((item, index) => (
+                <div key={index} className="group flex items-start p-6 bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-800 hover:border-blue-500/30 transition-all duration-300">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white text-xl font-bold mr-5 mt-0.5">
+                    {index + 3}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-blue-300 transition-colors">{item.title}</h3>
+                    <p className="text-gray-400">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Contact CTA Section */}
-      <section className="py-20 bg-blue-50">
-        <div className="container mx-auto px-6 max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-blue-800">¿Listo para proteger tu negocio?</h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Nuestros expertos están disponibles para evaluar tus necesidades de seguridad
-          </p>
-          <a 
-            href="/contact" 
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200"
-          >
-            Contacta con nosotros
-          </a>
+      {/* CTA Section */}
+      <section className="relative py-20 overflow-hidden bg-white">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white -z-0"></div>
+        <div className="relative container mx-auto px-4 max-w-4xl text-center">
+          <div>
+            <span className="inline-block px-4 py-1.5 text-sm font-medium text-blue-700 bg-blue-100 rounded-full mb-6">
+              {t('cta.badge') || 'Siguiente Paso'}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
+              {t('cta.title') || '¿Listo para una Estrategia de Seguridad que'} <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">{t('cta.titleHighlight') || 'Genere Resultados'}</span>?
+            </h2>
+            <div className="w-32 h-1 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto mb-8 rounded-full"></div>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+              {t('cta.description') || 'Descubre cómo nuestro enfoque estratégico puede fortalecer tu posición competitiva en el mercado actual.'}
+            </p>
+            <div className="inline-block">
+              <Link 
+                href="/contacto" 
+                className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                {t('cta.button') || 'Habla con un experto'}
+                <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
+                </svg>
+              </Link>
+            </div>
+            <p className="text-sm text-gray-500 mt-6">
+              {t('cta.disclaimer') || 'Sin compromiso • Consulta inicial sin costo'}
+            </p>
+          </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
