@@ -2,7 +2,6 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import HeroSection from './HeroSection';
 import { useLanguage } from '@/lib/LanguageContext';
 
