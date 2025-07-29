@@ -1,13 +1,56 @@
 import ArticleLayout from '@/components/wiki/ArticleLayout';
+import JsonLd from '@/components/JsonLd';
 import { FiExternalLink } from 'react-icons/fi';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Gestión Integral de Riesgos en Ciberseguridad | SESECPRO',
+  description: 'Proceso sistemático para identificar, analizar, evaluar y tratar riesgos de seguridad de la información. Metodologías FAIR, OCTAVE, ISO 31000.',
+  keywords: ['gestión de riesgos', 'ciberseguridad', 'FAIR', 'OCTAVE', 'ISO 31000', 'evaluación de riesgos', 'análisis de riesgos'],
+  openGraph: {
+    title: 'Gestión Integral de Riesgos en Ciberseguridad',
+    description: 'Aprende metodologías avanzadas para gestionar riesgos de ciberseguridad',
+    type: 'article',
+    url: 'https://sesecpro.es/recursos/wiki/fundamentos/gestion-riesgos'
+  }
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Gestión Integral de Riesgos en Ciberseguridad",
+  "description": "Proceso sistemático para identificar, analizar, evaluar y tratar riesgos de seguridad de la información",
+  "author": {
+    "@type": "Organization",
+    "name": "SESECPRO"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "SESECPRO",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://sesecpro.es/logo.svg"
+    }
+  },
+  "datePublished": "2024-01-15",
+  "dateModified": "2024-01-15",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://sesecpro.es/recursos/wiki/fundamentos/gestion-riesgos"
+  },
+  "articleSection": "Ciberseguridad",
+  "keywords": ["gestión de riesgos", "ciberseguridad", "FAIR", "OCTAVE", "ISO 31000"]
+};
 
 export default function GestionRiesgosPage() {
   return (
-    <ArticleLayout 
-      title="Gestión Integral de Riesgos en Ciberseguridad" 
-      description="Proceso sistemático para identificar, analizar, evaluar y tratar riesgos de seguridad de la información"
-      backUrl="/recursos/wiki/fundamentos"
-    >
+    <>
+      <JsonLd data={articleSchema} />
+      <ArticleLayout 
+        title="Gestión Integral de Riesgos en Ciberseguridad" 
+        description="Proceso sistemático para identificar, analizar, evaluar y tratar riesgos de seguridad de la información"
+        backUrl="/recursos/wiki/fundamentos"
+      >
       <div className="space-y-10 text-gray-800 px-4 sm:px-6">
         <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
           <h2 className="text-xl sm:text-2xl font-bold mb-4">¿Qué es la Gestión de Riesgos?</h2>
@@ -161,6 +204,7 @@ export default function GestionRiesgosPage() {
           </div>
         </section>
       </div>
-    </ArticleLayout>
+      </ArticleLayout>
+    </>
   );
 }

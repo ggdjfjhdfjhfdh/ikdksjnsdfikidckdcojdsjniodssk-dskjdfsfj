@@ -2,5 +2,22 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /_next/
+Disallow: /admin/
+Disallow: /*.json$
+Disallow: /test*
+Disallow: /_vercel/
 
+# Allow important resources
+Allow: /public/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.svg$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.webp$
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap
 Sitemap: https://sesecpro.es/sitemap.xml

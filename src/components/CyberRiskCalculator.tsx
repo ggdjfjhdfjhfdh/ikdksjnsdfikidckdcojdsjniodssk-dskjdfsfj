@@ -16,6 +16,9 @@ import {
   FireIcon,
   BoltIcon
 } from '@heroicons/react/24/outline';
+import { useLanguage } from '@/lib/LanguageContext';
+import { riskCalculatorTranslations, type RiskCalculatorTranslationKey } from '@/lib/riskCalculatorTranslations';
+import { businessQuestions as businessQuestionsData, individualQuestions as individualQuestionsData } from '@/lib/riskCalculatorQuestions';
 
 interface Question {
   id: string;
@@ -51,93 +54,29 @@ interface LeadData {
   phone?: string;
 }
 
-// Preguntas de segmentación inicial
-const segmentationQuestions: Question[] = [
-  { id: 'user_type', category: 'Perfil', question: '¿Está evaluando la seguridad para uso personal o empresarial?', weight: 0 },
-  { id: 'company_size', category: 'Perfil', question: '¿Cuál es el tamaño de su organización?', weight: 0 },
-  { id: 'industry_type', category: 'Perfil', question: '¿En qué sector opera su organización?', weight: 0 },
-  { id: 'it_resources', category: 'Perfil', question: '¿Cuenta con un equipo de IT dedicado?', weight: 0 },
+// Preguntas de segmentación inicial - se traducirán dinámicamente
+const getSegmentationQuestions = (t: (key: RiskCalculatorTranslationKey) => string): Question[] => [
+  { id: 'user_type', category: 'Profile', question: t('userTypeQuestion'), weight: 0 },
+  { id: 'company_size', category: 'Profile', question: t('companySizeQuestion'), weight: 0 },
+  { id: 'industry_type', category: 'Profile', question: t('industryQuestion'), weight: 0 },
+  { id: 'it_resources', category: 'Profile', question: t('itResourcesQuestion'), weight: 0 },
 ];
 
-const businessQuestions: Question[] = [
-  // Gestión de Identidades y Accesos (20%)
-  { id: 'zero_trust', category: 'Identidad y Acceso', question: '¿Ha implementado un modelo de arquitectura Zero Trust?', weight: 12, targetAudience: 'business' },
-  { id: 'privileged_access', category: 'Identidad y Acceso', question: '¿Utiliza una solución PAM (Privileged Access Management) para cuentas administrativas?', weight: 10, targetAudience: 'business' },
-  { id: 'mfa_adaptive', category: 'Identidad y Acceso', question: '¿Implementa MFA adaptativo basado en riesgo y contexto?', weight: 8, targetAudience: 'business' },
-  { id: 'identity_governance', category: 'Identidad y Acceso', question: '¿Tiene procesos automatizados de provisioning/deprovisioning de usuarios?', weight: 6, targetAudience: 'business' },
-  { id: 'least_privilege', category: 'Identidad y Acceso', question: '¿Aplica el principio de menor privilegio en todos los sistemas?', weight: 4, targetAudience: 'both' },
-  
-  // Protección de Endpoints y Dispositivos (18%)
-  { id: 'edr_solution', category: 'Endpoints', question: '¿Utiliza una solución EDR/XDR en todos los endpoints?', weight: 10, targetAudience: 'business' },
-  { id: 'device_encryption', category: 'Endpoints', question: '¿Todos los dispositivos tienen cifrado completo de disco?', weight: 8, targetAudience: 'both' },
-  { id: 'mobile_device_management', category: 'Endpoints', question: '¿Gestiona dispositivos móviles con una solución MDM/EMM?', weight: 6, targetAudience: 'business' },
-  { id: 'endpoint_compliance', category: 'Endpoints', question: '¿Monitorea continuamente el cumplimiento de políticas en endpoints?', weight: 5, targetAudience: 'business' },
-  { id: 'usb_control', category: 'Endpoints', question: '¿Controla y monitorea el uso de dispositivos USB y medios extraíbles?', weight: 3, targetAudience: 'both' },
-  
-  // Seguridad de Red y Perímetro (16%)
-  { id: 'ngfw_deployment', category: 'Red y Perímetro', question: '¿Utiliza Next-Generation Firewalls (NGFW) con inspección profunda de paquetes?', weight: 8 },
-  { id: 'network_microsegmentation', category: 'Red y Perímetro', question: '¿Ha implementado microsegmentación de red?', weight: 7 },
-  { id: 'dns_security', category: 'Red y Perímetro', question: '¿Utiliza DNS seguro y filtrado de dominios maliciosos?', weight: 5 },
-  { id: 'network_monitoring', category: 'Red y Perímetro', question: '¿Monitorea el tráfico de red en tiempo real con herramientas NDR?', weight: 4 },
-  { id: 'secure_remote_access', category: 'Red y Perímetro', question: '¿Utiliza ZTNA (Zero Trust Network Access) para acceso remoto?', weight: 4 },
-  
-  // Protección de Datos y Cifrado (14%)
-  { id: 'data_classification', category: 'Protección de Datos', question: '¿Tiene un sistema de clasificación y etiquetado de datos implementado?', weight: 8 },
-  { id: 'dlp_solution', category: 'Protección de Datos', question: '¿Utiliza una solución DLP (Data Loss Prevention)?', weight: 6 },
-  { id: 'encryption_at_rest', category: 'Protección de Datos', question: '¿Cifra todos los datos sensibles en reposo?', weight: 5 },
-  { id: 'encryption_in_transit', category: 'Protección de Datos', question: '¿Cifra todas las comunicaciones con TLS 1.3 o superior?', weight: 4 },
-  { id: 'key_management', category: 'Protección de Datos', question: '¿Utiliza un HSM o sistema centralizado de gestión de claves?', weight: 5 },
-  
-  // Detección y Respuesta (12%)
-  { id: 'siem_solution', category: 'Detección y Respuesta', question: '¿Utiliza una plataforma SIEM/SOAR para correlación de eventos?', weight: 8 },
-  { id: 'threat_hunting', category: 'Detección y Respuesta', question: '¿Realiza threat hunting proactivo regularmente?', weight: 6 },
-  { id: 'incident_response_team', category: 'Detección y Respuesta', question: '¿Tiene un equipo CSIRT/SOC operativo 24/7?', weight: 5 },
-  { id: 'forensic_capabilities', category: 'Detección y Respuesta', question: '¿Cuenta con capacidades de análisis forense digital?', weight: 3 },
-  
-  // Gestión de Vulnerabilidades (10%)
-  { id: 'vulnerability_management', category: 'Gestión de Vulnerabilidades', question: '¿Realiza escaneos de vulnerabilidades automatizados y continuos?', weight: 6 },
-  { id: 'penetration_testing', category: 'Gestión de Vulnerabilidades', question: '¿Realiza pentesting y red team exercises regularmente?', weight: 5 },
-  { id: 'patch_management', category: 'Gestión de Vulnerabilidades', question: '¿Tiene un proceso automatizado de gestión de parches?', weight: 4 },
-  { id: 'asset_inventory', category: 'Gestión de Vulnerabilidades', question: '¿Mantiene un inventario actualizado de todos los activos IT?', weight: 3 },
-  
-  // Continuidad del Negocio y Recuperación (10%)
-  { id: 'business_continuity_plan', category: 'Continuidad del Negocio', question: '¿Tiene un plan de continuidad del negocio probado y actualizado?', weight: 6 },
-  { id: 'disaster_recovery', category: 'Continuidad del Negocio', question: '¿Realiza pruebas de recuperación ante desastres regularmente?', weight: 5 },
-  { id: 'backup_immutable', category: 'Continuidad del Negocio', question: '¿Utiliza backups inmutables y air-gapped?', weight: 4, targetAudience: 'business' },
-  { id: 'rto_rpo_compliance', category: 'Continuidad del Negocio', question: '¿Cumple con los objetivos RTO y RPO definidos?', weight: 3, targetAudience: 'business' }
-];
+// Función para convertir preguntas con claves de traducción a preguntas con texto
+const convertQuestionsToTranslated = (questions: typeof businessQuestionsData, t: (key: RiskCalculatorTranslationKey) => string): Question[] => {
+  return questions.map(q => ({
+    id: q.id,
+    category: t(q.category as RiskCalculatorTranslationKey),
+    question: t(q.questionKey),
+    weight: q.weight,
+    targetAudience: q.targetAudience
+  }));
+};
 
-const individualQuestions: Question[] = [
-  // Seguridad Personal Básica
-  { id: 'personal_antivirus', category: 'Protección Personal', question: '¿Utiliza un antivirus actualizado en todos sus dispositivos?', weight: 8, targetAudience: 'individual' },
-  { id: 'personal_mfa', category: 'Protección Personal', question: '¿Tiene activada la autenticación de dos factores en sus cuentas importantes?', weight: 10, targetAudience: 'individual' },
-  { id: 'password_manager', category: 'Protección Personal', question: '¿Utiliza un gestor de contraseñas para crear y almacenar contraseñas únicas?', weight: 9, targetAudience: 'individual' },
-  { id: 'software_updates', category: 'Protección Personal', question: '¿Mantiene actualizados el sistema operativo y aplicaciones?', weight: 7, targetAudience: 'individual' },
-  { id: 'secure_browsing', category: 'Protección Personal', question: '¿Utiliza navegadores seguros y evita sitios web sospechosos?', weight: 6, targetAudience: 'individual' },
-  
-  // Protección de Datos Personales
-  { id: 'personal_backups', category: 'Datos Personales', question: '¿Realiza copias de seguridad regulares de sus datos importantes?', weight: 8, targetAudience: 'individual' },
-  { id: 'cloud_security', category: 'Datos Personales', question: '¿Utiliza servicios de almacenamiento en la nube con cifrado?', weight: 6, targetAudience: 'individual' },
-  { id: 'personal_encryption', category: 'Datos Personales', question: '¿Cifra los datos sensibles en sus dispositivos?', weight: 7, targetAudience: 'individual' },
-  { id: 'social_media_privacy', category: 'Datos Personales', question: '¿Tiene configurada la privacidad en sus redes sociales?', weight: 5, targetAudience: 'individual' },
-  
-  // Seguridad en Comunicaciones
-  { id: 'secure_messaging', category: 'Comunicaciones', question: '¿Utiliza aplicaciones de mensajería con cifrado end-to-end?', weight: 6, targetAudience: 'individual' },
-  { id: 'email_security', category: 'Comunicaciones', question: '¿Verifica la autenticidad de emails antes de hacer clic en enlaces?', weight: 7, targetAudience: 'individual' },
-  { id: 'public_wifi_security', category: 'Comunicaciones', question: '¿Evita realizar actividades sensibles en WiFi público o usa VPN?', weight: 8, targetAudience: 'individual' },
-  
-  // Dispositivos y Acceso
-  { id: 'device_locking', category: 'Dispositivos', question: '¿Tiene configurado bloqueo automático en todos sus dispositivos?', weight: 6, targetAudience: 'individual' },
-  { id: 'app_permissions', category: 'Dispositivos', question: '¿Revisa y limita los permisos de las aplicaciones instaladas?', weight: 5, targetAudience: 'individual' },
-  { id: 'device_tracking', category: 'Dispositivos', question: '¿Tiene activado el rastreo de dispositivos en caso de pérdida?', weight: 4, targetAudience: 'individual' },
-  
-  // Concienciación y Educación
-  { id: 'phishing_awareness', category: 'Concienciación', question: '¿Sabe identificar intentos de phishing y estafas online?', weight: 8, targetAudience: 'individual' },
-  { id: 'security_news', category: 'Concienciación', question: '¿Se mantiene informado sobre amenazas de ciberseguridad actuales?', weight: 4, targetAudience: 'individual' },
-  { id: 'incident_response', category: 'Concienciación', question: '¿Sabe qué hacer si sospecha que ha sido víctima de un ciberataque?', weight: 6, targetAudience: 'individual' }
-];
+
 
 const CyberRiskCalculator: React.FC = () => {
+  const { language } = useLanguage();
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
   const [showResults, setShowResults] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
@@ -155,6 +94,11 @@ const CyberRiskCalculator: React.FC = () => {
   const [showSegmentation, setShowSegmentation] = useState(true);
   const [segmentationStep, setSegmentationStep] = useState(0);
 
+  // Helper function to get translations
+  const t = (key: RiskCalculatorTranslationKey): string => {
+    return (riskCalculatorTranslations[language as keyof typeof riskCalculatorTranslations]?.[key] || riskCalculatorTranslations.ES[key] || key);
+  };
+
   const handleAnswer = (questionId: string, answer: boolean) => {
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
   };
@@ -164,9 +108,10 @@ const CyberRiskCalculator: React.FC = () => {
     if (!userProfile) return [];
     
     if (userProfile.type === 'individual') {
-      return individualQuestions;
+      return convertQuestionsToTranslated(individualQuestionsData, t);
     } else {
       // Para empresas, incluir preguntas tanto de negocio como generales
+      const businessQuestions = convertQuestionsToTranslated(businessQuestionsData, t);
       return businessQuestions.filter(q => 
         q.targetAudience === 'business' || q.targetAudience === 'both'
       );
@@ -537,41 +482,41 @@ const CyberRiskCalculator: React.FC = () => {
               {result.urgency === 'low' && <TrophyIcon className="h-8 w-8 text-blue-600" />}
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
-              {result.urgency === 'critical' && '🚨 Situación Crítica Detectada'}
-              {result.urgency === 'high' && '⚠️ Riesgos Significativos Identificados'}
-              {result.urgency === 'medium' && '📊 Oportunidades de Mejora'}
-              {result.urgency === 'low' && '🏆 Excelente Postura de Seguridad'}
+              {result.urgency === 'critical' && `🚨 ${t('criticalSituationDetected')}`}
+              {result.urgency === 'high' && `⚠️ ${t('significantRisksIdentified')}`}
+              {result.urgency === 'medium' && `📊 ${t('improvementOpportunities')}`}
+              {result.urgency === 'low' && `🏆 ${t('excellentSecurityPosture')}`}
             </h3>
             <p className="text-gray-600 mb-4">
-              Reciba su reporte detallado personalizado y una consulta gratuita de 30 minutos con nuestros expertos.
+              {t('reportDescription')}
             </p>
           </div>
 
           <form onSubmit={handleLeadSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email corporativo *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('emailLabel')} *</label>
               <input
                 type="email"
                 required
                 value={leadData.email}
                 onChange={(e) => setLeadData({...leadData, email: e.target.value})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="su.email@empresa.com"
+                placeholder={t('emailPlaceholder')}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Empresa *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('companyLabel')} *</label>
               <input
                 type="text"
                 required
                 value={leadData.company}
                 onChange={(e) => setLeadData({...leadData, company: e.target.value})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Nombre de su empresa"
+                placeholder={t('companyPlaceholder')}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Cargo *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('roleLabel')} *</label>
               <select
                 required
                 value={leadData.role}
@@ -588,13 +533,13 @@ const CyberRiskCalculator: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono (opcional)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('phoneLabel')}</label>
               <input
                 type="tel"
                 value={leadData.phone || ''}
                 onChange={(e) => setLeadData({...leadData, phone: e.target.value})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="+34 600 000 000"
+                placeholder={t('phonePlaceholder')}
               />
             </div>
             
@@ -603,7 +548,7 @@ const CyberRiskCalculator: React.FC = () => {
               disabled={isSubmittingLead}
               className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 transition-all"
             >
-              {isSubmittingLead ? 'Enviando...' : '🎯 Obtener Reporte Detallado GRATIS'}
+              {isSubmittingLead ? t('submitting') : t('getDetailedReport')}
             </button>
             
             <p className="text-xs text-gray-500 text-center">
@@ -662,16 +607,16 @@ const CyberRiskCalculator: React.FC = () => {
         )}
 
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Resultado de su Evaluación</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('resultsTitle')}</h2>
           <div className="flex items-center justify-center mb-6">
             <div className={`text-6xl font-bold ${result.color} mr-4`}>{result.score}%</div>
             <div className="text-left">
-              <div className="text-lg font-semibold text-gray-700">Nivel de Seguridad</div>
+              <div className="text-lg font-semibold text-gray-700">{t('securityLevel')}</div>
               <div className={`text-2xl font-bold ${result.color} capitalize`}>
-                {result.level === 'low' && 'Excelente'}
-                {result.level === 'medium' && 'Bueno'}
-                {result.level === 'high' && 'Riesgo Alto'}
-                {result.level === 'critical' && 'Riesgo Crítico'}
+                {result.level === 'low' && t('levelExcellent')}
+                {result.level === 'medium' && t('levelGood')}
+                {result.level === 'high' && t('levelHigh')}
+                {result.level === 'critical' && t('levelCritical')}
               </div>
             </div>
           </div>
@@ -692,7 +637,7 @@ const CyberRiskCalculator: React.FC = () => {
         <div className="mb-8">
           <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
             <ExclamationTriangleIcon className="h-6 w-6 mr-2 text-yellow-500" />
-            Recomendaciones Personalizadas
+            {t('recommendationsTitle')}
           </h3>
           <ul className="space-y-3">
             {result.recommendations.map((rec, index) => (
@@ -708,16 +653,16 @@ const CyberRiskCalculator: React.FC = () => {
         <div className="bg-gradient-to-r from-slate-50 to-blue-50 p-6 rounded-lg mb-6 border border-slate-200">
           <h4 className="text-xl font-bold text-slate-900 mb-4 flex items-center">
             <ChartBarIcon className="h-6 w-6 mr-2 text-blue-600" />
-            Impacto Empresarial
+            {t('businessImpactTitle')}
           </h4>
           <div className="grid md:grid-cols-3 gap-4 mb-4">
             <div className="text-center p-3 bg-white rounded-lg border">
               <div className="text-2xl font-bold text-blue-600">{result.timeToImplement}</div>
-              <div className="text-sm text-slate-600">Tiempo de implementación</div>
+              <div className="text-sm text-slate-600">{t('implementationTime')}</div>
             </div>
             <div className="text-center p-3 bg-white rounded-lg border">
               <div className="text-2xl font-bold text-green-600">{result.estimatedCost}</div>
-              <div className="text-sm text-slate-600">Inversión estimada</div>
+              <div className="text-sm text-slate-600">{t('preventionCost')}</div>
             </div>
             <div className="text-center p-3 bg-white rounded-lg border">
               <div className={`text-2xl font-bold ${
@@ -725,11 +670,11 @@ const CyberRiskCalculator: React.FC = () => {
                 result.urgency === 'high' ? 'text-orange-600' :
                 result.urgency === 'medium' ? 'text-yellow-600' : 'text-green-600'
               }`}>
-                {result.urgency === 'critical' ? 'CRÍTICA' :
-                 result.urgency === 'high' ? 'ALTA' :
-                 result.urgency === 'medium' ? 'MEDIA' : 'BAJA'}
+                {result.urgency === 'critical' ? t('urgencyCritical').toUpperCase() :
+                 result.urgency === 'high' ? t('urgencyHigh').toUpperCase() :
+                 result.urgency === 'medium' ? t('urgencyMedium').toUpperCase() : t('urgencyLow').toUpperCase()}
               </div>
-              <div className="text-sm text-slate-600">Prioridad</div>
+              <div className="text-sm text-slate-600">{t('priority')}</div>
             </div>
           </div>
           <p className="text-slate-700 text-center italic">
@@ -814,10 +759,10 @@ const CyberRiskCalculator: React.FC = () => {
               <ShieldCheckIcon className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold text-slate-900 mb-4">
-              Calculadora de Riesgo Cibernético
+              {t('calculatorTitle')}
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Primero, ayúdanos a personalizar la evaluación según su perfil
+              {t('personalizationMessage')}
             </p>
           </div>
         </div>
@@ -826,7 +771,7 @@ const CyberRiskCalculator: React.FC = () => {
           {segmentationStep === 0 && (
             <div className="text-center">
               <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                ¿Para quién es esta evaluación?
+                {t('userTypeQuestion')}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                 <button
@@ -837,8 +782,8 @@ const CyberRiskCalculator: React.FC = () => {
                   className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all group"
                 >
                   <div className="text-4xl mb-4">👤</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Uso Personal</h3>
-                  <p className="text-gray-600">Evaluar mi seguridad personal y dispositivos</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('optionPersonal')}</h3>
+                  <p className="text-gray-600">{t('personalDescription')}</p>
                 </button>
                 
                 <button
@@ -849,8 +794,8 @@ const CyberRiskCalculator: React.FC = () => {
                   className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all group"
                 >
                   <div className="text-4xl mb-4">🏢</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Empresa/Organización</h3>
-                  <p className="text-gray-600">Evaluar la ciberseguridad empresarial</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('optionBusiness')}</h3>
+                  <p className="text-gray-600">{t('businessDescription')}</p>
                 </button>
               </div>
             </div>

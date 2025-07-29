@@ -5,6 +5,17 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   poweredByHeader: false,
+  compress: true,
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
+  },
+  experimental: {
+    optimizeCss: true,
+    scrollRestoration: true
+  },
   async headers() {
     return [
       {
@@ -17,6 +28,22 @@ const nextConfig = {
           {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
           }
         ]
       },
@@ -26,6 +53,15 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=604800, immutable'
+          }
+        ]
+      },
+      {
+        source: '/(.*\\.(css|js|svg|png|jpg|jpeg|webp|avif|ico))$',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
           }
         ]
       }
