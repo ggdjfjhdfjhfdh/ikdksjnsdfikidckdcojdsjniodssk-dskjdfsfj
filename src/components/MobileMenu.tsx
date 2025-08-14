@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiChevronRight } from 'react-icons/fi';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
+import { useLanguage } from '../lib/LanguageContext';
 
 interface Link {
   href: string;
@@ -21,15 +22,18 @@ interface NavItem {
   name: string;
 }
 
-const navItems: NavItem[] = [
-  { path: '/about', name: 'Sobre nosotros' },
-  { path: '/solutions', name: 'Soluciones' },
-  { path: '/contact', name: 'Contacto' }
+const getNavItems = (t: (key: string) => string): NavItem[] => [
+  { path: '/about', name: t('navAbout') },
+  { path: '/solutions', name: t('navSolutions') },
+  { path: '/recursos', name: t('navResources') },
+  { path: '/contact', name: t('navContact') }
 ];
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
+  const navItems = getNavItems(t);
   
   // Close menu when clicking outside or pressing Escape
   useEffect(() => {
@@ -87,11 +91,11 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div className="flex h-full flex-col overflow-y-auto">
               {/* Header with close button */}
               <div className="flex items-center justify-between p-4 border-b">
-                <h2 className="text-lg font-semibold text-gray-900">Menú</h2>
+                <h2 className="text-lg font-semibold text-gray-900">{t('common.menu') || 'Menú'}</h2>
                 <button
                   onClick={onClose}
                   className="rounded-md p-2 text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  aria-label="Cerrar menú"
+                  aria-label={t('common.closeMenu') || 'Cerrar menú'}
                 >
                   <FiX className="h-6 w-6" />
                 </button>
@@ -118,7 +122,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   className="block w-full px-6 py-3 text-center text-white bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg shadow hover:shadow-md transition-all"
                   onClick={onClose}
                 >
-                  Contactar Ahora
+                  {t('common.contactNow') || 'Contactar Ahora'}
                 </a>
               </div>
             </div>

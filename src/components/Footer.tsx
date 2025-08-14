@@ -49,7 +49,6 @@ export default function Footer({ bgColor = 'bg-gray-900/95', links = [
           <div className="flex gap-6 text-sm font-normal">
             <Link href="/about" className="text-gray-400 hover:text-cyan-400 transition-colors">{t('navPurpose')}</Link>
             <Link href="/solutions" className="text-gray-400 hover:text-cyan-400 transition-colors">{t('navSolutions')}</Link>
-            <Link href="/resources" className="text-gray-400 hover:text-cyan-400 transition-colors">{t('resources')}</Link>
             <Link href="/contact" className="text-gray-400 hover:text-cyan-400 transition-colors">{t('navContact')}</Link>
           </div>
           <div className="flex flex-wrap gap-6 mt-4 justify-center md:justify-end">

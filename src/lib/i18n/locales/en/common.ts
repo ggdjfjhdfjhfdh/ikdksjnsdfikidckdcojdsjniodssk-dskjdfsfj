@@ -69,6 +69,17 @@ export const commonEN = {
   support: 'Support',
   documentation: 'Documentation',
   
+  // Navigation specific
+  navAbout: 'About',
+  navSolutions: 'Solutions',
+  navResources: 'Resources',
+  navContact: 'Contact',
+  
+  // Mobile menu
+  menu: 'Menu',
+  closeMenu: 'Close menu',
+  contactNow: 'Contact Now',
+  
   // Forms
   required: 'Required',
   optional: 'Optional',
@@ -97,6 +108,39 @@ export const commonEN = {
   // Legacy navigation (for compatibility)
   navPurpose: 'About',
   resources: 'Resources',
+  
+  // Main page
+  heroTitle1: 'Next-Generation',
+  heroTitle2: 'Enterprise Cybersecurity',
+  heroDescription: 'Comprehensive cybersecurity solutions designed for modern enterprises. 24/7 protection, immediate response, and cutting-edge technology.',
+  askUs: 'Ask Us',
+  whySesecproTitle: 'Why choose SESECPRO?',
+  whySesecproPoint1Title: 'Proven Experience',
+  whySesecproPoint1Desc: 'Over 500 companies protected with 10+ years of experience in enterprise cybersecurity',
+  whySesecproPoint2Title: 'Cutting-Edge Technology',
+  whySesecproPoint2Desc: 'AI, Machine Learning and Zero Trust architecture for proactive protection',
+  whySesecproPoint3Title: 'Guaranteed Response',
+  whySesecproPoint3Desc: '24/7/365 SOC with guaranteed response in less than 15 minutes',
+  solutionsTitle: 'Our Solutions',
+  solutionsDescription: 'Comprehensive protection tailored to your organization\'s needs',
+  solution1Title: 'Audit & Consulting',
+  solution1Description: 'Risk assessment in 48h, personalized roadmap and regulatory compliance',
+  solution2Title: 'SOC as a Service',
+  solution2Description: '24/7/365 monitoring, Threat Intelligence and automated response',
+  solution3Title: 'Incident Response',
+  solution3Description: 'Specialized team, containment in <1 hour and complete forensic analysis',
+  exploreSolutions: 'Explore Solutions',
+  riskCalculatorTitle: 'How secure is your company?',
+  riskCalculatorSubtitle: 'Free Cybersecurity Assessment',
+  riskCalculatorDescription: 'Discover your level of exposure to cyberattacks in just 5 minutes. We evaluate 18 critical aspects and provide you with a personalized action plan to strengthen your security.',
+  riskCalculatorButton: 'Assess Now for Free',
+  riskCalculatorFeatures: '✓ No registration required • ✓ Immediate results • ✓ 100% confidential',
+  riskCalculatorAspects: '18 Evaluated Aspects',
+  riskCalculatorTime: '5 Minutes',
+  riskCalculatorPersonalized: 'Personalized Plan',
+  ctaTitle: 'Protect Your Company Today',
+  ctaSubtitle: 'Contact us today and discover how we can strengthen your cybersecurity',
+  ctaButton: 'Start now',
 };
 
 export type CommonTranslations = typeof commonEN;

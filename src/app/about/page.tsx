@@ -104,7 +104,7 @@ export default function AboutPage() {
       {/* Experience Section */}
       <section className="relative py-20 bg-gray-900 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-[url('/images/pattern-grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+          {/* Pattern grid removed - file not found */}
         </div>
         <div className="relative container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-16">

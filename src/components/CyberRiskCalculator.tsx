@@ -19,6 +19,7 @@ import {
 import { useLanguage } from '@/lib/LanguageContext';
 import { riskCalculatorTranslations, type RiskCalculatorTranslationKey } from '@/lib/riskCalculatorTranslations';
 import { businessQuestions as businessQuestionsData, individualQuestions as individualQuestionsData } from '@/lib/riskCalculatorQuestions';
+import DownloadButton from './DownloadButton';
 
 interface Question {
   id: string;
@@ -562,7 +563,7 @@ const CyberRiskCalculator: React.FC = () => {
 
   if (showResults && result) {
     return (
-      <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
+      <div id="assessment-results" className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
         {/* Alerta de urgencia */}
         {(result.urgency === 'critical' || result.urgency === 'high') && (
           <div className={`mb-6 p-4 rounded-lg border-l-4 ${
@@ -735,6 +736,11 @@ const CyberRiskCalculator: React.FC = () => {
               <span>Respuesta en menos de 2 horas • Consulta sin compromiso</span>
             </div>
           </div>
+        </div>
+
+        {/* Botón para descargar PDF */}
+        <div className="mb-6">
+          <DownloadButton title={t('resultsTitle') || 'Informe de Evaluación'} contentSelector="#assessment-results" />
         </div>
 
         <div className="flex justify-center">
