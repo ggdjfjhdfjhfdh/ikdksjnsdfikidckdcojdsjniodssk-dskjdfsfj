@@ -256,7 +256,7 @@ export const generateGuidePdf = (title: string, content: HTMLElement, userProfil
   
   // Score principal
   doc.setFontSize(36);
-  doc.setTextColor(data.score >= 85 ? [34, 197, 94] : data.score >= 70 ? [234, 179, 8] : data.score >= 50 ? [249, 115, 22] : [239, 68, 68]);
+  doc.setTextColor(...(data.score >= 85 ? [34, 197, 94] : data.score >= 70 ? [234, 179, 8] : data.score >= 50 ? [249, 115, 22] : [239, 68, 68]));
   doc.text(`${data.score}%`, pageWidth / 2, metricsY + 40, { align: 'center' });
   
   doc.setFontSize(12);

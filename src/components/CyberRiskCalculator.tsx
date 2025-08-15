@@ -40,11 +40,20 @@ interface UserProfile {
   hasITTeam?: boolean;
 }
 
+interface ActionStep {
+  id: number;
+  title: string;
+  description: string;
+  priority: 'CRÍTICO' | 'ALTO' | 'MEDIO';
+  timeframe: 'Inmediato' | '1-3 meses' | '3-6 meses';
+  category: '🚨 Inmediato' | '⚡ Corto Plazo' | '📈 Medio Plazo';
+}
+
 interface RiskResult {
   score: number;
   level: 'low' | 'medium' | 'high' | 'critical';
   color: string;
-  recommendations: string[];
+  actionPlan: ActionStep[];
   urgency: 'low' | 'medium' | 'high' | 'critical';
   businessImpact: string;
   estimatedCost: string;
@@ -106,7 +115,11 @@ const CyberRiskCalculator: React.FC = () => {
 
   // Helper function to get translations
   const t = (key: RiskCalculatorTranslationKey): string => {
-    return (riskCalculatorTranslations[language as keyof typeof riskCalculatorTranslations]?.[key] || riskCalculatorTranslations.ES[key] || key);
+    const translations = riskCalculatorTranslations[language as keyof typeof riskCalculatorTranslations];
+    if (translations && key in translations) {
+      return translations[key as keyof typeof translations];
+    }
+    return riskCalculatorTranslations.ES[key as keyof typeof riskCalculatorTranslations.ES] || key;
   };
 
   const handleAnswer = (questionId: string, answer: boolean) => {
@@ -190,11 +203,22 @@ const CyberRiskCalculator: React.FC = () => {
     
     let level: RiskResult['level'];
     let color: string;
-    let recommendations: string[];
+    let actionPlan: ActionStep[];
     let urgency: RiskResult['urgency'];
     let businessImpact: string;
     let estimatedCost: string;
     let timeToImplement: string;
+    
+    // Helper para estructurar pasos con metadatos según prioridad
+    const createActionSteps = (steps: Array<{ title: string; description: string }>): ActionStep[] =>
+      steps.map((step, index) => ({
+        id: index + 1,
+        title: step.title,
+        description: step.description,
+        priority: index < 2 ? 'CRÍTICO' : index < 4 ? 'ALTO' : 'MEDIO',
+        timeframe: index < 2 ? 'Inmediato' : index < 4 ? '1-3 meses' : '3-6 meses',
+        category: index < 2 ? '🚨 Inmediato' : index < 4 ? '⚡ Corto Plazo' : '📈 Medio Plazo'
+      }));
     
     // Datos reales basados en estadísticas de ciberseguridad 2024
     // Fuente: Costo promedio de brechas de datos: $4.88M (IBM Security)
@@ -211,30 +235,26 @@ const CyberRiskCalculator: React.FC = () => {
         businessImpact = 'Protección personal óptima - Riesgo de robo de identidad <1% (vs 15% promedio nacional)';
         estimatedCost = '€180 - €420/año (ROI: evita pérdidas promedio de €3,200/incidente)';
         timeToImplement = '1-2 meses';
-        recommendations = [
-          '🏆 EXCELENTE: Su seguridad personal supera el 95% de usuarios.',
-          '🔄 Mantenga actualizados todos sus dispositivos (74% de brechas por error humano).',
-          '🎯 VPN premium y gestores de contraseñas empresariales (reducen riesgo 85%).',
-          '🚀 Autenticación biométrica (99.9% efectividad vs phishing).',
-          '🤝 Comparta conocimientos - solo 23% de usuarios usan 2FA.',
-          '📊 Revise configuraciones de privacidad (38% exponen datos innecesariamente).',
-          '💡 Formación continua - amenazas evolucionan cada 39 segundos.'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'Mantén todo actualizado', description: '1) Activa actualizaciones automáticas en móvil y PC. 2) Actualiza apps críticas (correo, navegador, banca, redes). 3) Reinicia al finalizar.' },
+          { title: 'Autenticación biométrica y 2FA', description: '1) Habilita FaceID/TouchID o biometría. 2) Activa 2FA en correo, banca y redes. 3) Guarda códigos de respaldo en el gestor.' },
+          { title: 'Gestor de contraseñas empresarial', description: '1) Instala el gestor en todos tus dispositivos. 2) Cambia contraseñas débiles por únicas >12 caracteres. 3) Activa autocompletado seguro.' },
+          { title: 'Privacidad avanzada', description: '1) Revisa privacidad en redes (solo amigos/privado). 2) Desactiva geolocalización en publicaciones. 3) Elimina datos sensibles públicos.' },
+          { title: 'VPN premium', description: '1) Configura una VPN confiable (no gratuitas). 2) Activa en redes Wi‑Fi públicas. 3) Desactiva cuando no se use para ahorro de batería.' }
+        ]);
       } else {
         businessImpact = 'Excelencia operativa - Riesgo de brecha <2% vs 46% promedio sector';
         estimatedCost = userProfile?.companySize === 'small' ? '€12,000 - €25,000/año (13.2% presupuesto IT)' : 
                        userProfile?.companySize === 'medium' ? '€35,000 - €75,000/año (ROI: evita €1.2M promedio)' :
                        userProfile?.companySize === 'large' ? '€85,000 - €180,000/año (vs €4.88M costo brecha)' : '€200,000 - €400,000/año (Enterprise grade)';
         timeToImplement = '3-6 meses';
-        recommendations = [
-          '🏆 NIVEL ENTERPRISE: Top 5% en madurez de ciberseguridad.',
-          '🔄 Revisiones trimestrales (MTTR objetivo: <4 horas).',
-          '🎯 ISO 27001/SOC 2 Type II (reduce primas seguro 15-30%).',
-          '🚀 AI/ML para detección (mejora detección 67% vs métodos tradicionales).',
-          '🤝 Threat intelligence sharing (reduce tiempo detección 23%).',
-          '📊 Métricas avanzadas: MTTR <4h, MTTD <1h (benchmarks industria).',
-          userProfile?.hasITTeam ? '👥 Certificaciones avanzadas (CISSP, CISM) para equipo IT.' : '💼 Equipo ciberseguridad dedicado (ROI: 3.2x en 24 meses).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'Zero Trust en accesos', description: '1) MFA obligatorio en VPN/SSO. 2) Segmenta redes. 3) Revisa accesos privilegiados y elimina cuentas huérfanas.' },
+          { title: 'Gestión de credenciales privilegiadas', description: '1) Implanta PAM o bóveda segura. 2) Rotación trimestral de contraseñas. 3) Registra y audita accesos.' },
+          { title: 'EDR/XDR en endpoints críticos', description: '1) Despliega agente EDR/XDR. 2) Activa reglas de detección. 3) Configura alertas y playbooks.' },
+          { title: 'Simulaciones de phishing', description: '1) Programa campañas bimensuales. 2) Mide tasas de clics. 3) Refuerza formación focalizada.' },
+          { title: 'Protección de datos (DLP)', description: '1) Clasifica datos sensibles. 2) Define políticas DLP. 3) Monitoriza y bloquea exfiltración.' }
+        ]);
       }
     } else if (percentage >= 75) {
       level = 'medium';
@@ -245,30 +265,26 @@ const CyberRiskCalculator: React.FC = () => {
         businessImpact = 'Buena protección - Riesgo robo identidad 8% (vs 15% promedio)';
         estimatedCost = '€120 - €320/año (ROI: evita €2,400 promedio por incidente)';
         timeToImplement = '2-4 meses';
-        recommendations = [
-          '✅ NIVEL AVANZADO: Supera al 75% de usuarios en seguridad.',
-          '🔐 2FA en cuentas críticas (reduce riesgo phishing 99.9%).',
-          '🛡️ Gestor contraseñas profesional (solo 39% de usuarios lo usa).',
-          '📋 Backups automáticos (60% usuarios pierden datos anualmente).',
-          '🎓 Formación anti-phishing (reduce susceptibilidad 70%).',
-          '🔍 Auditoría permisos apps (promedio: 67 apps con acceso excesivo).',
-          '💳 Alertas bancarias (detecta fraude 89% más rápido).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'Activa 2FA en cuentas críticas', description: '1) Empieza por correo y banca. 2) Usa app de autenticación (no SMS). 3) Guarda códigos de recuperación.' },
+          { title: 'Instala gestor de contraseñas', description: '1) Crea bóveda y contraseña maestra fuerte. 2) Cambia contraseñas débiles. 3) Activa 2FA del gestor.' },
+          { title: 'Copia de seguridad automática', description: '1) iCloud/Drive/OneDrive o disco externo. 2) Programa semanal. 3) Prueba restauración de un archivo.' },
+          { title: 'Revisión de permisos de apps', description: '1) Revisa permisos por app. 2) Revoca acceso innecesario. 3) Desinstala apps no usadas.' },
+          { title: 'Alertas bancarias', description: '1) Activa notificaciones de login y transacciones. 2) Verifica movimientos sospechosos. 3) Ajusta límites.' }
+        ]);
       } else {
         businessImpact = 'Reducción riesgo significativa - Probabilidad brecha 15% vs 46% promedio';
         estimatedCost = userProfile?.companySize === 'small' ? '€18,000 - €35,000 (vs €826-€653K costo incidente)' : 
                        userProfile?.companySize === 'medium' ? '€45,000 - €85,000 (ROI: 5.7x en 18 meses)' :
                        userProfile?.companySize === 'large' ? '€95,000 - €180,000 (vs €4.88M costo brecha promedio)' : '€180,000 - €350,000 (Enterprise)';
         timeToImplement = '6-12 meses';
-        recommendations = [
-          '✅ NIVEL AVANZADO: Top 25% empresas en madurez ciberseguridad.',
-          '🔐 Zero Trust (reduce brechas laterales 67%).',
-          '🛡️ XDR/SOAR (mejora tiempo respuesta 73%).',
-          '📋 Gestión riesgos terceros (80% brechas vía proveedores).',
-          '🎓 Concienciación continua (reduce error humano 45%).',
-          '🔍 Red/Purple team (mejora detección 58%).',
-          userProfile?.industry ? `🏭 Cumplimiento ${userProfile.industry} (evita multas promedio €2.3M).` : '📜 Evaluación normativa (GDPR, NIS2, etc.).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'Zero Trust', description: '1) MFA obligatorio en todas las apps. 2) Segmentación por roles. 3) Inventario y control de accesos.' },
+          { title: 'XDR/SOAR', description: '1) Centraliza detecciones. 2) Automatiza respuestas comunes. 3) Define runbooks y métricas (MTTD/MTTR).' },
+          { title: 'Riesgo de terceros', description: '1) Inventario de proveedores. 2) Evaluación periódica. 3) Cláusulas de seguridad y auditoría.' },
+          { title: 'Concienciación', description: '1) Formación mensual breve. 2) Simulaciones de phishing. 3) KPIs de mejora por equipo.' },
+          { title: 'Cumplimiento normativo', description: '1) Gap analysis GDPR/NIS2. 2) Plan de remediación. 3) Auditoría interna.' }
+        ]);
       }
     } else if (percentage >= 60) {
       level = 'medium';
@@ -279,31 +295,26 @@ const CyberRiskCalculator: React.FC = () => {
         businessImpact = 'Protección básica - Riesgo robo identidad 12% (vulnerable a ataques dirigidos)';
         estimatedCost = '€80 - €250/año (ROI: evita €1,800 promedio por incidente)';
         timeToImplement = '3-6 meses';
-        recommendations = [
-          '⚠️ NIVEL INTERMEDIO: Básicos cubiertos, vulnerabilidades críticas pendientes.',
-          '🎯 Antivirus empresarial (detecta 95% vs 60% gratuitos).',
-          '🔒 Firewall router (bloquea 78% intentos intrusión).',
-          '🌐 VPN confiable (cifrado AES-256, sin logs).',
-          '📊 Updates automáticos (parcha 89% vulnerabilidades conocidas).',
-          '🚨 Formación anti-phishing (1 de cada 4 emails es malicioso).',
-          '💾 Backup 3-2-1 (60% usuarios pierden datos críticos).',
-          '🔐 Contraseñas únicas >12 caracteres (vs 123456 en top 10).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'Antivirus de nivel empresarial', description: '1) Instala una solución reputada. 2) Programa análisis semanal. 3) Activa protección en tiempo real.' },
+          { title: 'Asegura tu router', description: '1) Cambia la contraseña y desactiva WPS. 2) Actualiza firmware. 3) Activa firewall.' },
+          { title: 'VPN confiable', description: '1) Configura VPN sólo de proveedores confiables. 2) Úsala en Wi‑Fi públicas. 3) Verifica que esté conectada.' },
+          { title: 'Actualizaciones automáticas', description: '1) Activa updates del sistema. 2) Actualiza navegador y apps clave. 3) Reinicia semanalmente.' },
+          { title: 'Backup 3-2-1', description: '1) 3 copias, 2 medios, 1 fuera de línea. 2) Programa copia automática. 3) Prueba restauración.' }
+        ]);
       } else {
         businessImpact = 'Riesgo moderado - Probabilidad brecha 25% (necesita refuerzo crítico)';
         estimatedCost = userProfile?.companySize === 'small' ? '€35,000 - €65,000 (vs €826K-€653K costo incidente)' : 
                        userProfile?.companySize === 'medium' ? '€75,000 - €140,000 (ROI: 4.2x en 24 meses)' :
                        userProfile?.companySize === 'large' ? '€150,000 - €280,000 (vs €4.88M costo brecha)' : '€280,000 - €500,000 (Enterprise)';
         timeToImplement = '9-18 meses';
-        recommendations = [
-          '⚠️ NIVEL INTERMEDIO: Fundamentos presentes, gaps críticos identificados.',
-          '🎯 SIEM/SOAR (reduce tiempo detección de días a horas).',
-          '🔒 EDR/XDR endpoints (detecta 97% amenazas avanzadas).',
-          '🌐 Microsegmentación (contiene 84% movimientos laterales).',
-          '📊 Gestión vulnerabilidades (parcha CVEs críticos <72h).',
-          '🚨 SOC 24/7 o MDR (reduce MTTR 67%).',
-          userProfile?.hasITTeam ? '👥 Certificación respuesta incidentes (GCIH, GCFA).' : '💼 Especialista ciberseguridad (salario: €45K-€75K).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'SIEM/SOAR', description: '1) Centraliza logs críticos. 2) Casos de uso prioritarios. 3) Playbooks de respuesta.' },
+          { title: 'EDR/XDR endpoints', description: '1) Despliegue por fases. 2) Políticas de bloqueo. 3) Integración con SIEM.' },
+          { title: 'Microsegmentación', description: '1) Mapa de flujos. 2) Segmenta por función. 3) Políticas de acceso mínimo.' },
+          { title: 'Vulnerabilidades', description: '1) Escaneo continuo. 2) SLA: críticos <72h. 3) Parcheo y verificación.' },
+          { title: 'SOC 24/7 o MDR', description: '1) Contrata servicio o monta interno. 2) Define KPIs (MTTD/MTTR). 3) Informes mensuales.' }
+        ]);
       }
     } else if (percentage >= 40) {
       level = 'high';
@@ -314,32 +325,26 @@ const CyberRiskCalculator: React.FC = () => {
         businessImpact = 'RIESGO ALTO: Probabilidad robo identidad 35% - Exposición crítica';
         estimatedCost = '€60 - €180/año (ROI: evita €3,200 promedio por incidente)';
         timeToImplement = '1-3 meses (URGENTE)';
-        recommendations = [
-          '🚨 RIESGO ELEVADO: Múltiples vulnerabilidades críticas detectadas.',
-          '🔥 URGENTE: 2FA inmediato (99.9% efectivo vs account takeover).',
-          '🛡️ Antivirus actualizado (malware crece 5.4M variantes/mes).',
-          '🔐 Contraseñas únicas (81% brechas usan credenciales débiles).',
-          '📋 Auditoría cuentas (promedio: 130 cuentas online por persona).',
-          '🎯 Alertas actividad (detecta 67% actividad fraudulenta).',
-          '💼 Monitoreo identidad (dark web, €15/mes vs €3,200 pérdida).',
-          '📱 Updates críticos (86% exploits usan vulnerabilidades conocidas).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'Activa 2FA URGENTE', description: '1) Correo y banca HOY mismo. 2) Apps de autenticación (no SMS). 3) Guarda códigos de respaldo.' },
+          { title: 'Antivirus y escaneo completo', description: '1) Instala antivirus reputado. 2) Escaneo completo del sistema. 3) Activa protección en tiempo real.' },
+          { title: 'Cambiar TODAS las contraseñas', description: '1) Instala gestor de contraseñas. 2) Cambia contraseñas por únicas >12 caracteres. 3) Prioriza cuentas críticas.' },
+          { title: 'Auditoría de cuentas', description: '1) Lista todas tus cuentas online. 2) Cierra las no utilizadas. 3) Activa alertas de login.' },
+          { title: 'Updates críticos', description: '1) Actualiza sistema operativo. 2) Actualiza navegadores y apps. 3) Activa updates automáticos.' }
+        ]);
       } else {
         businessImpact = 'RIESGO CRÍTICO: Probabilidad brecha 40% - Impacto financiero severo';
         estimatedCost = userProfile?.companySize === 'small' ? '€50,000 - €95,000 (vs €826K-€653K costo incidente)' : 
                        userProfile?.companySize === 'medium' ? '€110,000 - €200,000 (vs €1.2M costo promedio)' :
                        userProfile?.companySize === 'large' ? '€220,000 - €400,000 (vs €4.88M costo brecha)' : '€400,000 - €700,000 (Enterprise)';
         timeToImplement = '3-6 meses (URGENTE)';
-        recommendations = [
-          '🚨 RIESGO ELEVADO: Múltiples vectores de ataque expuestos.',
-          '🔥 URGENTE: MFA administrativo (reduce riesgo 99.9%).',
-          '🛡️ Antimalware empresarial (detecta 99.7% vs 60% básico).',
-          '🔐 Cifrado datos (GDPR: multas hasta 4% facturación anual).',
-          '📋 Plan respuesta incidentes (reduce MTTR 73%).',
-          '🎯 Pentest externo (identifica 89% vulnerabilidades críticas).',
-          '💼 MSSP/MDR (reduce costos 34% vs SOC interno).',
-          userProfile?.hasITTeam ? '👥 Formación urgente (74% brechas por error humano).' : '🚨 Consultoría especializada (€150-€300/hora vs €4.88M brecha).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'MFA Administrativo Inmediato', description: '1) MFA en VPN/SSO/admin. 2) Deshabilitar cuentas huérfanas. 3) Auditoría de accesos privilegiados.' },
+          { title: 'Antimalware Empresarial', description: '1) Despliegue en endpoints críticos. 2) Políticas de bloqueo. 3) Telemetría centralizada.' },
+          { title: 'Cifrado de datos', description: '1) Cifrar discos y datos sensibles. 2) Gestión de claves segura. 3) Procedimientos de recuperación.' },
+          { title: 'Plan de Respuesta a Incidentes', description: '1) Crear playbooks. 2) Roles y responsables. 3) Simulacros mensuales.' },
+          { title: 'Pentest + MSSP/MDR', description: '1) Pentest externo. 2) Selección de MSSP/MDR. 3) Acuerdos de SLAs y reporting.' }
+        ]);
       }
     } else {
       level = 'critical';
@@ -350,34 +355,26 @@ const CyberRiskCalculator: React.FC = () => {
         businessImpact = 'EMERGENCIA: Probabilidad robo identidad >50% - Riesgo financiero extremo';
         estimatedCost = '€40 - €120/año (ROI: evita €5,400 promedio por incidente grave)';
         timeToImplement = '2-4 semanas (EMERGENCIA)';
-        recommendations = [
-          '🚨 RIESGO CRÍTICO: Exposición máxima - Acción inmediata requerida.',
-          '⚡ HOY: Cambiar TODAS las contraseñas (81% brechas usan credenciales débiles).',
-          '🔒 2FA inmediato email/banco (previene 99.9% account takeover).',
-          '🎯 Antivirus + escaneo completo (5.4M nuevas variantes malware/mes).',
-          '👥 Auditoría cuentas (promedio: 130 cuentas online expuestas).',
-          '📊 Congelación crédito (previene 89% fraude identidad).',
-          '💡 Protección identidad profesional (dark web monitoring).',
-          '🚀 Consultoría especializada (vs €5,400 costo promedio incidente).',
-          '📱 Updates críticos TODOS los dispositivos (86% exploits conocidos).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'Cambia TODAS las contraseñas HOY', description: '1) Instala un gestor. 2) Contraseñas únicas y fuertes. 3) Prioriza correo y banca.' },
+          { title: 'Activa 2FA ya', description: '1) Correo y banca. 2) Redes sociales. 3) Guarda códigos de recuperación.' },
+          { title: 'Antivirus y escaneo completo', description: '1) Instalar y escanear sistema. 2) Eliminar amenazas. 3) Activar protección en tiempo real.' },
+          { title: 'Congelación de crédito', description: '1) Solicita congelación. 2) Activa alertas. 3) Monitorea actividad sospechosa.' },
+          { title: 'Updates críticos en todos los dispositivos', description: '1) Sistema operativo. 2) Navegadores y apps. 3) Actualizaciones automáticas.' }
+        ]);
       } else {
         businessImpact = 'EMERGENCIA: Probabilidad brecha >60% - Riesgo paralización negocio';
         estimatedCost = userProfile?.companySize === 'small' ? '€70,000 - €150,000 (vs €826K-€653K costo incidente)' : 
                        userProfile?.companySize === 'medium' ? '€180,000 - €350,000 (vs €2.4M costo promedio)' :
                        userProfile?.companySize === 'large' ? '€350,000 - €650,000 (vs €4.88M costo brecha)' : '€650,000 - €1,200,000 (Enterprise)';
         timeToImplement = '1-3 meses (EMERGENCIA)';
-        recommendations = [
-          '🚨 RIESGO CRÍTICO: Múltiples vectores críticos - Intervención urgente.',
-          '⚡ CONTACTO INMEDIATO: SESECPRO para intervención de emergencia.',
-          '🔒 Controles básicos urgentes (firewall, antivirus, backups).',
-          '🎯 Políticas seguridad fundamentales (reduce riesgo 67%).',
-          '👥 Equipo respuesta incidentes (MTTR objetivo: <24h).',
-          '📊 Assessment completo (identifica 95% vulnerabilidades críticas).',
-          '💡 Outsourcing ciberseguridad (reduce costos 34% vs interno).',
-          '🚀 Roadmap transformación (compliance GDPR, NIS2).',
-          userProfile?.hasITTeam ? '🔥 Formación urgente IT (74% brechas por error humano).' : '🚨 Servicios externos inmediatos (€200-€400/hora vs €4.88M brecha).'
-        ];
+        actionPlan = createActionSteps([
+          { title: 'Contacto inmediato y contención', description: '1) Contactar SESECPRO. 2) Aislar activos críticos. 3) Activar plan de continuidad.' },
+          { title: 'Controles básicos urgentes', description: '1) Firewall activo. 2) Antivirus en todos los equipos. 3) Backups verificados.' },
+          { title: 'Políticas fundamentales', description: '1) Políticas de contraseñas. 2) Accesos mínimos. 3) Política de parches.' },
+          { title: 'Respuesta a incidentes', description: '1) Equipo y roles. 2) MTTR objetivo <24h. 3) Simulacro en 2 semanas.' },
+          { title: 'Assessment + Roadmap', description: '1) Assessment completo. 2) Plan de remediación. 3) Roadmap GDPR/NIS2.' }
+        ]);
       }
     }
     
@@ -915,6 +912,436 @@ const CyberRiskCalculator: React.FC = () => {
             "{result.businessImpact}"
           </p>
         </div>
+
+        {/* Secciones Específicas para Particulares */}
+        {userProfile?.type === 'individual' && (() => {
+          // Lógica para determinar si mostrar protección familiar
+          const hasFamilyContext = () => {
+            const familyKeywords = ['familia', 'hijos', 'menores', 'niños', 'adolescentes', 'control parental'];
+            const answeredQuestions = Object.keys(answers);
+            
+            // Si respondió preguntas relacionadas con dispositivos móviles o control parental
+            return answeredQuestions.some(id => 
+              currentQuestions.find(q => q.id === id)?.question.toLowerCase().match(/(móvil|celular|tablet|control|parental|familiar)/)
+            ) || result.score < 60; // Mostrar si tiene puntuación media-baja
+          };
+
+          // Consejos antiestafas específicos por plataforma
+          const getAntiScamTips = () => {
+            return {
+              whatsapp: [
+                "Verifica la identidad del remitente antes de hacer transferencias",
+                "Desconfía de ofertas demasiado buenas para ser verdad",
+                "No compartas códigos de verificación con nadie",
+                "Activa la verificación en dos pasos",
+                "Revisa los números de contacto oficiales de empresas"
+              ],
+              email: [
+                "Verifica la dirección del remitente cuidadosamente",
+                "No hagas clic en enlaces sospechosos",
+                "Confirma solicitudes importantes por teléfono",
+                "Usa filtros de spam avanzados",
+                "Mantén actualizado tu antivirus"
+              ],
+              social: [
+                "Configura la privacidad de tus perfiles",
+                "No aceptes solicitudes de desconocidos",
+                "Verifica la autenticidad de ofertas y promociones",
+                "No compartas información personal sensible",
+                "Reporta perfiles y contenido sospechoso"
+              ]
+            };
+          };
+
+          // Guías por dispositivo
+          const getDeviceGuides = () => {
+            return {
+              iphone: {
+                "2fa": [
+                  "Ir a Ajustes > [Tu nombre] > Iniciar sesión y seguridad",
+                  "Tocar 'Autenticación de dos factores'",
+                  "Tocar 'Continuar' y seguir las instrucciones",
+                  "Verificar con número de teléfono de confianza"
+                ],
+                "passwords": [
+                  "Ir a Ajustes > Contraseñas",
+                  "Tocar 'Opciones de contraseñas'",
+                  "Activar 'Detectar contraseñas comprometidas'",
+                  "Usar 'Contraseñas automáticas' para generar contraseñas seguras"
+                ],
+                "backup": [
+                  "Ir a Ajustes > [Tu nombre] > iCloud",
+                  "Tocar 'Copia de seguridad de iCloud'",
+                  "Activar 'Copia de seguridad de iCloud'",
+                  "Tocar 'Crear copia de seguridad ahora'"
+                ]
+              },
+              android: {
+                "2fa": [
+                  "Ir a Configuración > Google > Gestionar tu cuenta de Google",
+                  "Tocar 'Seguridad' > 'Verificación en dos pasos'",
+                  "Tocar 'Empezar' y seguir las instrucciones",
+                  "Configurar método de verificación preferido"
+                ],
+                "passwords": [
+                  "Descargar Google Password Manager",
+                  "Ir a Configuración > Google > Autorrelleno",
+                  "Activar 'Autorrelleno con Google'",
+                  "Configurar verificación de contraseñas comprometidas"
+                ],
+                "backup": [
+                  "Ir a Configuración > Sistema > Copia de seguridad",
+                  "Activar 'Copia de seguridad en Google Drive'",
+                  "Seleccionar cuenta de Google",
+                  "Configurar elementos a respaldar"
+                ]
+              },
+              windows: {
+                "2fa": [
+                  "Abrir Configuración > Cuentas > Opciones de inicio de sesión",
+                  "Configurar Windows Hello (huella, PIN o reconocimiento facial)",
+                  "Activar 2FA en la cuenta de Microsoft",
+                  "Instalar Microsoft Authenticator"
+                ],
+                "passwords": [
+                  "Usar Windows Credential Manager",
+                  "Instalar un gestor como Bitwarden o 1Password",
+                  "Activar Windows Defender SmartScreen",
+                  "Configurar contraseñas de aplicación"
+                ],
+                "backup": [
+                  "Configurar Historial de archivos",
+                  "Usar OneDrive para sincronización",
+                  "Crear punto de restauración del sistema",
+                  "Configurar copia de seguridad automática"
+                ]
+              },
+              mac: {
+                "2fa": [
+                  "Ir a Preferencias del Sistema > ID de Apple",
+                  "Hacer clic en 'Contraseña y seguridad'",
+                  "Activar 'Autenticación de dos factores'",
+                  "Configurar dispositivos de confianza"
+                ],
+                "passwords": [
+                  "Usar Llavero de iCloud integrado",
+                  "Ir a Safari > Preferencias > Contraseñas",
+                  "Activar 'Detectar contraseñas comprometidas'",
+                  "Considerar 1Password o Bitwarden"
+                ],
+                "backup": [
+                  "Configurar Time Machine",
+                  "Conectar disco externo para respaldos",
+                  "Usar iCloud para documentos importantes",
+                  "Verificar respaldos regularmente"
+                ]
+              }
+            };
+          };
+
+          const antiScamTips = getAntiScamTips();
+          const deviceGuides = getDeviceGuides();
+
+          return (
+            <div className="space-y-8 mb-8">
+              {/* Protección Familiar y Control Parental */}
+              {hasFamilyContext() && (
+                <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-2xl border-2 border-purple-200/60 p-8 shadow-xl">
+                  <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mr-4">
+                      <span className="text-white text-xl">👨‍👩‍👧‍👦</span>
+                    </div>
+                    Protección Familiar y Control Parental
+                  </h3>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-purple-200/60">
+                      <h4 className="text-lg font-semibold text-purple-800 mb-4 flex items-center">
+                        <span className="mr-2">🛡️</span>
+                        Controles Parentales Esenciales
+                      </h4>
+                      <ul className="space-y-3 text-sm text-slate-700">
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1">✓</span>
+                          <span>Configurar Screen Time (iOS) o Digital Wellbeing (Android)</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1">✓</span>
+                          <span>Activar filtros de contenido en routers y dispositivos</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1">✓</span>
+                          <span>Configurar controles de compras en app stores</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1">✓</span>
+                          <span>Establecer horarios de uso de dispositivos</span>
+                        </li>
+                      </ul>
+                    </div>
+                    
+                    <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-purple-200/60">
+                      <h4 className="text-lg font-semibold text-purple-800 mb-4 flex items-center">
+                        <span className="mr-2">📚</span>
+                        Educación Digital
+                      </h4>
+                      <ul className="space-y-3 text-sm text-slate-700">
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1">💡</span>
+                          <span>Enseñar sobre privacidad en redes sociales</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1">💡</span>
+                          <span>Explicar los riesgos del cyberbullying</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1">💡</span>
+                          <span>Crear reglas familiares para el uso de internet</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1">💡</span>
+                          <span>Supervisar actividad online sin invadir privacidad</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 p-4 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl border border-purple-200">
+                    <p className="text-sm text-purple-800 text-center font-medium">
+                      🔗 <strong>Recursos:</strong> Configura Family Link (Google) o Tiempo en Pantalla (Apple) para un control integral
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Consejos Antiestafas */}
+              <div className="bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 rounded-2xl border-2 border-red-200/60 p-8 shadow-xl">
+                <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center mr-4">
+                    <span className="text-white text-xl">🚨</span>
+                  </div>
+                  Consejos Antiestafas por Plataforma
+                </h3>
+                
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-red-200/60">
+                    <h4 className="text-lg font-semibold text-green-800 mb-4 flex items-center">
+                      <span className="mr-2">💬</span>
+                      WhatsApp
+                    </h4>
+                    <ul className="space-y-2 text-sm text-slate-700">
+                      {antiScamTips.whatsapp.map((tip, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-green-600 mr-2 mt-1 text-xs">▶</span>
+                          <span>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-red-200/60">
+                    <h4 className="text-lg font-semibold text-blue-800 mb-4 flex items-center">
+                      <span className="mr-2">📧</span>
+                      Email
+                    </h4>
+                    <ul className="space-y-2 text-sm text-slate-700">
+                      {antiScamTips.email.map((tip, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-blue-600 mr-2 mt-1 text-xs">▶</span>
+                          <span>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-red-200/60">
+                    <h4 className="text-lg font-semibold text-purple-800 mb-4 flex items-center">
+                      <span className="mr-2">📱</span>
+                      Redes Sociales
+                    </h4>
+                    <ul className="space-y-2 text-sm text-slate-700">
+                      {antiScamTips.social.map((tip, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-purple-600 mr-2 mt-1 text-xs">▶</span>
+                          <span>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                
+                <div className="mt-6 flex items-center justify-center">
+                  <a 
+                    href="/recursos/guias/proteccion-phishing" 
+                    className="inline-flex items-center text-sm font-semibold text-red-700 hover:text-red-800 transition-colors"
+                  >
+                    📖 Guía completa antiestafas (phishing)
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+                
+                <div className="mt-4 p-4 bg-gradient-to-r from-red-100 to-orange-100 rounded-xl border border-red-200">
+                  <p className="text-sm text-red-800 text-center font-medium">
+                    ⚠️ <strong>Recuerda:</strong> Si algo parece demasiado bueno para ser verdad, probablemente lo es. Verifica siempre antes de actuar.
+                  </p>
+                </div>
+              </div>
+
+              {/* Guía Rápida por Dispositivo */}
+              <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-cyan-50 rounded-2xl border-2 border-blue-200/60 p-8 shadow-xl">
+                <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mr-4">
+                    <span className="text-white text-xl">📱</span>
+                  </div>
+                  Guía Rápida por Dispositivo
+                </h3>
+                
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {Object.entries(deviceGuides).map(([device, guides]) => (
+                    <div key={device} className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-blue-200/60">
+                      <h4 className="text-lg font-semibold text-blue-800 mb-4 flex items-center">
+                        <span className="mr-2">
+                          {device === 'iphone' && '📱'}
+                          {device === 'android' && '🤖'}
+                          {device === 'windows' && '💻'}
+                          {device === 'mac' && '🖥️'}
+                        </span>
+                        {device.charAt(0).toUpperCase() + device.slice(1)}
+                      </h4>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <h5 className="font-semibold text-sm text-slate-700 mb-2">🔐 2FA</h5>
+                          <ul className="text-xs text-slate-600 space-y-1">
+                            {guides["2fa"].slice(0, 2).map((step, index) => (
+                              <li key={index} className="flex items-start">
+                                <span className="text-blue-500 mr-1">{index + 1}.</span>
+                                <span>{step}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h5 className="font-semibold text-sm text-slate-700 mb-2">🔑 Contraseñas</h5>
+                          <ul className="text-xs text-slate-600 space-y-1">
+                            {guides.passwords.slice(0, 2).map((step, index) => (
+                              <li key={index} className="flex items-start">
+                                <span className="text-green-500 mr-1">{index + 1}.</span>
+                                <span>{step}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="mt-6 p-4 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl border border-blue-200">
+                  <p className="text-sm text-blue-800 text-center font-medium">
+                    💡 <strong>Tip:</strong> Cada dispositivo tiene sus propias herramientas de seguridad integradas. ¡Aprovéchalas!
+                  </p>
+                </div>
+              </div>
+
+              {/* Guías Paso a Paso */}
+              <div className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-2xl border-2 border-green-200/60 p-8 shadow-xl">
+                <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mr-4">
+                    <span className="text-white text-xl">📋</span>
+                  </div>
+                  Guías Paso a Paso
+                </h3>
+                
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="group bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-green-200/60 hover:shadow-lg transition-all duration-300">
+                    <h4 className="text-lg font-semibold text-green-800 mb-4 flex items-center">
+                      <span className="mr-2">🔐</span>
+                      Configurar 2FA
+                    </h4>
+                    <p className="text-sm text-slate-600 mb-4">
+                      Protege tus cuentas con autenticación de dos factores en menos de 5 minutos.
+                    </p>
+                    <div className="space-y-2">
+                      <a 
+                        href="/recursos/guias/autenticacion-dos-pasos" 
+                        className="inline-flex items-center text-sm font-semibold text-green-600 hover:text-green-700 transition-colors"
+                      >
+                        📖 Guía Completa
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </a>
+                      <div className="flex items-center text-xs text-slate-500">
+                        <span className="mr-2">📱</span>
+                        <span>Incluye códigos QR para configuración rápida</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="group bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-green-200/60 hover:shadow-lg transition-all duration-300">
+                    <h4 className="text-lg font-semibold text-blue-800 mb-4 flex items-center">
+                      <span className="mr-2">🔑</span>
+                      Gestor de Contraseñas
+                    </h4>
+                    <p className="text-sm text-slate-600 mb-4">
+                      Instala y configura un gestor de contraseñas seguro paso a paso.
+                    </p>
+                    <div className="space-y-2">
+                      <a 
+                        href="/recursos/guias/seguridad-contrasenas" 
+                        className="inline-flex items-center text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                      >
+                        📖 Guía Completa
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </a>
+                      <div className="flex items-center text-xs text-slate-500">
+                        <span className="mr-2">🔗</span>
+                        <span>Enlaces directos a apps recomendadas</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="group bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-green-200/60 hover:shadow-lg transition-all duration-300">
+                    <h4 className="text-lg font-semibold text-purple-800 mb-4 flex items-center">
+                      <span className="mr-2">💾</span>
+                      Copias de Seguridad
+                    </h4>
+                    <p className="text-sm text-slate-600 mb-4">
+                      Configura respaldos automáticos para proteger tus datos importantes.
+                    </p>
+                    <div className="space-y-2">
+                      <a 
+                        href="/recursos/guias/gestion-copias-seguridad" 
+                        className="inline-flex items-center text-sm font-semibold text-purple-600 hover:text-purple-700 transition-colors"
+                      >
+                        📖 Guía Completa
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </a>
+                      <div className="flex items-center text-xs text-slate-500">
+                        <span className="mr-2">☁️</span>
+                        <span>Incluye opciones cloud y locales</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-6 p-4 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl border border-green-200">
+                  <p className="text-sm text-green-800 text-center font-medium">
+                    🎯 <strong>Objetivo:</strong> Implementa estas 3 medidas básicas y mejora tu seguridad en un 80%
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* CTA Section Mejorado */}
         <div className={`${
