@@ -184,6 +184,125 @@ export const riskCalculatorES = {
   // Mensaje de alerta crítica
   criticalAlertMessage: 'Su organización presenta vulnerabilidades críticas que requieren intervención inmediata. Cada día de retraso aumenta exponencialmente el riesgo de incidentes.',
   highRiskAlertMessage: 'Se han identificado riesgos significativos que deben abordarse con prioridad para evitar posibles incidentes de seguridad.',
+  
+  // Nuevas secciones para usuarios individuales
+  familyProtectionTitle: 'Protección Familiar y Control Parental',
+  familyProtectionDescription: 'Si convives con menores, activa controles parentales en sus dispositivos, limita el tiempo de pantalla, bloquea compras sin permiso y revisa las apps instaladas. Habla con ellos sobre privacidad, contraseñas y cómo detectar estafas.',
+  familyProtectionTips: [
+    'Crea cuentas infantiles y perfiles con edad adecuada',
+    'En App Store/Play Store, restringe compras y descargas',
+    'Activa filtros de contenido y tiempo de uso',
+    'Revisa historial y permisos de apps periódicamente'
+  ],
+  
+  antiScamTitle: 'Consejos Antiestafas (WhatsApp, Email y Redes)',
+  antiScamWhatsApp: {
+    platform: 'WhatsApp',
+    warning: 'Desconfía de mensajes que piden códigos, urgencias de "familiar/amigo", o enlaces a pagos.',
+    tips: [
+      'Nunca compartas códigos de verificación que te lleguen por SMS o App.',
+      'Verifica por llamada si te piden dinero o datos.',
+      'Desactiva vista previa de enlaces y revisa el remitente.'
+    ]
+  },
+  antiScamEmail: {
+    platform: 'Email',
+    warning: 'Ojo con facturas falsas, avisos de "bloqueo de cuenta" y enlaces a "verificar identidad".',
+    tips: [
+      'Comprueba el dominio real del remitente y no descargues adjuntos sospechosos.',
+      'Nunca introduzcas contraseñas desde enlaces de correos; entra manualmente a la web oficial.',
+      'Activa alertas de inicio de sesión en tus cuentas.'
+    ]
+  },
+  antiScamSocial: {
+    platform: 'Redes Sociales',
+    warning: 'Cuidado con sorteos falsos, apps de filtros que piden permisos excesivos o enlaces acortados.',
+    tips: [
+      'Activa 2FA en Instagram, Facebook, TikTok y X.',
+      'No compartas datos personales por mensajes privados.',
+      'Revisa los permisos de apps conectadas a tus cuentas.'
+    ]
+  },
+
+  deviceGuidesTitle: 'Guía Rápida por Dispositivo',
+  deviceIPhone: {
+    device: 'iPhone',
+    twoFactorSteps: [
+      'Ajustes > tu nombre > Contraseña y seguridad > Activar 2FA',
+      'Elige app de autenticación (recomendado) o SMS',
+      'Guarda códigos de recuperación en lugar seguro'
+    ],
+    passwordManagerSteps: [
+      'Usa el llavero de iCloud o un gestor (1Password, Bitwarden)',
+      'Crea contraseñas únicas y largas',
+      'Activa autocompletar seguro'
+    ],
+    backupSteps: [
+      'Ajustes > iCloud > Copia de seguridad > Activar',
+      'Comprueba que incluya fotos, contactos y apps críticas',
+      'Haz una copia local en ordenador de vez en cuando'
+    ]
+  },
+  deviceAndroid: {
+    device: 'Android',
+    twoFactorSteps: [
+      'Cuenta de Google > Seguridad > Verificación en dos pasos',
+      'Usa Google Authenticator o app similar',
+      'Guarda los códigos de respaldo'
+    ],
+    passwordManagerSteps: [
+      'Usa Gestor de Google o un gestor dedicado',
+      'Crea contraseñas únicas y largas',
+      'Activa autocompletar seguro'
+    ],
+    backupSteps: [
+      'Ajustes > Sistema > Copia de seguridad',
+      'Incluye fotos (Google Fotos) y documentos importantes',
+      'Verifica restauración en otro dispositivo de prueba'
+    ]
+  },
+  deviceWindows: {
+    device: 'Windows',
+    twoFactorSteps: [
+      'Activa 2FA en cuentas Microsoft y servicios críticos',
+      'Usa app de autenticación en lugar de SMS',
+      'Guarda códigos de recuperación'
+    ],
+    passwordManagerSteps: [
+      'Instala un gestor de contraseñas de confianza',
+      'Habilita biometría (Windows Hello) con PIN',
+      'Revisa contraseñas reutilizadas'
+    ],
+    backupSteps: [
+      'Historial de archivos o copia en nube (OneDrive)',
+      'Incluye documentos, fotos y escritorio',
+      'Prueba restauración de un archivo'
+    ]
+  },
+  deviceMac: {
+    device: 'Mac',
+    twoFactorSteps: [
+      'Preferencias del Sistema > ID de Apple > Contraseña y seguridad > 2FA',
+      'App de autenticación recomendada',
+      'Guarda códigos de recuperación'
+    ],
+    passwordManagerSteps: [
+      'Llaveros de iCloud o gestor dedicado',
+      'Evita reutilización de contraseñas',
+      'Autocompletar seguro en Safari/Chrome'
+    ],
+    backupSteps: [
+      'Time Machine activado y probando restauración',
+      'Copia adicional en nube (iCloud, OneDrive, Dropbox)',
+      'Verificación mensual de copias'
+    ]
+  },
+
+  stepByStepGuidesTitle: 'Guías Paso a Paso (2FA, Gestores y Copias)',
+  guide2FALabel: 'Guía 2FA',
+  guidePasswordManagerLabel: 'Guía Gestor de Contraseñas',
+  guideBackupLabel: 'Guía Copias de Seguridad',
+  stepByStepDescription: 'Accede a nuestras guías completas escaneando los códigos QR o haciendo clic en los enlaces.',
 };
 
 export type RiskCalculatorTranslations = typeof riskCalculatorES;

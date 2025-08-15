@@ -4,12 +4,21 @@ import { useState } from 'react';
 import { generateGuidePdf } from '@/utils/generatePdf';
 import { useI18n } from '@/lib/LanguageContext';
 
+interface UserProfile {
+  type: 'individual' | 'business';
+  companySize?: 'small' | 'medium' | 'large' | 'enterprise';
+  industry?: string;
+  role?: string;
+  hasITTeam?: boolean;
+}
+
 interface DownloadButtonProps {
   title?: string;
   contentSelector?: string; // CSS selector del contenedor cuyo contenido se exportará
+  userProfile?: UserProfile; // Perfil del usuario para personalizar el PDF
 }
 
-export default function DownloadButton({ title = 'Informe de Evaluación', contentSelector = '#assessment-results' }: DownloadButtonProps) {
+export default function DownloadButton({ title = 'Informe de Evaluación', contentSelector = '#assessment-results', userProfile }: DownloadButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useI18n();
 
@@ -24,7 +33,7 @@ export default function DownloadButton({ title = 'Informe de Evaluación', conte
         return;
       }
 
-      const blob = generateGuidePdf(title, container);
+      const blob = generateGuidePdf(title, container, userProfile);
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;

@@ -6,11 +6,13 @@ import Link from "next/link";
 
 export default function CookieConsent() {
   const { t } = useI18n();
+  const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(true);
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== "undefined") {
       const consent = window.localStorage.getItem("cookie_consent");
       if (!consent) setVisible(true);
@@ -26,7 +28,7 @@ export default function CookieConsent() {
   };
 
 
-  if (!visible) return null;
+  if (!mounted || !visible) return null;
 
   return (
     <>

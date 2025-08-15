@@ -12,7 +12,7 @@ export const VideoBackground: React.FC<VideoBackgroundProps> = ({
   overlay = true 
 }) => {
   return (
-    <div className={`relative w-full h-full overflow-hidden ${className}`}>
+    <div className={`relative w-full h-full ${className}`}>
       <video 
         autoPlay 
         loop 
@@ -24,7 +24,7 @@ export const VideoBackground: React.FC<VideoBackgroundProps> = ({
       </video>
       
       {overlay && (
-        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-50 pointer-events-none"></div>
       )}
     </div>
   );

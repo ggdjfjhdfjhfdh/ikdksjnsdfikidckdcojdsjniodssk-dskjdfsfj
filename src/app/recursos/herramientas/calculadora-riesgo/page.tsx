@@ -1,5 +1,5 @@
 import React from 'react';
-import CyberRiskCalculator from '../../../../components/CyberRiskCalculator';
+import CyberRiskCalculator from '../../../../components/CyberRiskCalculatorClient';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -15,11 +15,7 @@ export const metadata: Metadata = {
 
 const CalculadoraRiesgoPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4">
-        <CyberRiskCalculator />
-      </div>
-    </div>
+    <CyberRiskCalculator />
   );
 };
 

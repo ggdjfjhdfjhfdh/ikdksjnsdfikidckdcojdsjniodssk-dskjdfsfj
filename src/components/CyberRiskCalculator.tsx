@@ -14,12 +14,15 @@ import {
   CalendarDaysIcon,
   TrophyIcon,
   FireIcon,
-  BoltIcon
+  BoltIcon,
+  LockClosedIcon
 } from '@heroicons/react/24/outline';
 import { useLanguage } from '@/lib/LanguageContext';
 import { riskCalculatorTranslations, type RiskCalculatorTranslationKey } from '@/lib/riskCalculatorTranslations';
 import { businessQuestions as businessQuestionsData, individualQuestions as individualQuestionsData } from '@/lib/riskCalculatorQuestions';
 import DownloadButton from './DownloadButton';
+import OptimizedImage from './OptimizedImage';
+import { VideoBackground } from './VideoBackground';
 
 interface Question {
   id: string;
@@ -94,6 +97,12 @@ const CyberRiskCalculator: React.FC = () => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [showSegmentation, setShowSegmentation] = useState(true);
   const [segmentationStep, setSegmentationStep] = useState(0);
+  const [isClient, setIsClient] = useState(false);
+
+  // Prevent hydration mismatch by ensuring client-side rendering
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Helper function to get translations
   const t = (key: RiskCalculatorTranslationKey): string => {
@@ -607,47 +616,271 @@ const CyberRiskCalculator: React.FC = () => {
           </div>
         )}
 
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('resultsTitle')}</h2>
-          <div className="flex items-center justify-center mb-6">
-            <div className={`text-6xl font-bold ${result.color} mr-4`}>{result.score}%</div>
-            <div className="text-left">
-              <div className="text-lg font-semibold text-gray-700">{t('securityLevel')}</div>
-              <div className={`text-2xl font-bold ${result.color} capitalize`}>
-                {result.level === 'low' && t('levelExcellent')}
-                {result.level === 'medium' && t('levelGood')}
-                {result.level === 'high' && t('levelHigh')}
-                {result.level === 'critical' && t('levelCritical')}
-              </div>
+        {/* Resumen Ejecutivo */}
+        <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl p-8 mb-8 border border-slate-200">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-3xl font-bold text-slate-900 mb-2">Reporte Ejecutivo de Ciberseguridad</h2>
+              <p className="text-slate-600">Evaluación completa basada en {currentQuestions.length} controles de seguridad</p>
+            </div>
+            <div className="text-right">
+              <div className={`text-5xl font-bold ${result.color} mb-1`}>{result.score}%</div>
+              <div className="text-sm text-slate-500">Índice de Madurez</div>
             </div>
           </div>
-          
-          {/* Indicador visual */}
-          <div className="w-full bg-gray-200 rounded-full h-4 mb-6">
-            <div 
-              className={`h-4 rounded-full transition-all duration-500 ${
-                result.level === 'low' ? 'bg-green-500' :
-                result.level === 'medium' ? 'bg-yellow-500' :
-                result.level === 'high' ? 'bg-orange-500' : 'bg-red-500'
-              }`}
-              style={{ width: `${result.score}%` }}
-            ></div>
+
+          {/* Insignia de nivel de riesgo */}
+          <div className={`inline-flex items-center px-6 py-3 rounded-full text-lg font-semibold mb-6 ${
+            result.level === 'low' ? 'bg-green-100 text-green-800 border-2 border-green-200' :
+            result.level === 'medium' ? 'bg-blue-100 text-blue-800 border-2 border-blue-200' :
+            result.level === 'high' ? 'bg-orange-100 text-orange-800 border-2 border-orange-200' : 
+            'bg-red-100 text-red-800 border-2 border-red-200'
+          }`}>
+            {result.level === 'low' && <CheckCircleIcon className="h-6 w-6 mr-2" />}
+            {result.level === 'medium' && <ShieldCheckIcon className="h-6 w-6 mr-2" />}
+            {result.level === 'high' && <ExclamationTriangleIcon className="h-6 w-6 mr-2" />}
+            {result.level === 'critical' && <XCircleIcon className="h-6 w-6 mr-2" />}
+            {result.level === 'low' && 'NIVEL ENTERPRISE'}
+            {result.level === 'medium' && (result.score >= 75 ? 'NIVEL AVANZADO' : 'NIVEL INTERMEDIO')}
+            {result.level === 'high' && 'RIESGO ELEVADO'}
+            {result.level === 'critical' && 'RIESGO CRÍTICO'}
+          </div>
+
+          {/* Barra de progreso */}
+          <div className="mb-4">
+            <div className="flex justify-between text-sm text-slate-600 mb-2">
+              <span>Nivel de Madurez en Ciberseguridad</span>
+              <span>{result.score}% de {currentQuestions.length} controles</span>
+            </div>
+            <div className="w-full bg-slate-200 rounded-full h-4 overflow-hidden">
+              <div 
+                className={`h-4 rounded-full transition-all duration-1000 ease-out ${
+                  result.level === 'low' ? 'bg-gradient-to-r from-green-500 to-green-600' :
+                  result.level === 'medium' ? (result.score >= 75 ? 'bg-gradient-to-r from-blue-500 to-blue-600' : 'bg-gradient-to-r from-yellow-500 to-yellow-600') :
+                  result.level === 'high' ? 'bg-gradient-to-r from-orange-500 to-orange-600' : 'bg-gradient-to-r from-red-500 to-red-600'
+                }`}
+                style={{ width: `${result.score}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Escala de madurez */}
+          <div className="grid grid-cols-4 gap-2 text-xs text-slate-500 mt-2">
+            <div className="text-center">
+              <div className="h-1 bg-red-300 rounded mb-1"></div>
+              <span>0-39% Crítico</span>
+            </div>
+            <div className="text-center">
+              <div className="h-1 bg-orange-300 rounded mb-1"></div>
+              <span>40-59% Alto</span>
+            </div>
+            <div className="text-center">
+              <div className="h-1 bg-yellow-300 rounded mb-1"></div>
+              <span>60-74% Medio</span>
+            </div>
+            <div className="text-center">
+              <div className="h-1 bg-blue-300 rounded mb-1"></div>
+              <span>75-89% Avanzado</span>
+            </div>
           </div>
         </div>
 
-        <div className="mb-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-            <ExclamationTriangleIcon className="h-6 w-6 mr-2 text-yellow-500" />
-            {t('recommendationsTitle')}
+        {/* Análisis Detallado por Categorías */}
+        <div className="bg-white rounded-xl border border-slate-200 p-8 mb-8">
+          <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+            <ChartBarIcon className="h-7 w-7 mr-3 text-blue-600" />
+            Diagnóstico Detallado por Áreas
           </h3>
-          <ul className="space-y-3">
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            {(() => {
+              const currentQuestions = getQuestionsForProfile();
+              
+              // Calcular puntuación por categoría
+              const categoryScores = currentQuestions.reduce((acc, q) => {
+                const categoryKey = q.category as string;
+                if (!acc[categoryKey]) {
+                  acc[categoryKey] = { total: 0, achieved: 0, questions: 0 };
+                }
+                acc[categoryKey].total += q.weight;
+                acc[categoryKey].achieved += answers[q.id] ? q.weight : 0;
+                acc[categoryKey].questions += 1;
+                return acc;
+              }, {} as Record<string, { total: number; achieved: number; questions: number }>);
+
+              const categoryIcons = {
+                'Identidad y Acceso': '🔐',
+                'Endpoints': '💻',
+                'Red y Perímetro': '🛡️',
+                'Protección de Datos': '🗂️',
+                'Detección y Respuesta': '🚨',
+                'Gestión de Vulnerabilidades': '🔍',
+                'Continuidad del Negocio': '♻️',
+                'Seguridad Personal': '👤',
+                'Dispositivos': '📱',
+                'Navegación Web': '🌐',
+                'Contraseñas': '🔑',
+                'Redes Sociales': '📲',
+                'Respaldo de Datos': '💾'
+              };
+
+              return Object.entries(categoryScores).map(([category, scores]) => {
+                const percentage = (scores.achieved / scores.total) * 100;
+                const level = percentage >= 90 ? 'excelente' : 
+                            percentage >= 75 ? 'bueno' : 
+                            percentage >= 50 ? 'regular' : 'crítico';
+                
+                const colorClass = level === 'excelente' ? 'bg-green-500' :
+                                 level === 'bueno' ? 'bg-blue-500' :
+                                 level === 'regular' ? 'bg-yellow-500' : 'bg-red-500';
+                
+                const bgClass = level === 'excelente' ? 'bg-green-50' :
+                              level === 'bueno' ? 'bg-blue-50' :
+                              level === 'regular' ? 'bg-yellow-50' : 'bg-red-50';
+
+                const textClass = level === 'excelente' ? 'text-green-800' :
+                                level === 'bueno' ? 'text-blue-800' :
+                                level === 'regular' ? 'text-yellow-800' : 'text-red-800';
+
+                return (
+                  <div key={category} className={`p-5 rounded-lg border ${bgClass}`}>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center">
+                        <span className="text-2xl mr-3">{categoryIcons[category as keyof typeof categoryIcons] || '📊'}</span>
+                        <h4 className="font-semibold text-slate-900">{category}</h4>
+                      </div>
+                      <span className={`px-3 py-1 rounded-full text-sm font-semibold ${textClass} bg-white`}>
+                        {Math.round(percentage)}%
+                      </span>
+                    </div>
+                    
+                    <div className="mb-3">
+                      <div className="w-full bg-slate-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-1000 ${colorClass}`}
+                          style={{ width: `${percentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between text-sm text-slate-600">
+                      <span>{scores.questions} controles evaluados</span>
+                      <span className={`font-semibold ${textClass}`}>
+                        {level === 'excelente' && '✅ Excelente'}
+                        {level === 'bueno' && '👍 Bueno'}
+                        {level === 'regular' && '⚠️ Mejorable'}
+                        {level === 'crítico' && '🚨 Crítico'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              });
+            })()}
+          </div>
+        </div>
+
+        {/* Benchmarking del Sector */}
+        <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 rounded-2xl border-2 border-indigo-200/60 p-8 mb-8 shadow-xl">
+          <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mr-4">
+              <TrophyIcon className="h-6 w-6 text-white" />
+            </div>
+            Comparativa del Sector
+          </h3>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="group text-center p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200/60">
+              <div className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">{result.score}%</div>
+              <div className="text-sm text-slate-600 mb-2 font-semibold">Su Puntuación</div>
+              <div className={`inline-block text-xs font-bold px-3 py-1.5 rounded-full ${
+                result.score >= 75 ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200' :
+                result.score >= 50 ? 'bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border border-yellow-200' : 'bg-gradient-to-r from-red-100 to-pink-100 text-red-800 border border-red-200'
+              }`}>
+                {result.score >= 75 ? 'Líder del sector' :
+                 result.score >= 50 ? 'Por encima del promedio' : 'Necesita mejoras'}
+              </div>
+            </div>
+            
+            <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/60">
+              <div className="text-4xl font-bold text-slate-500 mb-2">
+                {userProfile?.type === 'business' ? '52%' : '34%'}
+              </div>
+              <div className="text-sm text-slate-600 mb-2 font-semibold">Promedio del Sector</div>
+              <div className="text-xs text-slate-500 font-medium">
+                {userProfile?.type === 'business' ? 'Empresas similares' : 'Usuarios personales'}
+              </div>
+            </div>
+            
+            <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/60">
+              <div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">85%</div>
+              <div className="text-sm text-slate-600 mb-2 font-semibold">Objetivo Recomendado</div>
+              <div className="text-xs text-slate-500 font-medium">Nivel Enterprise</div>
+            </div>
+          </div>
+          
+          <div className="mt-6 p-5 bg-white/70 backdrop-blur-sm rounded-xl border border-indigo-200/60">
+            <p className="text-sm text-slate-700 text-center leading-relaxed">
+              📊 <strong>Contexto:</strong> Su organización está en el{' '}
+              <span className="font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                {result.score >= 75 ? 'top 25%' :
+                 result.score >= 50 ? 'top 50%' : 'percentil inferior'}
+              </span>{' '}
+              del sector. El 46% de empresas sufren brechas de seguridad anuales, 
+              con un costo promedio de €4.88M por incidente.
+            </p>
+          </div>
+        </div>
+
+        {/* Plan de Acción Recomendado */}
+        <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl border-2 border-slate-300/60 p-8 mb-8 shadow-xl">
+          <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mr-4">
+              <DocumentTextIcon className="h-6 w-6 text-white" />
+            </div>
+            Plan de Acción Prioritario
+          </h3>
+          
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="group text-center p-5 bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-200 hover:shadow-lg transition-all duration-300">
+              <div className="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-700 bg-clip-text text-transparent mb-1">🚨 Inmediato</div>
+              <div className="text-sm text-slate-600 font-medium">0-30 días</div>
+            </div>
+            <div className="group text-center p-5 bg-gradient-to-br from-yellow-50 to-orange-100 rounded-xl border border-yellow-200 hover:shadow-lg transition-all duration-300">
+              <div className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-1">⚡ Corto Plazo</div>
+              <div className="text-sm text-slate-600 font-medium">1-3 meses</div>
+            </div>
+            <div className="group text-center p-5 bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl border border-green-200 hover:shadow-lg transition-all duration-300">
+              <div className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-1">📈 Medio Plazo</div>
+              <div className="text-sm text-slate-600 font-medium">3-6 meses</div>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
             {result.recommendations.map((rec, index) => (
-              <li key={index} className="flex items-start">
-                <CheckCircleIcon className="h-5 w-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-700">{rec}</span>
-              </li>
+              <div key={index} className="group flex items-start p-5 bg-white/80 backdrop-blur-sm rounded-xl border-l-4 border-blue-500 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-blue-600">
+                <span className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4 mt-0.5 group-hover:scale-110 transition-transform duration-300">
+                  {index + 1}
+                </span>
+                <div className="flex-1">
+                  <span className="text-slate-700 leading-relaxed block font-medium">{rec}</span>
+                  <div className="mt-3 flex items-center text-xs">
+                    <span className={`px-3 py-1.5 rounded-full mr-3 font-bold border ${
+                      index < 2 ? 'bg-gradient-to-r from-red-100 to-red-200 text-red-800 border-red-300' :
+                      index < 4 ? 'bg-gradient-to-r from-yellow-100 to-orange-200 text-yellow-800 border-yellow-300' : 'bg-gradient-to-r from-green-100 to-emerald-200 text-green-800 border-green-300'
+                    }`}>
+                      {index < 2 ? 'CRÍTICO' : index < 4 ? 'ALTO' : 'MEDIO'}
+                    </span>
+                    <div className="flex items-center text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
+                      <ClockIcon className="h-3 w-3 mr-1" />
+                      <span className="font-medium">
+                        {index < 2 ? 'Inmediato' : index < 4 ? '1-3 meses' : '3-6 meses'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
 
         {/* Información de impacto empresarial */}
@@ -683,64 +916,99 @@ const CyberRiskCalculator: React.FC = () => {
           </p>
         </div>
 
-        {/* CTA mejorado */}
-        <div className={`p-6 rounded-lg mb-6 border-2 ${
+        {/* CTA Section Mejorado */}
+        <div className={`${
           result.urgency === 'critical' 
-            ? 'bg-red-50 border-red-200' 
+            ? 'bg-gradient-to-r from-red-600 to-red-800' 
             : result.urgency === 'high'
-            ? 'bg-orange-50 border-orange-200'
-            : 'bg-blue-50 border-blue-200'
-        }`}>
-          <div className="text-center">
-            <h4 className="text-2xl font-bold text-slate-900 mb-3">
-              {result.urgency === 'critical' && '🚨 Intervención Urgente Requerida'}
-              {result.urgency === 'high' && '⚠️ Consulta Prioritaria Recomendada'}
-              {result.urgency === 'medium' && '📈 Optimice su Seguridad'}
-              {result.urgency === 'low' && '🏆 Mantenga la Excelencia'}
-            </h4>
-            <p className="text-slate-700 mb-6 max-w-2xl mx-auto">
-              {result.urgency === 'critical' && 'Su organización está en riesgo inmediato. Nuestros expertos pueden implementar controles críticos en 48-72 horas.'}
-              {result.urgency === 'high' && 'Reduzca significativamente su exposición con nuestro plan de acción prioritario de 30 días.'}
-              {result.urgency === 'medium' && 'Fortalezca su postura de seguridad con nuestro roadmap personalizado de mejora continua.'}
-              {result.urgency === 'low' && 'Mantenga su liderazgo en ciberseguridad con nuestros servicios de optimización avanzada.'}
+            ? 'bg-gradient-to-r from-orange-600 to-orange-800'
+            : 'bg-gradient-to-r from-blue-600 to-indigo-700'
+        } rounded-xl p-8 text-white text-center`}>
+          <div className="max-w-4xl mx-auto">
+            <h3 className="text-3xl font-bold mb-4">
+              {result.urgency === 'critical' && '🚨 Acción Inmediata Requerida'}
+              {result.urgency === 'high' && '⚠️ No Espere Más - Actúe Ahora'}
+              {result.urgency === 'medium' && '📈 Transforme su Ciberseguridad'}
+              {result.urgency === 'low' && '🏆 Mantenga su Liderazgo'}
+            </h3>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                <CalendarDaysIcon className="h-8 w-8 mx-auto mb-2" />
+                <h4 className="font-semibold mb-1">Consulta Gratuita</h4>
+                <p className="text-sm opacity-90">30 minutos con expertos certificados</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                <DocumentTextIcon className="h-8 w-8 mx-auto mb-2" />
+                <h4 className="font-semibold mb-1">Reporte Detallado</h4>
+                <p className="text-sm opacity-90">Plan de acción personalizado</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                <ShieldCheckIcon className="h-8 w-8 mx-auto mb-2" />
+                <h4 className="font-semibold mb-1">Implementación</h4>
+                <p className="text-sm opacity-90">Soporte completo de expertos</p>
+              </div>
+            </div>
+            
+            <p className="text-lg mb-8 max-w-3xl mx-auto opacity-95">
+              {result.urgency === 'critical' && 'Cada minuto cuenta. Su organización está expuesta a amenazas críticas que requieren intervención inmediata de nuestros especialistas.'}
+              {result.urgency === 'high' && 'Los riesgos identificados pueden materializarse en cualquier momento. Nuestro equipo puede reducir su exposición en 30 días.'}
+              {result.urgency === 'medium' && 'Fortalezca su postura de seguridad con nuestro enfoque probado y metodología de clase mundial.'}
+              {result.urgency === 'low' && 'Mantenga su excelencia operativa y explore las últimas innovaciones en ciberseguridad empresarial.'}
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-4">
-              <button 
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+              <button
                 onClick={triggerLeadCapture}
-                className={`px-8 py-4 rounded-lg font-bold text-lg transition-all transform hover:scale-105 ${
-                  result.urgency === 'critical'
-                    ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg'
-                    : result.urgency === 'high'
-                    ? 'bg-orange-600 hover:bg-orange-700 text-white shadow-lg'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'
-                }`}
+                className="bg-white text-slate-900 px-10 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg"
               >
-                {result.urgency === 'critical' && '🚨 Consulta de Emergencia GRATIS'}
-                {result.urgency === 'high' && '⚡ Consulta Prioritaria GRATIS'}
-                {result.urgency === 'medium' && '📊 Consulta Estratégica GRATIS'}
-                {result.urgency === 'low' && '🎯 Consulta de Optimización GRATIS'}
+                🎯 Obtener Consulta GRATUITA
               </button>
               
               <a
                 href="tel:+34900000000"
-                className="flex items-center justify-center px-6 py-4 bg-white border-2 border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-all"
+                className="flex items-center justify-center bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-slate-900 transition-all"
               >
                 <PhoneIcon className="h-5 w-5 mr-2" />
                 Llamar Ahora
               </a>
+              
+              <button
+                onClick={() => {
+                  setShowResults(false);
+                  setCurrentStep(0);
+                  setAnswers({});
+                }}
+                className="bg-transparent border border-white/50 text-white px-6 py-4 rounded-lg font-medium hover:bg-white/10 transition-colors"
+              >
+                Nueva Evaluación
+              </button>
             </div>
             
-            <div className="flex items-center justify-center text-sm text-slate-600">
-              <CalendarDaysIcon className="h-4 w-4 mr-1" />
-              <span>Respuesta en menos de 2 horas • Consulta sin compromiso</span>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm opacity-90">
+              <div className="flex items-center">
+                <CheckCircleIcon className="h-4 w-4 mr-1" />
+                <span>Respuesta en 2 horas</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircleIcon className="h-4 w-4 mr-1" />
+                <span>Sin compromiso</span>
+              </div>
+              <div className="flex items-center">
+                <CheckCircleIcon className="h-4 w-4 mr-1" />
+                <span>Expertos certificados</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Botón para descargar PDF */}
         <div className="mb-6">
-          <DownloadButton title={t('resultsTitle') || 'Informe de Evaluación'} contentSelector="#assessment-results" />
+          <DownloadButton 
+            title={t('resultsTitle') || 'Informe de Evaluación'} 
+            contentSelector="#assessment-results" 
+            userProfile={userProfile || undefined}
+          />
         </div>
 
         <div className="flex justify-center">
@@ -756,170 +1024,254 @@ const CyberRiskCalculator: React.FC = () => {
   }
 
   // Interfaz de segmentación
+  if (!isClient) {
+     return null;
+   }
+
   if (showSegmentation) {
+    const isPersonal = userProfile?.type === 'individual';
+    const isBusiness = userProfile?.type === 'business';
+    const canStart = isPersonal || (isBusiness && userProfile?.companySize && typeof userProfile?.hasITTeam === 'boolean');
+
+    const companySizes = [
+      { value: 'small' as const, label: 'Pequeña (1-49)', icon: '🏪' },
+      { value: 'medium' as const, label: 'Mediana (50-249)', icon: '🏬' },
+      { value: 'large' as const, label: 'Grande (250-999)', icon: '🏢' },
+      { value: 'enterprise' as const, label: 'Enterprise (1000+)', icon: '🏭' },
+    ];
+
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-t-2xl p-8 border border-slate-200">
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-6">
-              <ShieldCheckIcon className="h-8 w-8 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold text-slate-900 mb-4">
-              {t('calculatorTitle')}
-            </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              {t('personalizationMessage')}
-            </p>
-          </div>
-        </div>
-        
-        <div className="bg-white rounded-b-2xl p-8">
-          {segmentationStep === 0 && (
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                {t('userTypeQuestion')}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-                <button
-                  onClick={() => {
-                    handleSegmentationAnswer('user_type', 'individual');
-                    setSegmentationStep(1);
-                  }}
-                  className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all group"
-                >
-                  <div className="text-4xl mb-4">👤</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('optionPersonal')}</h3>
-                  <p className="text-gray-600">{t('personalDescription')}</p>
-                </button>
-                
-                <button
-                  onClick={() => {
-                    handleSegmentationAnswer('user_type', 'business');
-                    setSegmentationStep(1);
-                  }}
-                  className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all group"
-                >
-                  <div className="text-4xl mb-4">🏢</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('optionBusiness')}</h3>
-                  <p className="text-gray-600">{t('businessDescription')}</p>
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {segmentationStep === 1 && userProfile?.type === 'business' && (
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                ¿Cuál es el tamaño de su organización?
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-                {[
-                  { value: 'small', label: 'Pequeña (1-50 empleados)', icon: '🏪' },
-                  { value: 'medium', label: 'Mediana (51-250 empleados)', icon: '🏬' },
-                  { value: 'large', label: 'Grande (251-1000 empleados)', icon: '🏢' },
-                  { value: 'enterprise', label: 'Empresa (1000+ empleados)', icon: '🏭' }
-                ].map((size) => (
-                  <button
-                    key={size.value}
-                    onClick={() => {
-                      handleSegmentationAnswer('company_size', size.value);
-                      setSegmentationStep(2);
-                    }}
-                    className="p-4 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all text-left"
-                  >
-                    <div className="flex items-center">
-                      <span className="text-2xl mr-3">{size.icon}</span>
-                      <span className="font-medium">{size.label}</span>
+      <div className="bg-gray-50">
+        {/* HERO con fondo blanco y diseño moderno */}
+        <section className="relative w-full bg-gradient-to-br from-slate-50 via-white to-blue-50">
+          <div className="pt-12 md:pt-16 pb-10">
+            <div className="max-w-7xl mx-auto h-full flex items-center px-6">
+              <div className="w-full">
+                {/* Cabecera y mensaje */}
+                <div className="max-w-3xl">
+                  <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mb-5 shadow-lg">
+                    <ShieldCheckIcon className="h-7 w-7 text-white" />
+                  </div>
+                  <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-3 leading-tight">
+                    {t('calculatorTitle')}
+                  </h1>
+                  <p className="text-lg md:text-xl text-slate-700 leading-relaxed mb-4">
+                    {t('personalizationMessage')}
+                  </p>
+                  {/* Barra de beneficios compacta */}
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-slate-700">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 ring-1 ring-slate-200 shadow-sm">
+                      <CheckCircleIcon className="h-4 w-4 text-emerald-600" />
+                      <span>Gratis y sin registro</span>
                     </div>
-                  </button>
-                ))}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 ring-1 ring-slate-200 shadow-sm">
+                      <ClockIcon className="h-4 w-4 text-blue-600" />
+                      <span>15-20 minutos</span>
+                    </div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 ring-1 ring-slate-200 shadow-sm">
+                      <ShieldCheckIcon className="h-4 w-4 text-indigo-600" />
+                      <span>Recomendaciones prácticas</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Introducción breve */}
+                <p className="mt-5 text-base md:text-lg text-slate-600 leading-relaxed max-w-3xl">
+                  Esta evaluación práctica te ayuda a entender tu nivel de madurez en ciberseguridad. Responde preguntas por áreas clave y recibe un diagnóstico con prioridades y recomendaciones accionables.
+                </p>
+
+                {/* Tarjeta con selector integrado */}
+                <div className="mt-4">
+                  {/* Card de selección */}
+                  <div className="w-full">
+                    <div className="bg-white rounded-2xl shadow-xl ring-1 ring-slate-200 p-6 md:p-8">
+                      {/* Segmented control: para quién */}
+                      <div className="flex items-center justify-between flex-wrap gap-3">
+                        <div className="text-sm font-medium text-slate-700">Para quién es la evaluación</div>
+                        <div className="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200">
+                          <button
+                            type="button"
+                            aria-pressed={isPersonal}
+                            onClick={() => {
+                              handleSegmentationAnswer('user_type', 'individual');
+                            }}
+                            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isPersonal ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}
+                          >
+                            👤 {t('optionPersonal')}
+                          </button>
+                          <button
+                            type="button"
+                            aria-pressed={isBusiness}
+                            onClick={() => {
+                              handleSegmentationAnswer('user_type', 'business');
+                            }}
+                            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isBusiness ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}
+                          >
+                            🏢 {t('optionBusiness')}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Detalles adicionales dependiendo de selección */}
+                      {isPersonal && (
+                        <div className="mt-6">
+                          <div className="text-slate-700 mb-4">
+                            {t('evaluationPersonalDescription')}
+                          </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                            <button
+                              onClick={completeSegmentation}
+                              className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            >
+                              🚀 {t('startPersonalEvaluation')}
+                            </button>
+                            <div className="flex items-center text-xs text-slate-600">
+                              <LockClosedIcon className="h-4 w-4 mr-2 text-slate-500" />
+                              <span>Sin registro para ver resultados. Tus datos están seguros.</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {isBusiness && (
+                        <div className="mt-6 space-y-6">
+                          {/* Tamaño de empresa */}
+                          <div>
+                            <div className="text-sm font-medium text-slate-700 mb-3">Tamaño de la empresa</div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              {companySizes.map((size) => (
+                                <button
+                                  key={size.value}
+                                  onClick={() => {
+                                    handleSegmentationAnswer('company_size', size.value);
+                                  }}
+                                  className={`group p-4 rounded-xl border-2 transition-all duration-300 text-left transform hover:scale-105 hover:shadow-lg ${userProfile?.companySize === size.value ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg' : 'border-slate-200 hover:border-blue-300 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 hover:shadow-md'}`}
+                                >
+                                  <div className="flex items-center">
+                                    <span className="text-2xl mr-3 transition-transform group-hover:scale-110">{size.icon}</span>
+                                    <span className="font-semibold text-slate-800">{size.label}</span>
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Equipo de IT */}
+                          {userProfile?.companySize && (
+                            <div>
+                              <div className="text-sm font-medium text-slate-700 mb-3">¿Cuenta con equipo de IT?</div>
+                              <div className="inline-flex gap-2">
+                                <button
+                                  onClick={() => handleSegmentationAnswer('it_resources', 'yes')}
+                                  className={`group px-5 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${userProfile?.hasITTeam === true ? 'border-emerald-500 bg-gradient-to-br from-emerald-50 to-green-50 text-emerald-800 shadow-lg' : 'border-slate-200 hover:border-emerald-400 hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 hover:text-emerald-700'}`}
+                                >
+                                  <span className="mr-2 transition-transform group-hover:scale-110">👥</span>
+                                  {t('itTeamYes')}
+                                </button>
+                                <button
+                                  onClick={() => handleSegmentationAnswer('it_resources', 'no')}
+                                  className={`group px-5 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${userProfile?.hasITTeam === false ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-yellow-50 text-orange-800 shadow-lg' : 'border-slate-200 hover:border-orange-400 hover:bg-gradient-to-br hover:from-orange-50 hover:to-yellow-50 hover:text-orange-700'}`}
+                                >
+                                  <span className="mr-2 transition-transform group-hover:scale-110">🤝</span>
+                                  {t('itTeamNo')}
+                                </button>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* CTA */}
+                          <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4">
+                            <button
+                              onClick={() => canStart && completeSegmentation()}
+                              disabled={!canStart}
+                              className={`group inline-flex items-center justify-center px-8 py-4 rounded-xl font-bold transition-all duration-300 shadow-xl transform ${canStart ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 hover:scale-105 hover:shadow-2xl' : 'bg-slate-300 text-slate-500 cursor-not-allowed'}`}
+                            >
+                              <span className="mr-2 transition-transform group-hover:scale-110">🚀</span>
+                              Comenzar evaluación empresarial
+                            </button>
+                            <div className="flex items-center text-xs text-slate-600">
+                              <LockClosedIcon className="h-4 w-4 mr-2 text-slate-500" />
+                              <span>Sin registro para ver resultados. Tus datos están seguros.</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Sección informativa (antes en sidebar) */}
+                  <div className="mt-6">
+                    <div className="bg-white rounded-2xl shadow-xl ring-1 ring-slate-200 p-6 md:p-7">
+                      <div className="text-xs font-semibold tracking-wider text-slate-600 uppercase mb-4">Cómo funciona</div>
+                      <div className="space-y-3">
+                        <div className="p-3 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+                          <div className="text-sm font-semibold text-slate-900 mb-0.5">1) Responde el cuestionario</div>
+                          <div className="text-xs text-slate-600">15-20 minutos, preguntas por áreas clave</div>
+                        </div>
+                        <div className="p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200">
+                          <div className="text-sm font-semibold text-slate-900 mb-0.5">2) Obtén el diagnóstico</div>
+                          <div className="text-xs text-slate-600">Puntuación, urgencia y recomendaciones priorizadas</div>
+                        </div>
+                        <div className="p-3 rounded-lg bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200">
+                          <div className="text-sm font-semibold text-slate-900 mb-0.5">3) Descarga el informe</div>
+                          <div className="text-xs text-slate-600">PDF ejecutivo y roadmap de 90 días</div>
+                        </div>
+                      </div>
+
+                      <div className="mt-6">
+                        <div className="text-xs font-semibold tracking-wider text-slate-600 uppercase mb-3">Beneficios</div>
+                        <ul className="space-y-2 text-sm text-slate-700">
+                          <li className="flex gap-2"><CheckCircleIcon className="h-4 w-4 text-emerald-500 mt-0.5" />Diagnóstico por áreas (IAM, Endpoints, Red, Datos, D&R, Vulns, Continuidad)</li>
+                          <li className="flex gap-2"><CheckCircleIcon className="h-4 w-4 text-emerald-500 mt-0.5" />Informe ejecutivo PDF con roadmap 90 días</li>
+                          <li className="flex gap-2"><CheckCircleIcon className="h-4 w-4 text-emerald-500 mt-0.5" />Benchmark sectorial y estimación de impacto/esfuerzo</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Intro adicional breve (en lugar de logos) */}
+                <div className="mt-10">
+                  <p className="text-slate-600 text-base md:text-lg max-w-3xl">
+                    
+                  </p>
+                </div>
               </div>
             </div>
-          )}
-          
-          {segmentationStep === 1 && userProfile?.type === 'individual' && (
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                ¡Perfecto! Evaluaremos su seguridad personal
-              </h2>
-              <p className="text-gray-600 mb-8">
-                Nuestro cuestionario está personalizado para evaluar la ciberseguridad en el ámbito personal, 
-                incluyendo dispositivos, cuentas online, y hábitos de seguridad digital.
-              </p>
-              <button
-                onClick={completeSegmentation}
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all"
-              >
-                🚀 Comenzar Evaluación Personal
-              </button>
-            </div>
-          )}
-          
-          {segmentationStep === 2 && userProfile?.type === 'business' && (
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                ¿Cuenta con un equipo de IT dedicado?
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-                <button
-                  onClick={() => {
-                    handleSegmentationAnswer('it_resources', 'yes');
-                    completeSegmentation();
-                  }}
-                  className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all"
-                >
-                  <div className="text-4xl mb-4">👥</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Sí, tenemos equipo IT</h3>
-                  <p className="text-gray-600">Contamos con personal técnico interno</p>
-                </button>
-                
-                <button
-                  onClick={() => {
-                    handleSegmentationAnswer('it_resources', 'no');
-                    completeSegmentation();
-                  }}
-                  className="p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all"
-                >
-                  <div className="text-4xl mb-4">🤝</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">No, externalizamos IT</h3>
-                  <p className="text-gray-600">Dependemos de proveedores externos</p>
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+          </div>
+        </section>
       </div>
     );
   }
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <div className="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-white/10 backdrop-blur-sm border-b border-white/20">
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden ring-1 ring-slate-200">
+        <div className="bg-white border-b border-slate-200">
           <div className="text-center py-8 px-6">
             <div className="flex items-center justify-center mb-4">
-              <ShieldCheckIcon className="h-12 w-12 text-cyan-400 mr-3" />
-              <h1 className="text-4xl font-bold text-white">
+              <ShieldCheckIcon className="h-12 w-12 text-blue-600 mr-3" />
+              <h1 className="text-4xl font-bold text-slate-900">
                 {userProfile?.type === 'individual' ? 'Evaluación de Seguridad Personal' : 'Enterprise Security Assessment'}
               </h1>
             </div>
-            <p className="text-blue-100 text-lg max-w-3xl mx-auto">
+            <p className="text-slate-600 text-lg max-w-3xl mx-auto">
               {userProfile?.type === 'individual' 
                 ? 'Evaluación personalizada de su ciberseguridad personal y protección digital'
                 : 'Evaluación avanzada de madurez en ciberseguridad basada en frameworks internacionales (NIST, ISO 27001, CIS Controls)'
               }
             </p>
-            <div className="flex justify-center items-center mt-4 space-x-6 text-sm text-blue-200">
+            <div className="flex justify-center items-center mt-4 space-x-6 text-sm text-slate-500">
               <div className="flex items-center">
-                <ClockIcon className="h-4 w-4 mr-1" />
+                <ClockIcon className="h-4 w-4 mr-1 text-slate-500" />
                 <span>15-20 minutos</span>
               </div>
               <div className="flex items-center">
-                <ChartBarIcon className="h-4 w-4 mr-1" />
+                <ChartBarIcon className="h-4 w-4 mr-1 text-slate-500" />
                 <span>Análisis por categorías</span>
               </div>
               <div className="flex items-center">
-                <DocumentTextIcon className="h-4 w-4 mr-1" />
+                <DocumentTextIcon className="h-4 w-4 mr-1 text-slate-500" />
                 <span>Reporte ejecutivo</span>
               </div>
             </div>
@@ -1067,13 +1419,13 @@ const CyberRiskCalculator: React.FC = () => {
           </div>
 
           {/* Navigation */}
-          <div className="flex justify-between items-center pt-6 border-t border-slate-200">
+          <div className="flex justify-between items-center pt-6 border-t border-slate-200/60">
             <button
                onClick={prevStep}
                disabled={currentStep === 0}
-               className="flex items-center px-6 py-3 text-slate-600 border-2 border-slate-300 rounded-xl hover:bg-slate-50 hover:border-slate-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
+               className="group flex items-center px-6 py-3 text-slate-700 border-2 border-slate-300 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-gray-50 hover:border-slate-400 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-semibold hover:shadow-md"
              >
-               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <svg className="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                </svg>
                Anterior
@@ -1082,17 +1434,18 @@ const CyberRiskCalculator: React.FC = () => {
              <button
                onClick={nextStep}
                disabled={answers[currentQuestion.id] === undefined}
-               className="flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-semibold shadow-lg"
+               className="group flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-bold shadow-xl hover:shadow-2xl transform hover:scale-105"
              >
                {currentStep === currentQuestions.length - 1 ? (
                  <span className="flex items-center">
-                   🎯 Generar Reporte Personalizado
-                   <BoltIcon className="h-5 w-5 ml-2" />
+                   <span className="mr-2 transition-transform group-hover:scale-110">🎯</span>
+                   Generar Reporte Personalizado
+                   <BoltIcon className="h-5 w-5 ml-2 transition-transform group-hover:rotate-12" />
                  </span>
                ) : (
                  <span className="flex items-center">
                    Siguiente
-                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <svg className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                    </svg>
                  </span>
@@ -1101,10 +1454,10 @@ const CyberRiskCalculator: React.FC = () => {
              
              {/* Valor agregado en las últimas preguntas */}
              {currentStep > currentQuestions.length - 5 && (
-               <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+               <div className="mt-4 p-5 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 rounded-xl border-2 border-blue-200/60 shadow-lg">
                  <div className="flex items-center text-blue-800">
-                   <TrophyIcon className="h-5 w-5 mr-2" />
-                   <span className="text-sm font-medium">
+                   <TrophyIcon className="h-6 w-6 mr-3 text-blue-600" />
+                   <span className="text-sm font-semibold">
                      Su reporte incluirá: Análisis de riesgo personalizado • Plan de acción prioritario • Estimación de costos • Consulta gratuita
                    </span>
                  </div>

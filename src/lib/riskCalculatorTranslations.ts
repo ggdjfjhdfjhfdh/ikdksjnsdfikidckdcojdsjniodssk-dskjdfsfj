@@ -245,7 +245,15 @@ export const riskCalculatorTranslations = {
     businessDescription: 'Evaluar la ciberseguridad empresarial',
     
     // Pregunta de tipo de usuario
-    userTypeQuestion: '¿Para quién es esta evaluación?'
+    userTypeQuestion: '¿Para quién es esta evaluación?',
+    
+    // Descripciones adicionales para evaluación personal y recursos de TI
+    evaluationPersonalDescription: 'Nuestro cuestionario está personalizado para evaluar la ciberseguridad en el ámbito personal, incluyendo dispositivos, cuentas online, y hábitos de seguridad digital.',
+    startPersonalEvaluation: 'Comenzar Evaluación Personal',
+    itTeamYes: 'Sí, tenemos equipo IT',
+    itTeamYesDescription: 'Contamos con personal técnico interno',
+    itTeamNo: 'No, externalizamos IT',
+    itTeamNoDescription: 'Dependemos de proveedores externos'
   },
   
   EN: {
@@ -383,7 +391,7 @@ export const riskCalculatorTranslations = {
     timeToImplement1to3MonthsUrgent: '1-3 months (URGENT)',
     timeToImplement3to6MonthsUrgent: '3-6 months (URGENT)',
     timeToImplement2to4WeeksEmergency: '2-4 weeks (EMERGENCY)',
-    timeToImplement1to3MonthsEmergency: '1-3 months (EMERGENCY)',
+    timeToImplement1to3MonthsEmergency: '1-3 months (EMERGENCIA)',
     
     // Buttons and actions
     contactImmediate: 'IMMEDIATE CONTACT: SESECPRO for emergency intervention.',
