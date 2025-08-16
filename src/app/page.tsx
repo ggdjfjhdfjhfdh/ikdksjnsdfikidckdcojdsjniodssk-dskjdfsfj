@@ -143,10 +143,7 @@ export default function HomePage(): React.ReactElement {
       <section className="py-24 md:py-32 bg-gradient-to-br from-white via-blue-50/20 to-gray-50 relative">
         <div className="container">
           <div className="text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 text-sm font-semibold rounded-full mb-6">
-              <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-              Soluciones
-            </div>
+          
             <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
               {t('solutionsTitle')}
             </h2>
@@ -189,10 +186,7 @@ export default function HomePage(): React.ReactElement {
         <div className="container relative">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-100 to-orange-100 text-red-700 text-sm font-semibold rounded-full mb-6">
-                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                Evaluación de Riesgo
-              </div>
+              
               <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
                 {t('riskCalculatorTitle')}
               </h2>
@@ -284,10 +278,7 @@ export default function HomePage(): React.ReactElement {
         <div className="container relative z-10">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm text-white text-sm font-semibold rounded-full mb-8 border border-white/20">
-                <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-                ¿Listo para proteger tu empresa?
-              </div>
+             
               <h2 className="text-5xl md:text-7xl font-black mb-8 leading-tight bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
                 {t('ctaTitle')}
               </h2>

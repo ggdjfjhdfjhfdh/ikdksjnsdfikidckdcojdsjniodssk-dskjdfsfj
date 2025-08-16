@@ -1,5 +1,5 @@
-import { HelpCircle as HelpCircleIcon } from 'lucide-react';
+import { HelpCircle as HelpCircleIcon, LucideProps } from 'lucide-react';
 
-export default function HelpCircle() {
-  return <HelpCircleIcon className="w-6 h-6" />;
+export default function HelpCircle(props: LucideProps) {
+  return <HelpCircleIcon {...props} />;
 }

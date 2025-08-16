@@ -47,11 +47,7 @@ export default function RecursosHome() {
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
         <div className="relative px-4 py-24 sm:py-32">
           <div className="mx-auto max-w-4xl text-center">
-            <div className="mb-8">
-              <span className="inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-800 ring-1 ring-inset ring-blue-600/20">
-                🔒 Centro de Recursos
-              </span>
-            </div>
+
             <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6">
               {t('resourcesTitle')}
             </h1>

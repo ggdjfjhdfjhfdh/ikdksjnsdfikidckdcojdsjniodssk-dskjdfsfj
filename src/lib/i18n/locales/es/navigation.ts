@@ -34,12 +34,12 @@ export const navigationES = {
   
   // Por qué Sesecpro
   whySesecproTitle: '¿Por qué elegir SESECPRO?',
-  whySesecproPoint1Title: 'Experiencia Comprobada',
-  whySesecproPoint1Desc: 'Más de 10 años protegiendo organizaciones de todos los tamaños.',
-  whySesecproPoint2Title: 'Tecnología Avanzada',
-  whySesecproPoint2Desc: 'Utilizamos las herramientas más modernas del mercado.',
-  whySesecproPoint3Title: 'Soporte 24/7',
-  whySesecproPoint3Desc: 'Nuestro equipo está disponible cuando lo necesites.',
+  whySesecproPoint1Title: 'Protección Integral',
+  whySesecproPoint1Desc: 'Defendemos tu negocio con un enfoque 360°, desde la prevención hasta la respuesta a incidentes.',
+  whySesecproPoint2Title: 'Innovación Constante',
+  whySesecproPoint2Desc: 'Nos mantenemos a la vanguardia con las últimas tecnologías y estrategias para anticipar amenazas.',
+  whySesecproPoint3Title: 'Tranquilidad 24/7',
+  whySesecproPoint3Desc: 'Nuestro equipo experto está siempre activo, monitoreando y protegiendo tus activos digitales sin interrupciones.',
   
   // CTA
   ctaTitle: '¿Preparado para elevar tu seguridad digital al siguiente nivel?',
