@@ -72,7 +72,7 @@ interface ActionStep {
 
 interface RiskResult {
   score: number;
-  level: 'low' | 'medium' | 'high' | 'critical';
+  level: 'low' | 'medium' | 'high' | 'critical';  
   color: string;
   actionPlan: ActionStep[];
   urgency: 'low' | 'medium' | 'high' | 'critical';
