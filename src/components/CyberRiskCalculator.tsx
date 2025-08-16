@@ -594,15 +594,15 @@ const CyberRiskCalculator: React.FC = () => {
                 required
                 value={leadData.role}
                 onChange={(e) => setLeadData({...leadData, role: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               >
-                <option value="">Seleccione su cargo</option>
-                <option value="CEO/Gerente General">CEO/Gerente General</option>
-                <option value="CTO/Director Tecnología">CTO/Director Tecnología</option>
-                <option value="CISO/Director Seguridad">CISO/Director Seguridad</option>
-                <option value="IT Manager">IT Manager</option>
-                <option value="Responsable Sistemas">Responsable Sistemas</option>
-                <option value="Otro">Otro</option>
+                <option value="" className="text-gray-900">Seleccione su cargo</option>
+                <option value="CEO/Gerente General" className="text-gray-900">CEO/Gerente General</option>
+                <option value="CTO/Director Tecnología" className="text-gray-900">CTO/Director Tecnología</option>
+                <option value="CISO/Director Seguridad" className="text-gray-900">CISO/Director Seguridad</option>
+                <option value="IT Manager" className="text-gray-900">IT Manager</option>
+                <option value="Responsable Sistemas" className="text-gray-900">Responsable Sistemas</option>
+                <option value="Otro" className="text-gray-900">Otro</option>
               </select>
             </div>
             <div>
