@@ -72,10 +72,10 @@ export default function HomePage(): React.ReactElement {
             {t('heroDescription')}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 w-full md:w-auto justify-center md:justify-start mb-12">
-            <Link href="/contact" className="btn-primary text-lg px-12 py-5 shadow-2xl hover:shadow-blue-500/30 transform hover:scale-105">
+            <Link href="/contact" className="btn-primary text-base sm:text-lg px-8 py-4 sm:px-12 sm:py-5 shadow-2xl hover:shadow-blue-500/30 transform hover:scale-105">
               {t('askUs')}
             </Link>
-            <Link href="/about" className="btn-secondary text-lg px-12 py-5 shadow-xl hover:shadow-blue-500/20 transform hover:scale-105">
+            <Link href="/about" className="btn-secondary text-base sm:text-lg px-8 py-4 sm:px-12 sm:py-5 shadow-xl hover:shadow-blue-500/20 transform hover:scale-105">
               {t('learnMore')}
             </Link>
           </div>
@@ -169,7 +169,7 @@ export default function HomePage(): React.ReactElement {
           <div className="flex justify-center mt-16">
             <Link
               href="/solutions"
-              className="btn-primary text-lg px-10 py-4 shadow-2xl hover:shadow-blue-500/25"
+              className="btn-primary text-base sm:text-lg px-8 py-4 sm:px-10 sm:py-4 shadow-2xl hover:shadow-blue-500/25"
             >
               {t('exploreSolutions')}
             </Link>
@@ -253,7 +253,7 @@ export default function HomePage(): React.ReactElement {
                 <div className="text-center">
                   <Link 
                      href="/recursos/herramientas/calculadora-riesgo" 
-                     className="inline-flex items-center px-12 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-lg font-bold rounded-2xl hover:from-blue-700 hover:to-cyan-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-blue-500/30 group"
+                     className="inline-flex items-center px-8 py-4 sm:px-12 sm:py-5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-base sm:text-lg font-bold rounded-2xl hover:from-blue-700 hover:to-cyan-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-blue-500/30 group"
                    >
                     <ShieldCheckIcon className="h-6 w-6 mr-3 group-hover:scale-110 transition-transform" />
                     {t('riskCalculatorButton')}
@@ -291,7 +291,7 @@ export default function HomePage(): React.ReactElement {
             <div className="flex flex-col lg:flex-row gap-8 justify-center items-center mb-16">
               <div className="group relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                <Link href="/contact" className="relative inline-flex items-center px-12 py-6 bg-white text-gray-900 text-xl font-bold rounded-2xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-2xl">
+                <Link href="/contact" className="relative inline-flex items-center px-8 py-4 sm:px-12 sm:py-6 bg-white text-gray-900 text-base sm:text-xl font-bold rounded-2xl hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-2xl">
                   {t('ctaButton')}
                 </Link>
               </div>
