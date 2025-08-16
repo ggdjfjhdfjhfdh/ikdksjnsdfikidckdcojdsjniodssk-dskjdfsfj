@@ -25,6 +25,7 @@ import {
   Users,
   Key
 } from 'lucide-react';
+import DownloadButton from '@/components/DownloadButton';
 
 export default function AutenticacionDosPasos() {
   const nav = [
@@ -76,7 +77,7 @@ export default function AutenticacionDosPasos() {
         <div className="flex flex-col lg:flex-row gap-8 mt-8">
           {/* MAIN */}
           <article className="flex-1">
-            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div id="content" className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
               {/* HERO */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-100 p-10 text-center border-b border-gray-200">
                 <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
@@ -106,18 +107,13 @@ export default function AutenticacionDosPasos() {
                 </div>
                 
                 {/* Botones de acción */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <button className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg">
-                    <ArrowRight className="w-5 h-5 mr-2" />
-                    Comenzar guía
-                  </button>
-                  <button className="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors shadow-sm">
-                    <Download className="w-5 h-5 mr-2" />
-                    Descargar PDF
-                  </button>
+                <div className="flex items-center justify-center">
+                  <DownloadButton
+                    title="Guía: Autenticación en dos pasos"
+                    contentSelector="#content"
+                  />
                 </div>
               </div>
-
               {/* ¿QUÉ ES? */}
               <div className="divide-y divide-gray-100">
                 <section className="p-8">

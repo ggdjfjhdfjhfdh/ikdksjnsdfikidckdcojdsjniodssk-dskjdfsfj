@@ -1,10 +1,10 @@
 "use client";
 
-import Link from 'next/link';
 import ShareButton from '@/components/ShareButton';
 import BackButton from '@/components/BackButton';
-import { HardDrive, Shield, Clock, RefreshCw, HelpCircle, ChevronDown, Download } from 'lucide-react';
+import { HardDrive, Shield, RefreshCw, HelpCircle, ChevronDown } from 'lucide-react';
 import { ReactNode } from 'react';
+import DownloadButton from '@/components/DownloadButton';
 import PdfGenerator from './PdfGenerator';
 import { generateGuidePdf } from '@/utils/generatePdf';
 
@@ -153,8 +153,12 @@ export default function GestionCopiasSeguridad() {
                   </a></li>
                 </ul>
               </nav>
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 space-y-4">
                 <ShareButton />
+                <DownloadButton
+                  title="Guía: Gestión de copias de seguridad"
+                  contentSelector="#content"
+                />
               </div>
             </div>
           </aside>

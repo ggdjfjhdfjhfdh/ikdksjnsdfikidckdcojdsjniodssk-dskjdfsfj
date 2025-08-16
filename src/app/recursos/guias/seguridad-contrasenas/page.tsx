@@ -30,6 +30,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import DownloadButton from '@/components/DownloadButton';
 
 /*********************************
  * Utilidades de generación (tipadas)
@@ -156,7 +157,7 @@ export default function SeguridadContrasenas() {
         <div className="flex flex-col lg:flex-row gap-8 mt-6">
           {/* MAIN */}
           <article className="flex-1">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div id="content" className="bg-white rounded-lg shadow-md overflow-hidden">
               {/* HERO */}
               <header className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-10 text-center border-b border-gray-200">
                 <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
@@ -186,15 +187,11 @@ export default function SeguridadContrasenas() {
                 </div>
                 
                 {/* Botones de acción */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <button className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg">
-                    <ArrowRight className="w-5 h-5 mr-2" />
-                    Comenzar guía
-                  </button>
-                  <button className="inline-flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors shadow-sm">
-                    <Download className="w-5 h-5 mr-2" />
-                    Descargar PDF
-                  </button>
+                <div className="flex items-center justify-center">
+                  <DownloadButton
+                    title="Guía: Seguridad de contraseñas"
+                    contentSelector="#content"
+                  />
                 </div>
               </header>
 
