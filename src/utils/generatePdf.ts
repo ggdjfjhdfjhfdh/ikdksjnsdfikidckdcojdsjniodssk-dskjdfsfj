@@ -13,8 +13,15 @@ interface AssessmentData {
   urgency: 'low' | 'medium' | 'high' | 'critical';
   businessImpact: string;
   estimatedCost: string;
-  timeToImplement: string;
-  recommendations: string[];
+  timeToImplement?: string;
+  actionPlan?: Array<{
+    id: number | string;
+    title: string;
+    description: string;
+    priority: 'CRÍTICO' | 'ALTO' | 'MEDIO';
+    timeframe: string;
+    category: string;
+  }>;
 }
 
 interface UserProfile {
@@ -23,6 +30,11 @@ interface UserProfile {
   industry?: string;
   role?: string;
   hasITTeam?: boolean;
+  // Nuevos campos para filtrado personalizado
+  messagingAppsInstalled?: boolean;
+  messagingApps?: string[];
+  deviceBrands?: string[];
+  hasChildren?: boolean;
 }
 
 interface PersonalRecommendation {
@@ -151,18 +163,25 @@ function getPersonalNextSteps(urgency: 'low' | 'medium' | 'high' | 'critical'): 
   ];
 }
 
-export const generateGuidePdf = (title: string, content: HTMLElement, userProfile?: UserProfile) => {
+export const generateGuidePdf = (title: string, content: HTMLElement, userProfile?: UserProfile, actionPlan?: Array<{
+    id: number | string;
+    title: string;
+    description: string;
+    priority: 'CRÍTICO' | 'ALTO' | 'MEDIO';
+    timeframe: string;
+    category: string;
+  }>) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
   
   // Colores corporativos
-  const primaryColor = [37, 99, 235]; // Blue-600
-  const secondaryColor = [51, 65, 85]; // Slate-700
-  const accentColor = [59, 130, 246]; // Blue-500
-  const lightGray = [248, 250, 252]; // Slate-50
-  const darkGray = [30, 41, 59]; // Slate-800
-  const lightText = [100, 116, 139]; // Slate-500
+  const primaryColor: [number, number, number] = [37, 99, 235]; // Blue-600
+  const secondaryColor: [number, number, number] = [51, 65, 85]; // Slate-700
+  const accentColor: [number, number, number] = [59, 130, 246]; // Blue-500
+  const lightGray: [number, number, number] = [248, 250, 252]; // Slate-50
+  const darkGray: [number, number, number] = [30, 41, 59]; // Slate-800
+  const lightText: [number, number, number] = [100, 116, 139]; // Slate-500
   
   // Función para agregar encabezado en todas las páginas
   const addHeader = () => {
@@ -199,6 +218,7 @@ export const generateGuidePdf = (title: string, content: HTMLElement, userProfil
                         content.querySelector('[class*="text-"][class*="font-bold"]');
     const impactElement = content.querySelector('.italic');
     const costElements = content.querySelectorAll('.text-2xl.font-bold');
+    // Ya no usamos recomendaciones del DOM; preferimos el actionPlan pasado como parámetro.
     const recommendationElements = content.querySelectorAll('li span');
     
     const score = scoreElement ? parseInt(scoreElement.textContent?.replace('%', '') || '0') : 0;
@@ -219,7 +239,7 @@ export const generateGuidePdf = (title: string, content: HTMLElement, userProfil
       businessImpact: impactElement?.textContent || 'Impacto no especificado',
       estimatedCost: costElements[1]?.textContent || 'No especificado',
       timeToImplement: costElements[0]?.textContent || 'No especificado',
-      recommendations: Array.from(recommendationElements).map(el => el.textContent || '').filter(text => text.length > 10)
+      actionPlan: actionPlan && actionPlan.length > 0 ? actionPlan : undefined
     };
   };
   
@@ -256,7 +276,14 @@ export const generateGuidePdf = (title: string, content: HTMLElement, userProfil
   
   // Score principal
   doc.setFontSize(36);
-  doc.setTextColor(...(data.score >= 85 ? [34, 197, 94] : data.score >= 70 ? [234, 179, 8] : data.score >= 50 ? [249, 115, 22] : [239, 68, 68]));
+  const coverScoreColor: [number, number, number] = data.score >= 85
+    ? [34, 197, 94]
+    : data.score >= 70
+    ? [234, 179, 8]
+    : data.score >= 50
+    ? [249, 115, 22]
+    : [239, 68, 68];
+  doc.setTextColor(...coverScoreColor);
   doc.text(`${data.score}%`, pageWidth / 2, metricsY + 40, { align: 'center' });
   
   doc.setFontSize(12);
@@ -355,9 +382,10 @@ export const generateGuidePdf = (title: string, content: HTMLElement, userProfil
   doc.text(userProfile?.type === 'business' ? '3. Priorización de Acciones' : '3. ¿Qué hacer AHORA?', 15, yPos);
   yPos += 10;
   
-  const urgencyColor = data.urgency === 'critical' ? [239, 68, 68] : 
-                      data.urgency === 'high' ? [249, 115, 22] :
-                      data.urgency === 'medium' ? [234, 179, 8] : [34, 197, 94];
+  const urgencyColor: [number, number, number] =
+    data.urgency === 'critical' ? [239, 68, 68] :
+    data.urgency === 'high' ? [249, 115, 22] :
+    data.urgency === 'medium' ? [234, 179, 8] : [34, 197, 94];
   
   doc.setFillColor(...urgencyColor);
   doc.rect(15, yPos, pageWidth - 30, 20, 'F');
@@ -433,18 +461,19 @@ export const generateGuidePdf = (title: string, content: HTMLElement, userProfil
       yPos += 30;
     });
   } else {
-    // Tabla de recomendaciones para empresas (código existente)
-    const recommendationsData = data.recommendations.slice(0, 8).map((rec, index) => [
+    // Tabla de plan de acción para empresas
+    const effectivePlan = (data.actionPlan && data.actionPlan.length > 0 ? data.actionPlan : (actionPlan || []));
+    const planData = effectivePlan.slice(0, 8).map((step, index) => [
       `${index + 1}`,
-      rec,
-      data.urgency === 'critical' ? 'Inmediata' : data.urgency === 'high' ? '30 días' : '90 días'
+      `${step.title}: ${step.description}`,
+      step.timeframe || (data.urgency === 'critical' ? 'Inmediata' : data.urgency === 'high' ? '30 días' : '90 días')
     ]);
 
-    if (recommendationsData.length > 0) {
+    if (planData.length > 0) {
       doc.autoTable({
         startY: yPos,
-        head: [['#', 'Recomendación', 'Plazo']],
-        body: recommendationsData,
+        head: [['#', 'Acción', 'Plazo']],
+        body: planData,
         theme: 'grid',
         headStyles: { fillColor: primaryColor, textColor: [255, 255, 255], fontStyle: 'bold' },
         alternateRowStyles: { fillColor: lightGray },
@@ -482,6 +511,160 @@ export const generateGuidePdf = (title: string, content: HTMLElement, userProfil
     yPos += stepLines.length * 6 + 3;
   });
   
+  // Integración en página 3 para particulares: sección familiar, antiestafas, guías por dispositivo y QR
+  if (userProfile?.type !== 'business') {
+    // Ajustar yPos si es necesario
+    if (yPos > 200) {
+      doc.addPage();
+      addHeader();
+      yPos = 40;
+    }
+
+    // Sección: Perfil familiar y control parental
+    if ((userProfile?.hasChildren === true) || (userProfile?.hasChildren === undefined && hasFamilyContext(content))) {
+      doc.setTextColor(...primaryColor);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.text('Protección Familiar y Control Parental', 15, yPos);
+      yPos += 8;
+
+      doc.setTextColor(...darkGray);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const famLines = doc.splitTextToSize(
+        'Si convives con menores, activa controles parentales en sus dispositivos, limita el tiempo de pantalla, bloquea compras sin permiso y revisa las apps instaladas. Habla con ellos sobre privacidad, contraseñas y cómo detectar estafas.',
+        pageWidth - 30
+      );
+      doc.text(famLines, 15, yPos);
+      yPos += famLines.length * 6 + 6;
+
+      const bullets = [
+        'Crea cuentas infantiles y perfiles con edad adecuada',
+        'En App Store/Play Store, restringe compras y descargas',
+        'Activa filtros de contenido y tiempo de uso',
+        'Revisa historial y permisos de apps periódicamente'
+      ];
+      bullets.forEach(b => {
+        const l = doc.splitTextToSize(`- ${b}`, pageWidth - 35);
+        doc.text(l, 20, yPos);
+        yPos += l.length * 6 + 2;
+      });
+
+      yPos += 6;
+    }
+
+    // Sección: Consejos antiestafas por plataforma
+    doc.setTextColor(...primaryColor);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('Consejos Antiestafas (WhatsApp, Email y Redes)', 15, yPos);
+    yPos += 8;
+
+    const tips = filterAntiScamTipsByProfile(getAntiScamTips(), userProfile);
+    tips.forEach(t => {
+      if (yPos > 250) {
+        doc.addPage();
+        addHeader();
+        yPos = 40;
+      }
+      doc.setTextColor(...secondaryColor);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.text(t.platform, 15, yPos);
+      yPos += 6;
+
+      doc.setTextColor(...darkGray);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const w = doc.splitTextToSize(`Alerta: ${t.warning}`, pageWidth - 30);
+      doc.text(w, 15, yPos);
+      yPos += w.length * 6 + 2;
+
+      t.tips.forEach(item => {
+        const li = doc.splitTextToSize(`- ${item}`, pageWidth - 35);
+        doc.text(li, 20, yPos);
+        yPos += li.length * 6 + 1;
+      });
+      yPos += 4;
+    });
+
+    // Guía rápida por dispositivo
+    doc.setTextColor(...primaryColor);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('Guía Rápida por Dispositivo', 15, yPos);
+    yPos += 8;
+
+    const guides = filterDeviceGuidesByProfile(getDeviceGuides(), userProfile);
+    guides.forEach(g => {
+      if (yPos > 240) {
+        doc.addPage();
+        addHeader();
+        yPos = 40;
+      }
+      doc.setTextColor(...secondaryColor);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.text(g.device, 15, yPos);
+      yPos += 6;
+
+      doc.setTextColor(...darkGray);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const blocks = [
+        { title: '2FA', lines: g.twoFactorSteps },
+        { title: 'Gestor de contraseñas', lines: g.passwordManagerSteps },
+        { title: 'Copias de seguridad', lines: g.backupSteps },
+      ];
+      blocks.forEach(b => {
+        const h = doc.splitTextToSize(`${b.title}:`, pageWidth - 30);
+        doc.text(h, 15, yPos);
+        yPos += h.length * 6;
+        b.lines.forEach(step => {
+          const l = doc.splitTextToSize(`- ${step}`, pageWidth - 35);
+          doc.text(l, 20, yPos);
+          yPos += l.length * 6 + 1;
+        });
+        yPos += 2;
+      });
+      yPos += 4;
+    });
+
+    // Enlaces y QR a guías paso a paso
+    if (yPos > 220) {
+      doc.addPage();
+      addHeader();
+      yPos = 40;
+    }
+    doc.setTextColor(...primaryColor);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('Guías Paso a Paso (2FA, Gestores y Copias)', 15, yPos);
+    yPos += 8;
+
+    doc.setTextColor(...darkGray);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const resources = [
+      { label: 'Guía 2FA', url: 'https://sesecpro.com/guia/2fa' },
+      { label: 'Guía Gestor de Contraseñas', url: 'https://sesecpro.com/guia/gestor' },
+      { label: 'Guía Copias de Seguridad', url: 'https://sesecpro.com/guia/copias' },
+    ];
+    const startX = 15;
+    let qrX = startX;
+    const qrSize = 26;
+    resources.forEach((r, i) => {
+      if (qrX + qrSize > pageWidth - 15) {
+        qrX = startX;
+        yPos += qrSize + 10;
+      }
+      drawQr(doc, qrX, yPos, qrSize, r.url);
+      doc.text(r.label, qrX + qrSize / 2, yPos + qrSize + 5, { align: 'center' });
+      qrX += qrSize + 10;
+    });
+    yPos += qrSize + 18;
+  }
+
   // Información de contacto
   yPos += 15;
   doc.setFillColor(...primaryColor);
@@ -633,159 +816,54 @@ function drawQr(doc: jsPDF, x: number, y: number, size: number, url: string) {
   doc.text(lines, x + 2, y + size / 2, { align: 'left' });
 }
 
-// Integración en página 3 para particulares: sección familiar, antiestafas, guías por dispositivo y QR
-// Añadir justo antes de addFooter(3, 3);
-if (userProfile?.type !== 'business') {
-  // Ajustar yPos si es necesario
-  if (yPos > 200) {
-    doc.addPage();
-    addHeader();
-    yPos = 40;
-  }
-
-  // Sección: Perfil familiar y control parental
-  if (hasFamilyContext(content)) {
-    doc.setTextColor(...primaryColor);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.text('Protección Familiar y Control Parental', 15, yPos);
-    yPos += 8;
-
-    doc.setTextColor(...darkGray);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    const famLines = doc.splitTextToSize(
-      'Si convives con menores, activa controles parentales en sus dispositivos, limita el tiempo de pantalla, bloquea compras sin permiso y revisa las apps instaladas. Habla con ellos sobre privacidad, contraseñas y cómo detectar estafas.',
-      pageWidth - 30
-    );
-    doc.text(famLines, 15, yPos);
-    yPos += famLines.length * 6 + 6;
-
-    const bullets = [
-      'Crea cuentas infantiles y perfiles con edad adecuada',
-      'En App Store/Play Store, restringe compras y descargas',
-      'Activa filtros de contenido y tiempo de uso',
-      'Revisa historial y permisos de apps periódicamente'
-    ];
-    bullets.forEach(b => {
-      const l = doc.splitTextToSize(`- ${b}`, pageWidth - 35);
-      doc.text(l, 20, yPos);
-      yPos += l.length * 6 + 2;
-    });
-
-    yPos += 6;
-  }
-
-  // Sección: Consejos antiestafas por plataforma
-  doc.setTextColor(...primaryColor);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.text('Consejos Antiestafas (WhatsApp, Email y Redes)', 15, yPos);
-  yPos += 8;
-
-  const tips = getAntiScamTips();
-  tips.forEach(t => {
-    if (yPos > 250) {
-      doc.addPage();
-      addHeader();
-      yPos = 40;
-    }
-    doc.setTextColor(...secondaryColor);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.text(t.platform, 15, yPos);
-    yPos += 6;
-
-    doc.setTextColor(...darkGray);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    const w = doc.splitTextToSize(`Alerta: ${t.warning}`, pageWidth - 30);
-    doc.text(w, 15, yPos);
-    yPos += w.length * 6 + 2;
-
-    t.tips.forEach(item => {
-      const li = doc.splitTextToSize(`- ${item}`, pageWidth - 35);
-      doc.text(li, 20, yPos);
-      yPos += li.length * 6 + 1;
-    });
-    yPos += 4;
-  });
-
-  // Guía rápida por dispositivo
-  doc.setTextColor(...primaryColor);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.text('Guía Rápida por Dispositivo', 15, yPos);
-  yPos += 8;
-
-  const guides = getDeviceGuides();
-  guides.forEach(g => {
-    if (yPos > 240) {
-      doc.addPage();
-      addHeader();
-      yPos = 40;
-    }
-    doc.setTextColor(...secondaryColor);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.text(g.device, 15, yPos);
-    yPos += 6;
-
-    doc.setTextColor(...darkGray);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    const blocks = [
-      { title: '2FA', lines: g.twoFactorSteps },
-      { title: 'Gestor de contraseñas', lines: g.passwordManagerSteps },
-      { title: 'Copias de seguridad', lines: g.backupSteps },
-    ];
-    blocks.forEach(b => {
-      const h = doc.splitTextToSize(`${b.title}:`, pageWidth - 30);
-      doc.text(h, 15, yPos);
-      yPos += h.length * 6;
-      b.lines.forEach(step => {
-        const l = doc.splitTextToSize(`- ${step}`, pageWidth - 35);
-        doc.text(l, 20, yPos);
-        yPos += l.length * 6 + 1;
-      });
-      yPos += 2;
-    });
-    yPos += 4;
-  });
-
-  // Enlaces y QR a guías paso a paso
-  if (yPos > 220) {
-    doc.addPage();
-    addHeader();
-    yPos = 40;
-  }
-  doc.setTextColor(...primaryColor);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.text('Guías Paso a Paso (2FA, Gestores y Copias)', 15, yPos);
-  yPos += 8;
-
-  doc.setTextColor(...darkGray);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  const resources = [
-    { label: 'Guía 2FA', url: 'https://sesecpro.com/guia/2fa' },
-    { label: 'Guía Gestor de Contraseñas', url: 'https://sesecpro.com/guia/gestor' },
-    { label: 'Guía Copias de Seguridad', url: 'https://sesecpro.com/guia/copias' },
-  ];
-  const startX = 15;
-  let qrX = startX;
-  const qrSize = 26;
-  resources.forEach((r, i) => {
-    if (qrX + qrSize > pageWidth - 15) {
-      qrX = startX;
-      yPos += qrSize + 10;
-    }
-    drawQr(doc, qrX, yPos, qrSize, r.url);
-    doc.text(r.label, qrX + qrSize / 2, yPos + qrSize + 5, { align: 'center' });
-    qrX += qrSize + 10;
-  });
-  yPos += qrSize + 18;
+// Helpers de filtrado por perfil
+function normalize(val?: string) {
+  return (val || '').toLowerCase().trim();
 }
 
-// ... existing code ...
+function filterAntiScamTipsByProfile(tips: AntiScamTip[], userProfile?: UserProfile): AntiScamTip[] {
+  if (!userProfile) return tips;
+
+  const installed = userProfile.messagingAppsInstalled;
+  const apps = (userProfile.messagingApps || []).map(normalize);
+
+  // Mapeo simple a nuestras plataformas disponibles
+  const wantsWhatsApp = apps.includes('whatsapp');
+  const wantsSocial = apps.some(a => ['instagram', 'facebook', 'tiktok', 'x', 'twitter', 'snapchat', 'messenger', 'telegram', 'signal'].includes(a));
+
+  let result = tips.slice();
+
+  // Si indica que no tiene apps de mensajería, ocultamos la sección específica de WhatsApp
+  if (installed === false) {
+    result = result.filter(t => t.platform !== 'WhatsApp');
+  } else if (installed === true && apps.length > 0) {
+    // Mantener WhatsApp solo si está entre sus apps
+    result = result.filter(t => {
+      if (t.platform === 'WhatsApp') return wantsWhatsApp;
+      // Redes Sociales solo si tiene alguna red o app social en su lista
+      if (t.platform === 'Redes Sociales') return wantsSocial || wantsWhatsApp || apps.length > 0;
+      // Email lo dejamos como general
+      return true;
+    });
+  }
+
+  return result;
+}
+
+function filterDeviceGuidesByProfile(guides: DeviceGuide[], userProfile?: UserProfile): DeviceGuide[] {
+  if (!userProfile || !userProfile.deviceBrands || userProfile.deviceBrands.length === 0) return guides;
+
+  const mapBrandToDevice = (b: string): DeviceGuide['device'] | null => {
+    const v = normalize(b);
+    if (v === 'iphone' || v === 'ios' || v === 'apple') return 'iPhone';
+    if (v === 'android') return 'Android';
+    if (v === 'windows' || v === 'pc') return 'Windows';
+    if (v === 'mac' || v === 'macos' || v === 'osx') return 'Mac';
+    return null;
+  };
+
+  const wanted = new Set(userProfile.deviceBrands.map(mapBrandToDevice).filter((x): x is DeviceGuide['device'] => !!x));
+  if (wanted.size === 0) return guides; // fallback: no mapeó nada
+
+  return guides.filter(g => wanted.has(g.device));
+}

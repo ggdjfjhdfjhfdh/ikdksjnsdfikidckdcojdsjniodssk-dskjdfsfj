@@ -15,8 +15,18 @@ import {
   TrophyIcon,
   FireIcon,
   BoltIcon,
-  LockClosedIcon
+  LockClosedIcon,
+  ChatBubbleLeftRightIcon,
+  ComputerDesktopIcon
 } from '@heroicons/react/24/outline';
+import { 
+  SiWhatsapp, 
+  SiTelegram, 
+  SiSignal, 
+  SiInstagram, 
+  SiApple, 
+  SiAndroid
+} from 'react-icons/si';
 import { useLanguage } from '@/lib/LanguageContext';
 import { riskCalculatorTranslations, type RiskCalculatorTranslationKey } from '@/lib/riskCalculatorTranslations';
 import { businessQuestions as businessQuestionsData, individualQuestions as individualQuestionsData } from '@/lib/riskCalculatorQuestions';
@@ -38,6 +48,17 @@ interface UserProfile {
   industry?: string;
   role?: string;
   hasITTeam?: boolean;
+  // Nuevos campos para filtrado personalizado
+  messagingAppsInstalled?: boolean;
+  messagingApps?: string[];
+  deviceBrands?: string[];
+  hasChildren?: boolean;
+}
+
+interface ContentPreferences {
+  familyProtection: boolean;
+  antiScamTips: boolean;
+  deviceGuides: boolean;
 }
 
 interface ActionStep {
@@ -107,6 +128,8 @@ const CyberRiskCalculator: React.FC = () => {
   const [showSegmentation, setShowSegmentation] = useState(true);
   const [segmentationStep, setSegmentationStep] = useState(0);
   const [isClient, setIsClient] = useState(false);
+  const [contentPrefs, setContentPrefs] = useState<ContentPreferences>({ familyProtection: false, antiScamTips: false, deviceGuides: false });
+  const [showContentSetup, setShowContentSetup] = useState(true);
 
   // Prevent hydration mismatch by ensuring client-side rendering
   useEffect(() => {
@@ -146,7 +169,12 @@ const CyberRiskCalculator: React.FC = () => {
     if (questionId === 'user_type') {
       setUserProfile(prev => ({ 
         ...prev, 
-        type: value as 'individual' | 'business'
+        type: value as 'individual' | 'business',
+        // Inicializar campos de filtrado al elegir tipo
+        messagingAppsInstalled: false,
+        messagingApps: [],
+        deviceBrands: [],
+        hasChildren: false
       } as UserProfile));
     } else if (questionId === 'company_size') {
       setUserProfile(prev => ({ 
@@ -163,7 +191,36 @@ const CyberRiskCalculator: React.FC = () => {
         ...prev, 
         hasITTeam: value === 'yes'
       } as UserProfile));
+    } else if (questionId === 'messaging_apps_installed') {
+      setUserProfile(prev => ({
+        ...prev,
+        messagingAppsInstalled: value === 'yes'
+      } as UserProfile));
+    } else if (questionId === 'has_children') {
+      setUserProfile(prev => ({
+        ...prev,
+        hasChildren: value === 'yes'
+      } as UserProfile));
     }
+  };
+  
+  // Funciones helper para manejar listas (apps de mensajería y marcas de dispositivos)
+  const toggleMessagingApp = (app: string) => {
+    setUserProfile(prev => {
+      if (!prev) return prev;
+      const apps = prev.messagingApps || [];
+      const newApps = apps.includes(app) ? apps.filter(a => a !== app) : [...apps, app];
+      return { ...prev, messagingApps: newApps };
+    });
+  };
+
+  const toggleDeviceBrand = (brand: string) => {
+    setUserProfile(prev => {
+      if (!prev) return prev;
+      const brands = prev.deviceBrands || [];
+      const newBrands = brands.includes(brand) ? brands.filter(b => b !== brand) : [...brands, brand];
+      return { ...prev, deviceBrands: newBrands };
+    });
   };
   
   // Completar segmentación
@@ -171,6 +228,15 @@ const CyberRiskCalculator: React.FC = () => {
     setShowSegmentation(false);
     setCurrentStep(0);
   };
+
+  // Preferencias de contenido iniciales
+  const handleContentPrefChange = (key: keyof ContentPreferences, value: boolean) => {
+    setContentPrefs(prev => ({ ...prev, [key]: value }));
+  };
+  const completeContentSetup = () => {
+    setShowContentSetup(false);
+  };
+
 
   const calculateRisk = (): RiskResult => {
     const currentQuestions = getQuestionsForProfile();
@@ -382,7 +448,7 @@ const CyberRiskCalculator: React.FC = () => {
       score: Math.round(percentage), 
       level, 
       color, 
-      recommendations, 
+      actionPlan, 
       urgency, 
       businessImpact, 
       estimatedCost, 
@@ -853,26 +919,28 @@ const CyberRiskCalculator: React.FC = () => {
           </div>
           
           <div className="space-y-4">
-            {result.recommendations.map((rec, index) => (
-              <div key={index} className="group flex items-start p-5 bg-white/80 backdrop-blur-sm rounded-xl border-l-4 border-blue-500 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-blue-600">
+            {result.actionPlan.map((step) => (
+              <div key={step.id} className="group flex items-start p-5 bg-white/80 backdrop-blur-sm rounded-xl border-l-4 border-blue-500 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-blue-600">
                 <span className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-bold mr-4 mt-0.5 group-hover:scale-110 transition-transform duration-300">
-                  {index + 1}
+                  {step.id}
                 </span>
                 <div className="flex-1">
-                  <span className="text-slate-700 leading-relaxed block font-medium">{rec}</span>
-                  <div className="mt-3 flex items-center text-xs">
-                    <span className={`px-3 py-1.5 rounded-full mr-3 font-bold border ${
-                      index < 2 ? 'bg-gradient-to-r from-red-100 to-red-200 text-red-800 border-red-300' :
-                      index < 4 ? 'bg-gradient-to-r from-yellow-100 to-orange-200 text-yellow-800 border-yellow-300' : 'bg-gradient-to-r from-green-100 to-emerald-200 text-green-800 border-green-300'
+                  <h4 className="text-slate-900 font-semibold text-lg mb-2">{step.title}</h4>
+                  <p className="text-slate-700 leading-relaxed mb-3">{step.description}</p>
+                  <div className="flex items-center text-xs gap-2">
+                    <span className={`px-3 py-1.5 rounded-full font-bold border ${
+                      step.priority === 'CRÍTICO' ? 'bg-gradient-to-r from-red-100 to-red-200 text-red-800 border-red-300' :
+                      step.priority === 'ALTO' ? 'bg-gradient-to-r from-yellow-100 to-orange-200 text-yellow-800 border-yellow-300' : 'bg-gradient-to-r from-green-100 to-emerald-200 text-green-800 border-green-300'
                     }`}>
-                      {index < 2 ? 'CRÍTICO' : index < 4 ? 'ALTO' : 'MEDIO'}
+                      {step.priority}
                     </span>
                     <div className="flex items-center text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
                       <ClockIcon className="h-3 w-3 mr-1" />
-                      <span className="font-medium">
-                        {index < 2 ? 'Inmediato' : index < 4 ? '1-3 meses' : '3-6 meses'}
-                      </span>
+                      <span className="font-medium">{step.timeframe}</span>
                     </div>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full border border-blue-200">
+                      {step.category}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1045,7 +1113,7 @@ const CyberRiskCalculator: React.FC = () => {
           return (
             <div className="space-y-8 mb-8">
               {/* Protección Familiar y Control Parental */}
-              {hasFamilyContext() && (
+              {contentPrefs.familyProtection && hasFamilyContext() && (
                 <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 rounded-2xl border-2 border-purple-200/60 p-8 shadow-xl">
                   <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
                     <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mr-4">
@@ -1115,6 +1183,7 @@ const CyberRiskCalculator: React.FC = () => {
               )}
 
               {/* Consejos Antiestafas */}
+              {contentPrefs.antiScamTips && (
               <div className="bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 rounded-2xl border-2 border-red-200/60 p-8 shadow-xl">
                 <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
                   <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center mr-4">
@@ -1188,8 +1257,10 @@ const CyberRiskCalculator: React.FC = () => {
                   </p>
                 </div>
               </div>
+              )}
 
               {/* Guía Rápida por Dispositivo */}
+              {contentPrefs.deviceGuides && (
               <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-cyan-50 rounded-2xl border-2 border-blue-200/60 p-8 shadow-xl">
                 <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
                   <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mr-4">
@@ -1243,9 +1314,10 @@ const CyberRiskCalculator: React.FC = () => {
                 <div className="mt-6 p-4 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl border border-blue-200">
                   <p className="text-sm text-blue-800 text-center font-medium">
                     💡 <strong>Tip:</strong> Cada dispositivo tiene sus propias herramientas de seguridad integradas. ¡Aprovéchalas!
-                  </p>
-                </div>
+                </p>
               </div>
+              </div>
+              )}
 
               {/* Guías Paso a Paso */}
               <div className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 rounded-2xl border-2 border-green-200/60 p-8 shadow-xl">
@@ -1435,6 +1507,7 @@ const CyberRiskCalculator: React.FC = () => {
             title={t('resultsTitle') || 'Informe de Evaluación'} 
             contentSelector="#assessment-results" 
             userProfile={userProfile || undefined}
+            actionPlan={result.actionPlan}
           />
         </div>
 
@@ -1459,6 +1532,60 @@ const CyberRiskCalculator: React.FC = () => {
     const isPersonal = userProfile?.type === 'individual';
     const isBusiness = userProfile?.type === 'business';
     const canStart = isPersonal || (isBusiness && userProfile?.companySize && typeof userProfile?.hasITTeam === 'boolean');
+
+    // Paso 0: Preferencias de contenido (mostrar solo si aún no se completó)
+    if (showContentSetup) {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center">
+          <div className="max-w-3xl mx-auto w-full p-6">
+            <div className="bg-white rounded-2xl shadow-xl ring-1 ring-slate-200 p-8">
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Personaliza tu contenido</h2>
+              <p className="text-slate-600 mb-6">Selecciona qué secciones quieres ver en tu informe. No mostraremos contenido genérico.</p>
+              <div className="space-y-3">
+                <label className="flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all hover:border-blue-300">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">👨‍👩‍👧‍👦</span>
+                    <div>
+                      <div className="font-semibold text-slate-900">Protección Familiar y Control Parental</div>
+                      <div className="text-sm text-slate-600">Guías prácticas para familias y menores</div>
+                    </div>
+                  </div>
+                  <input type="checkbox" checked={contentPrefs.familyProtection} onChange={(e) => handleContentPrefChange('familyProtection', e.target.checked)} className="w-5 h-5" />
+                </label>
+
+                <label className="flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all hover:border-blue-300">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">🚨</span>
+                    <div>
+                      <div className="font-semibold text-slate-900">Consejos Antiestafas por Plataforma</div>
+                      <div className="text-sm text-slate-600">WhatsApp, Email y Redes sociales</div>
+                    </div>
+                  </div>
+                  <input type="checkbox" checked={contentPrefs.antiScamTips} onChange={(e) => handleContentPrefChange('antiScamTips', e.target.checked)} className="w-5 h-5" />
+                </label>
+
+                <label className="flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all hover:border-blue-300">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">📱</span>
+                    <div>
+                      <div className="font-semibold text-slate-900">Guía Rápida por Dispositivo</div>
+                      <div className="text-sm text-slate-600">iPhone, Android, Windows, Mac</div>
+                    </div>
+                  </div>
+                  <input type="checkbox" checked={contentPrefs.deviceGuides} onChange={(e) => handleContentPrefChange('deviceGuides', e.target.checked)} className="w-5 h-5" />
+                </label>
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button onClick={completeContentSetup} className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md">
+                  Continuar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     const companySizes = [
       { value: 'small' as const, label: 'Pequeña (1-49)', icon: '🏪' },
@@ -1541,11 +1668,109 @@ const CyberRiskCalculator: React.FC = () => {
 
                       {/* Detalles adicionales dependiendo de selección */}
                       {isPersonal && (
-                        <div className="mt-6">
+                        <div className="mt-6 space-y-6">
                           <div className="text-slate-700 mb-4">
                             {t('evaluationPersonalDescription')}
                           </div>
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+
+                          {/* ¿Usas apps de mensajería? */}
+                          <div>
+                            <div className="text-sm font-medium text-slate-700 mb-3">¿Usas aplicaciones de mensajería (WhatsApp, Telegram, etc.)?</div>
+                            <div className="inline-flex gap-2">
+                              <button
+                                onClick={() => handleSegmentationAnswer('messaging_apps_installed', 'yes')}
+                                className={`group px-5 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${userProfile?.messagingAppsInstalled === true ? 'border-emerald-500 bg-gradient-to-br from-emerald-50 to-green-50 text-emerald-800 shadow-lg' : 'border-slate-200 hover:border-emerald-400 hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 hover:text-emerald-700'}`}
+                              >
+                                <span className="mr-2 transition-transform group-hover:scale-110">💬</span>
+                                Sí, uso mensajería
+                              </button>
+                              <button
+                                onClick={() => handleSegmentationAnswer('messaging_apps_installed', 'no')}
+                                className={`group px-5 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${userProfile?.messagingAppsInstalled === false ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-yellow-50 text-orange-800 shadow-lg' : 'border-slate-200 hover:border-orange-400 hover:bg-gradient-to-br hover:from-orange-50 hover:to-yellow-50 hover:text-orange-700'}`}
+                              >
+                                <span className="mr-2 transition-transform group-hover:scale-110">📱</span>
+                                No uso mensajería
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Selección de apps específicas si usa mensajería */}
+                          {userProfile?.messagingAppsInstalled && (
+                            <div>
+                              <div className="text-sm font-medium text-slate-700 mb-3">¿Cuáles usas más frecuentemente?</div>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                {[
+                                  { key: 'WhatsApp', icon: <SiWhatsapp className="h-5 w-5 text-emerald-600" /> },
+                                  { key: 'Telegram', icon: <SiTelegram className="h-5 w-5 text-sky-500" /> },
+                                  { key: 'Signal', icon: <SiSignal className="h-5 w-5 text-blue-600" /> },
+                                  { key: 'Instagram', icon: <SiInstagram className="h-5 w-5 text-pink-500" /> },
+                                  { key: 'Facebook Messenger', icon: <ChatBubbleLeftRightIcon className="h-5 w-5 text-blue-500" /> },
+                                  { key: 'Otros', icon: <ChatBubbleLeftRightIcon className="h-5 w-5 text-slate-500" /> },
+                                ].map(({ key, icon }) => (
+                                  <button
+                                    key={key}
+                                    onClick={() => toggleMessagingApp(key)}
+                                    className={`group p-3 rounded-xl border-2 transition-all duration-300 text-left transform hover:scale-105 hover:shadow-lg ${(userProfile?.messagingApps || []).includes(key) ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg' : 'border-slate-200 hover:border-blue-300 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 hover:shadow-md'}`}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      {icon}
+                                      <div className="text-sm font-semibold text-slate-800">{key}</div>
+                                    </div>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Marcas/SO de dispositivos */}
+                          <div>
+                            <div className="text-sm font-medium text-slate-700 mb-3">¿Qué dispositivos y sistemas usas?</div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                              {[
+                                { key: 'iPhone/iOS', icon: <SiApple className="h-5 w-5 text-slate-800" /> },
+                                { key: 'Android/Samsung', icon: <SiAndroid className="h-5 w-5 text-green-600" /> },
+                                { key: 'Android/Otros', icon: <SiAndroid className="h-5 w-5 text-green-600" /> },
+                                { key: 'Windows PC', icon: <ComputerDesktopIcon className="h-5 w-5 text-blue-600" /> },
+                                { key: 'Mac', icon: <SiApple className="h-5 w-5 text-slate-800" /> },
+                                { key: 'Otros', icon: <ComputerDesktopIcon className="h-5 w-5 text-slate-500" /> },
+                              ].map(({ key, icon }) => (
+                                <button
+                                  key={key}
+                                  onClick={() => toggleDeviceBrand(key)}
+                                  className={`group p-3 rounded-xl border-2 transition-all duration-300 text-left transform hover:scale-105 hover:shadow-lg ${(userProfile?.deviceBrands || []).includes(key) ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg' : 'border-slate-200 hover:border-blue-300 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 hover:shadow-md'}`}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    {icon}
+                                    <div className="text-sm font-semibold text-slate-800">{key}</div>
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* ¿Tienes hijos? */}
+                          <div>
+                            <div className="text-sm font-medium text-slate-700 mb-3">¿Tienes hijos que usen dispositivos digitales?</div>
+                            <div className="inline-flex gap-2">
+                              <button
+                                onClick={() => handleSegmentationAnswer('has_children', 'yes')}
+                                className={`group px-5 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${userProfile?.hasChildren === true ? 'border-emerald-500 bg-gradient-to-br from-emerald-50 to-green-50 text-emerald-800 shadow-lg' : 'border-slate-200 hover:border-emerald-400 hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 hover:text-emerald-700'}`}
+                              >
+                                <span className="mr-2 transition-transform group-hover:scale-110">👨‍👩‍👧‍👦</span>
+                                Sí, tengo hijos
+                              </button>
+                              <button
+                                onClick={() => handleSegmentationAnswer('has_children', 'no')}
+                                className={`group px-5 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${userProfile?.hasChildren === false ? 'border-orange-500 bg-gradient-to-br from-orange-50 to-yellow-50 text-orange-800 shadow-lg' : 'border-slate-200 hover:border-orange-400 hover:bg-gradient-to-br hover:from-orange-50 hover:to-yellow-50 hover:text-orange-700'}`}
+                              >
+                                <span className="mr-2 transition-transform group-hover:scale-110">👤</span>
+                                No tengo hijos
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* CTA */}
+                          <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-4">
                             <button
                               onClick={completeSegmentation}
                               className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
@@ -1967,23 +2192,49 @@ const CyberRiskCalculator: React.FC = () => {
             </div>
           </div>
           
-          {/* Recommendations */}
-          <div className="bg-white rounded-xl border border-slate-200 p-8 mb-8">
-            <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
-              <DocumentTextIcon className="h-7 w-7 mr-3 text-blue-600" />
-              Plan de Acción Recomendado
-            </h3>
-            <div className="space-y-4">
-              {result?.recommendations.map((rec, index) => (
-                <div key={index} className="flex items-start p-4 bg-slate-50 rounded-lg border-l-4 border-blue-500">
-                  <span className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-semibold mr-4 mt-0.5">
-                    {index + 1}
-                  </span>
-                  <span className="text-slate-700 leading-relaxed">{rec}</span>
-                </div>
-              ))}
+          {/* Plan de Acción */}
+          {result?.actionPlan && result.actionPlan.length > 0 && (
+            <div className="bg-white rounded-xl border border-slate-200 p-8 mb-8">
+              <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+                <DocumentTextIcon className="h-7 w-7 mr-3 text-blue-600" />
+                Plan de Acción Recomendado
+              </h3>
+              <div className="space-y-4">
+                {result.actionPlan.map((step, index) => (
+                  <div key={String(step.id ?? index)} className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start">
+                        <span className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-semibold mr-4 mt-0.5">
+                          {index + 1}
+                        </span>
+                        <div>
+                          <h4 className="text-slate-900 font-semibold">{step.title}</h4>
+                          <p className="text-slate-700 leading-relaxed mt-1">{step.description}</p>
+                        </div>
+                      </div>
+                      <div className="ml-4 flex items-center gap-2">
+                        {step.category && (
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                            {step.category}
+                          </span>
+                        )}
+                        {step.priority && (
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${step.priority === 'CRÍTICO' ? 'bg-red-100 text-red-700 border-red-200' : step.priority === 'ALTO' ? 'bg-orange-100 text-orange-700 border-orange-200' : 'bg-blue-100 text-blue-700 border-blue-200'}`}>
+                            {step.priority}
+                          </span>
+                        )}
+                        {step.timeframe && (
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                            {step.timeframe}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           
           {/* CTA Section Mejorado */}
           <div className={`rounded-xl p-8 text-white text-center ${

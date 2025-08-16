@@ -10,15 +10,28 @@ interface UserProfile {
   industry?: string;
   role?: string;
   hasITTeam?: boolean;
+  // Nuevos campos para filtrado personalizado
+  messagingAppsInstalled?: boolean;
+  messagingApps?: string[];
+  deviceBrands?: string[];
+  hasChildren?: boolean;
 }
 
 interface DownloadButtonProps {
   title?: string;
   contentSelector?: string; // CSS selector del contenedor cuyo contenido se exportará
   userProfile?: UserProfile; // Perfil del usuario para personalizar el PDF
+  actionPlan?: Array<{
+    id: number | string;
+    title: string;
+    description: string;
+    priority: 'CRÍTICO' | 'ALTO' | 'MEDIO';
+    timeframe: string;
+    category: string;
+  }>;
 }
 
-export default function DownloadButton({ title = 'Informe de Evaluación', contentSelector = '#assessment-results', userProfile }: DownloadButtonProps) {
+export default function DownloadButton({ title = 'Informe de Evaluación', contentSelector = '#assessment-results', userProfile, actionPlan }: DownloadButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useI18n();
 
@@ -33,7 +46,7 @@ export default function DownloadButton({ title = 'Informe de Evaluación', conte
         return;
       }
 
-      const blob = generateGuidePdf(title, container, userProfile);
+      const blob = generateGuidePdf(title, container, userProfile, actionPlan);
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
