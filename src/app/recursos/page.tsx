@@ -48,7 +48,7 @@ export default function RecursosHome() {
         <div className="relative px-4 py-24 sm:py-32">
           <div className="mx-auto max-w-4xl text-center">
 
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6">
+            <h1 className="font-bold mb-6 text-gray-900 text-[clamp(2.25rem,5vw,3rem)] md:text-6xl md:bg-gradient-to-r md:from-gray-900 md:via-blue-900 md:to-purple-900 md:bg-clip-text md:text-transparent">
               {t('resourcesTitle')}
             </h1>
             <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
@@ -119,7 +119,7 @@ export default function RecursosHome() {
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 lg:p-12 text-center">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="relative">
-              <h2 className="text-3xl font-bold text-white mb-4">
+              <h2 className="text-3xl font-bold text-white mb-4 text-[clamp(1.75rem,4.5vw,2rem)] md:text-3xl">
                 ¿No encuentras lo que buscas?
               </h2>
               <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">

@@ -61,10 +61,10 @@ export default function HomePage(): React.ReactElement {
           <div className="mb-8">
       
           </div>
-          <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-8 leading-[0.9] text-gray-900">
+          <h1 className="text-[clamp(2.5rem,8vw,4.5rem)] md:text-8xl font-black tracking-tight mb-8 leading-[0.9] text-gray-900">
             {t('heroTitle1')}
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700 animate-pulse">
+            <span className="text-blue-700 md:text-transparent md:bg-clip-text md:bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700 md:animate-pulse">
               {t('heroTitle2')}
             </span>
           </h1>
@@ -279,7 +279,7 @@ export default function HomePage(): React.ReactElement {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
              
-              <h2 className="text-5xl md:text-7xl font-black mb-8 leading-tight bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
+              <h2 className="text-[clamp(2.25rem,6vw,4.5rem)] md:text-7xl font-black mb-8 leading-tight bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
                 {t('ctaTitle')}
               </h2>
               <div className="w-32 h-1.5 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 mx-auto rounded-full shadow-lg mb-8"></div>

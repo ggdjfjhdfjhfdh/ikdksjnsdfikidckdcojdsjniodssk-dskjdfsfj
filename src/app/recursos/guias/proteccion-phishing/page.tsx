@@ -1,8 +1,9 @@
+// Importaciones (añadimos DownloadButton y quitamos Link)
 "use client";
 
-import Link from 'next/link';
 import ShareButton from '@/components/ShareButton';
 import BackButton from '@/components/BackButton';
+import DownloadButton from '@/components/DownloadButton';
 import {
   AlertTriangle,
   MailWarning,
@@ -34,7 +35,7 @@ export default function ProteccionPhishing() {
       <BackButton href="/recursos/guias" label="Volver a guías" />
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 mt-8">
         {/* MAIN */}
-        <article className="flex-1 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+        <article id="content" className="flex-1 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
           {/* HERO */}
           <header className="bg-gradient-to-r from-red-50 to-orange-100 p-8 text-center border-b border-gray-200">
             <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -206,6 +207,10 @@ export default function ProteccionPhishing() {
         <aside className="lg:w-64">
           <div className="bg-white border border-gray-200 p-6 rounded-lg sticky top-4 space-y-4">
             <ShareButton />
+            <DownloadButton
+              title="Guía: Cómo protegerse del phishing"
+              contentSelector="#content"
+            />
             <nav>
               <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 text-sm">Contenido</h3>
               <ul className="space-y-2 text-sm">

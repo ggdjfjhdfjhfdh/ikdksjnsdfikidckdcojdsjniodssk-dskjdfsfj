@@ -5,8 +5,6 @@ import BackButton from '@/components/BackButton';
 import { HardDrive, Shield, RefreshCw, HelpCircle, ChevronDown } from 'lucide-react';
 import { ReactNode } from 'react';
 import DownloadButton from '@/components/DownloadButton';
-import PdfGenerator from './PdfGenerator';
-import { generateGuidePdf } from '@/utils/generatePdf';
 
 interface SectionProps {
   title: string;
