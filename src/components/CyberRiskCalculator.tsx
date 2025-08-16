@@ -129,7 +129,7 @@ const CyberRiskCalculator: React.FC = () => {
   const [segmentationStep, setSegmentationStep] = useState(0);
   const [isClient, setIsClient] = useState(false);
   const [contentPrefs, setContentPrefs] = useState<ContentPreferences>({ familyProtection: false, antiScamTips: false, deviceGuides: false });
-  const [showContentSetup, setShowContentSetup] = useState(true);
+  const [showContentSetup, setShowContentSetup] = useState(false);
 
   // Prevent hydration mismatch by ensuring client-side rendering
   useEffect(() => {
@@ -1642,16 +1642,17 @@ const CyberRiskCalculator: React.FC = () => {
                       {/* Segmented control: para quién */}
                       <div className="flex items-center justify-between flex-wrap gap-3">
                         <div className="text-sm font-medium text-slate-700">Para quién es la evaluación</div>
-                        <div className="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200">
+                        <div className="inline-flex gap-2">
                           <button
                             type="button"
                             aria-pressed={isPersonal}
                             onClick={() => {
                               handleSegmentationAnswer('user_type', 'individual');
                             }}
-                            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isPersonal ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}
+                            className={`group px-5 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${isPersonal ? 'border-emerald-500 bg-gradient-to-br from-emerald-50 to-green-50 text-emerald-800 shadow-lg' : 'border-slate-200 hover:border-emerald-400 hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 hover:text-emerald-700'}`}
                           >
-                            👤 {t('optionPersonal')}
+                            <span className="mr-2 transition-transform group-hover:scale-110">👤</span>
+                            {t('optionPersonal')}
                           </button>
                           <button
                             type="button"
@@ -1659,9 +1660,10 @@ const CyberRiskCalculator: React.FC = () => {
                             onClick={() => {
                               handleSegmentationAnswer('user_type', 'business');
                             }}
-                            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isBusiness ? 'bg-white shadow text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}
+                            className={`group px-5 py-3 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:shadow-lg transform hover:scale-105 ${isBusiness ? 'border-indigo-500 bg-gradient-to-br from-indigo-50 to-purple-50 text-indigo-800 shadow-lg' : 'border-slate-200 hover:border-indigo-400 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 hover:text-indigo-700'}`}
                           >
-                            🏢 {t('optionBusiness')}
+                            <span className="mr-2 transition-transform group-hover:scale-110">🏢</span>
+                            {t('optionBusiness')}
                           </button>
                         </div>
                       </div>
