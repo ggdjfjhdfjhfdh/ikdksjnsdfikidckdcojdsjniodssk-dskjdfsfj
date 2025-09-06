@@ -19,7 +19,9 @@ const { title, subtitle, description, ctaPrimary, ctaSecondary } = Astro.props;
 ---
 
 <!-- Importar estilos de animaciones avanzadas -->
-<link rel="stylesheet" href="/src/styles/hero-animations.css" />
+<style>
+  @import '../styles/hero-animations.css';
+</style>
 
 <section class="hero">
   <div class="hero-bg">
@@ -579,7 +581,9 @@ const { title, subtitle, description, ctaPrimary, ctaSecondary } = Astro.props;
 </script>
 
 <!-- Efectos avanzados de movimiento -->
-<script src="/src/scripts/hero-effects.js" type="module"></script>
+<script>
+  import('../scripts/hero-effects.js');
+</script>
 
 <script>
   // Generar matriz de código de fondo

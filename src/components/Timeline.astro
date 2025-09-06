@@ -211,6 +211,10 @@ const { steps } = Astro.props;
 <script>
   // Animación de la línea de tiempo
   class TimelineAnimation {
+    timeline: Element | null;
+    items: NodeListOf<Element>;
+    observer: IntersectionObserver | null;
+    
     constructor() {
       this.timeline = document.querySelector('.timeline-line');
       this.items = document.querySelectorAll('.timeline-item');
@@ -248,9 +252,9 @@ const { steps } = Astro.props;
       const activeItems = document.querySelectorAll('.timeline-item.active');
       const progress = activeItems.length / this.items.length;
       
-      if (progress > 0) {
-        this.timeline.classList.add('animate');
-        this.timeline.style.setProperty('--progress', `${progress * 100}%`);
+      if (progress > 0 && this.timeline) {
+        (this.timeline as HTMLElement).classList.add('animate');
+        (this.timeline as HTMLElement).style.setProperty('--progress', `${progress * 100}%`);
       }
     }
     

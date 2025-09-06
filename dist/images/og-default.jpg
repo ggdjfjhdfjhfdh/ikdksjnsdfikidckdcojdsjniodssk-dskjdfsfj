@@ -1,0 +1,86 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="defaultGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F172A;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1E293B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#020617;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="defaultAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="glowEffect" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:0" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#defaultGradient)"/>
+  
+  <!-- Glow effect -->
+  <circle cx="600" cy="315" r="400" fill="url(#glowEffect)"/>
+  
+  <!-- Geometric pattern -->
+  <g opacity="0.1" stroke="#334155" stroke-width="1" fill="none">
+    <polygon points="200,150 250,100 300,150 250,200"/>
+    <polygon points="900,200 950,150 1000,200 950,250"/>
+    <polygon points="150,400 200,350 250,400 200,450"/>
+    <polygon points="950,450 1000,400 1050,450 1000,500"/>
+    <circle cx="400" cy="500" r="30"/>
+    <circle cx="800" cy="130" r="25"/>
+  </g>
+  
+  <!-- Main logo centered -->
+  <g transform="translate(500, 200)">
+    <!-- Large shield -->
+    <path d="M100 40L60 55V95C60 125 80 155 100 165C120 155 140 125 140 95V55L100 40Z" fill="url(#defaultAccent)"/>
+    
+    <!-- Lock icon -->
+    <rect x="90" y="85" width="20" height="15" rx="2" fill="white" opacity="0.9"/>
+    <path d="M93 85V78C93 74 96 71 100 71C104 71 107 74 107 78V85" stroke="white" stroke-width="3" fill="none"/>
+    <circle cx="100" cy="92" r="3" fill="#047857"/>
+    
+    <!-- Security dots -->
+    <circle cx="85" cy="70" r="2" fill="white" opacity="0.6"/>
+    <circle cx="115" cy="70" r="2" fill="white" opacity="0.6"/>
+    <circle cx="85" cy="110" r="2" fill="white" opacity="0.6"/>
+    <circle cx="115" cy="110" r="2" fill="white" opacity="0.6"/>
+    
+    <!-- SESEC text -->
+    <text x="100" y="200" text-anchor="middle" font-family="Inter, sans-serif" font-size="72" font-weight="800" fill="white">SESEC</text>
+    <text x="100" y="235" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="400" fill="#94A3B8">CYBERSECURITY EXCELLENCE</text>
+  </g>
+  
+  <!-- Tagline -->
+  <text x="600" y="450" text-anchor="middle" font-family="Inter, sans-serif" font-size="32" font-weight="600" fill="white">Protegemos lo que más importa</text>
+  <text x="600" y="490" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="400" fill="#64748B">Soluciones avanzadas de ciberseguridad para empresas</text>
+  
+  <!-- Security elements around -->
+  <g opacity="0.4">
+    <!-- Left side elements -->
+    <g transform="translate(100, 250)">
+      <rect x="0" y="0" width="40" height="30" rx="4" fill="url(#defaultAccent)"/>
+      <path d="M5 0V-8C5 -12 8 -15 12 -15H28C32 -15 35 -12 35 -8V0" stroke="url(#defaultAccent)" stroke-width="2" fill="none"/>
+      <circle cx="20" cy="15" r="3" fill="white"/>
+    </g>
+    
+    <!-- Right side elements -->
+    <g transform="translate(1050, 300)">
+      <circle cx="0" cy="0" r="15" fill="url(#defaultAccent)" opacity="0.6"/>
+      <path d="M-8 -5L-3 0L8 -10" stroke="white" stroke-width="3" fill="none"/>
+    </g>
+    
+    <!-- Network connections -->
+    <g transform="translate(200, 500)">
+      <circle cx="0" cy="0" r="6" fill="url(#defaultAccent)"/>
+      <circle cx="50" cy="20" r="4" fill="url(#defaultAccent)"/>
+      <circle cx="100" cy="0" r="5" fill="url(#defaultAccent)"/>
+      <path d="M0 0L50 20L100 0" stroke="url(#defaultAccent)" stroke-width="2"/>
+    </g>
+  </g>
+  
+  <!-- Bottom brand strip -->
+  <rect x="0" y="580" width="1200" height="50" fill="url(#defaultAccent)" opacity="0.1"/>
+  <text x="600" y="610" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="500" fill="url(#defaultAccent)">www.sesec.es</text>
+</svg>

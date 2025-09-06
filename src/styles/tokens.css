@@ -106,7 +106,7 @@
   --dur-slow: 420ms;
 
   /* Ancho de contenedor */
-  --container: min(1200px, 92vw);
+  --container: min(1200px, 90vw);
 }
 
 /* ==========================================================================
@@ -539,7 +539,19 @@ p {
 .container {
   width: var(--container);
   margin: 0 auto;
-  padding: 0 var(--sp-6);
+  padding: 0 var(--sp-8);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--sp-6);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--sp-4);
+  }
 }
 
 .grid-12 {

@@ -112,31 +112,96 @@ const ANIMATION_SETTINGS = {
   }
 };
 
-// Load modules dynamically
+// Load modules dynamically from CDN
 async function loadModules() {
   try {
-    console.log('Loading MapLibre GL...');
-    const [maplibreModule, deckCore, deckLayers, deckMapbox] = await Promise.all([
-      import('maplibre-gl'),
-      import('@deck.gl/core'),
-      import('@deck.gl/layers'),
-      import('@deck.gl/mapbox')
-    ]);
+    console.log('Loading MapLibre GL from CDN...');
+    
+    // Load MapLibre GL CSS
+    if (!document.querySelector('link[href*="maplibre-gl"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/libs/maplibre-gl.min.css';
+      document.head.appendChild(link);
+    }
+    
+    // Load scripts sequentially to avoid conflicts
+    await loadScript('/libs/maplibre-gl.min.js');
+    await loadScript('/libs/deck.gl.min.js');
     
     console.log('Assigning module references...');
-    maplibregl = maplibreModule.default;
-    Deck = deckCore.Deck;
-    ScatterplotLayer = deckLayers.ScatterplotLayer;
-    ArcLayer = deckLayers.ArcLayer;
-    HeatmapLayer = deckLayers.HeatmapLayer;
-    TextLayer = deckLayers.TextLayer;
-    MapboxOverlay = deckMapbox.MapboxOverlay;
+    // Access global variables created by the CDN scripts
+    maplibregl = window.maplibregl;
+    // Verificar que deck.gl esté disponible globalmente
+    console.log('window.deck:', window.deck);
+    console.log('window.DeckGL:', window.DeckGL);
+    console.log('window.deckgl:', window.deckgl);
+    console.log('Available globals:', Object.keys(window).filter(key => key.toLowerCase().includes('deck')));
+    
+    // Mostrar todas las propiedades del objeto deck si existe
+    if (window.deck) {
+      console.log('window.deck properties:', Object.keys(window.deck));
+    }
+    if (window.DeckGL) {
+      console.log('window.DeckGL properties:', Object.keys(window.DeckGL));
+    }
+    
+    // Intentar diferentes formas de acceder a las clases
+    if (window.deck) {
+      Deck = window.deck.Deck;
+      ScatterplotLayer = window.deck.ScatterplotLayer;
+      ArcLayer = window.deck.ArcLayer;
+      HeatmapLayer = window.deck.HeatmapLayer;
+      TextLayer = window.deck.TextLayer;
+      MapboxOverlay = window.deck.MapboxOverlay;
+    } else if (window.DeckGL) {
+      Deck = window.DeckGL.Deck;
+      ScatterplotLayer = window.DeckGL.ScatterplotLayer;
+      ArcLayer = window.DeckGL.ArcLayer;
+      HeatmapLayer = window.DeckGL.HeatmapLayer;
+      TextLayer = window.DeckGL.TextLayer;
+      MapboxOverlay = window.DeckGL.MapboxOverlay;
+    } else {
+      throw new Error('deck.gl no está disponible globalmente');
+    }
+    
+    // Verificar que las clases estén disponibles
+    console.log('Deck:', typeof Deck);
+    console.log('ScatterplotLayer:', typeof ScatterplotLayer);
+    console.log('ArcLayer:', typeof ArcLayer);
+    console.log('HeatmapLayer:', typeof HeatmapLayer);
     
     console.log('All modules loaded successfully');
   } catch (error) {
     console.error('Error loading modules:', error);
     throw error;
   }
+}
+
+// Helper function to load scripts dynamically
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    console.log('Loading script:', src);
+    
+    // Check if script is already loaded
+    if (document.querySelector(`script[src="${src}"]`)) {
+      console.log('Script already loaded:', src);
+      resolve();
+      return;
+    }
+    
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = () => {
+      console.log('Script loaded successfully:', src);
+      resolve();
+    };
+    script.onerror = (error) => {
+      console.error('Error loading script:', src, error);
+      reject(new Error(`Failed to load script: ${src}`));
+    };
+    document.head.appendChild(script);
+  });
 }
 
 // Detect performance mode based on data size and device capabilities
@@ -424,7 +489,8 @@ async function loadThreatData() {
       console.log('No props data available, trying API fallback...');
       try {
         // Fallback to API call
-        const response = await fetch('/api/cybersecurity.json');
+        const backendUrl = window.BACKEND_URL;
+        const response = await fetch(`${backendUrl}/api/threat/data`);
         if (response.ok) {
           data = await response.json();
           console.log('API data loaded:', data);

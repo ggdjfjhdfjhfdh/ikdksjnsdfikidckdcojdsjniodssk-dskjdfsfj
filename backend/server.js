@@ -31,11 +31,11 @@ app.use(helmet({
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://sesec-2025.vercel.app', 'https://www.sesec.es']
+    ? ['https://sesec-2025.vercel.app', 'https://www.sesec.es', 'https://sesecpro.es', 'http://localhost:4321', 'http://127.0.0.1:4321']
     : ['http://localhost:4321', 'http://127.0.0.1:4321'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control']
 }));
 
 // Rate limiting

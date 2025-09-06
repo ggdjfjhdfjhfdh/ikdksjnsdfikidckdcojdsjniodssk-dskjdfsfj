@@ -1,0 +1,76 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ogGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1F2937;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#374151;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111827;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#ogGradient)"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#374151" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Security shield background -->
+  <g opacity="0.1">
+    <path d="M600 100L550 120V200C550 250 575 300 600 315C625 300 650 250 650 200V120L600 100Z" fill="url(#accentGradient)"/>
+  </g>
+  
+  <!-- Main logo -->
+  <g transform="translate(100, 150)">
+    <!-- Shield -->
+    <path d="M60 20L40 30V50C40 70 50 90 60 95C70 90 80 70 80 50V30L60 20Z" fill="url(#accentGradient)"/>
+    <rect x="55" y="45" width="10" height="8" rx="1" fill="white" opacity="0.9"/>
+    <path d="M57 45V42C57 40.5 58.5 39 60 39C61.5 39 63 40.5 63 42V45" stroke="white" stroke-width="2" fill="none"/>
+    <circle cx="60" cy="49" r="1.5" fill="#047857"/>
+    
+    <!-- SESEC text -->
+    <text x="100" y="45" font-family="Inter, sans-serif" font-size="48" font-weight="700" fill="white">SESEC</text>
+    <text x="100" y="75" font-family="Inter, sans-serif" font-size="18" font-weight="400" fill="#9CA3AF">CYBERSECURITY EXCELLENCE</text>
+  </g>
+  
+  <!-- Main title -->
+  <text x="100" y="300" font-family="Inter, sans-serif" font-size="64" font-weight="800" fill="white">Protección Avanzada</text>
+  <text x="100" y="360" font-family="Inter, sans-serif" font-size="64" font-weight="800" fill="url(#accentGradient)">en Ciberseguridad</text>
+  
+  <!-- Subtitle -->
+  <text x="100" y="420" font-family="Inter, sans-serif" font-size="24" font-weight="400" fill="#D1D5DB">Soluciones integrales para empresas que valoran la seguridad</text>
+  <text x="100" y="450" font-family="Inter, sans-serif" font-size="24" font-weight="400" fill="#D1D5DB">de sus datos y sistemas críticos</text>
+  
+  <!-- Security elements -->
+  <g opacity="0.6">
+    <!-- Lock icons -->
+    <g transform="translate(900, 200)">
+      <rect x="0" y="15" width="30" height="20" rx="3" fill="url(#accentGradient)" opacity="0.3"/>
+      <path d="M5 15V10C5 5 10 0 15 0C20 0 25 5 25 10V15" stroke="url(#accentGradient)" stroke-width="3" fill="none"/>
+      <circle cx="15" cy="25" r="3" fill="url(#accentGradient)"/>
+    </g>
+    
+    <!-- Network nodes -->
+    <g transform="translate(950, 350)">
+      <circle cx="0" cy="0" r="8" fill="url(#accentGradient)" opacity="0.4"/>
+      <circle cx="40" cy="20" r="6" fill="url(#accentGradient)" opacity="0.5"/>
+      <circle cx="80" cy="0" r="7" fill="url(#accentGradient)" opacity="0.3"/>
+      <path d="M0 0L40 20L80 0" stroke="url(#accentGradient)" stroke-width="2" opacity="0.6"/>
+    </g>
+    
+    <!-- Code brackets -->
+    <g transform="translate(850, 450)">
+      <text font-family="JetBrains Mono, monospace" font-size="36" fill="url(#accentGradient)" opacity="0.4">&lt;/&gt;</text>
+    </g>
+  </g>
+  
+  <!-- Bottom accent -->
+  <rect x="0" y="600" width="1200" height="30" fill="url(#accentGradient)" opacity="0.8"/>
+</svg>

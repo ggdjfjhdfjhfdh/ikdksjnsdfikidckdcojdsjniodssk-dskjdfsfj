@@ -5,17 +5,14 @@ import Section from '../components/Section.astro';
 import Card from '../components/Card.astro';
 import BigCTA from '../components/BigCTA.astro';
 import ThreatMap from '../components/ThreatMap.astro';
-import PremiumThreatMap from '../components/PremiumThreatMap.astro';
+
 import WebGLThreatMap from '../components/WebGLThreatMap.astro';
 // Configuration for backend API
-const BACKEND_URL = import.meta.env.PROD 
-  ? 'https://sesec-backend.fly.dev' 
-  : 'http://localhost:3000';
+const BACKEND_URL = import.meta.env.BACKEND_URL;
 
 // Fetch real-time threat data from backend
 let threatData = null;
 let correlationData = null;
-let errorMessage = null;
 
 try {
   console.log('🔄 Fetching threat data from backend API...');
@@ -42,11 +39,11 @@ try {
 
   
   // Verificar si al menos una API devolvió datos válidos
-  const validSources = Object.values(threatData).filter(data => data && !data.error);
+  const validSources = Object.values(threatData).filter(data => data && !(data as any)?.error);
   
   if (!threatData || validSources.length === 0) {
+    console.log('🔄 No valid data from APIs, using fallback demo data');
     threatData = null;
-    errorMessage = 'No se pudieron obtener datos en tiempo real de las APIs de ciberseguridad';
   } else if (validSources.length < Object.keys(threatData).length - 1) { // -1 para excluir metadata
     // Mostrar advertencia si algunas APIs fallaron pero tenemos datos parciales
     console.warn(`Solo ${validSources.length} de ${Object.keys(threatData).length - 1} APIs respondieron correctamente`);
@@ -80,7 +77,7 @@ try {
   }
 } catch (error) {
   console.error('Error fetching threat data:', error);
-  errorMessage = 'Error al cargar los datos de amenazas en tiempo real';
+  threatData = null;
 }
 
 // Threat levels and global threat calculation removed
@@ -91,17 +88,9 @@ try {
   <div class="threat-dashboard" data-page="amenazas">
       <!-- Mapa Principal (Pantalla Completa) -->
       <div class="map-container">
-        {errorMessage ? (
-          <div class="error-message">
-            <h3>⚠️ Error de Conexión</h3>
-            <p>{errorMessage}</p>
-            <button class="retry-btn" onclick="location.reload()">🔄 Reintentar</button>
-          </div>
-        ) : (
-          <WebGLThreatMap 
-            threatData={threatData}
-          />
-        )}
+        <WebGLThreatMap 
+          threatData={threatData}
+        />
 
         <!-- Panel de Filtros Overlay -->
         <aside class="filters-panel-overlay">
@@ -148,98 +137,9 @@ try {
           </div>
         </aside>
 
-        <!-- Dashboard de Estadísticas Principal -->
-        <div class="main-dashboard-overlay">
-          <!-- Estadísticas Principales -->
-          <div class="primary-stats-grid">
-            <div class="stat-card primary">
-              <div class="stat-info">
-                <span class="stat-number">{(threatData?.urlhaus?.count || threatData?.urlhaus?.total_urls || 106).toLocaleString()}</span>
-                <span class="stat-label">Amenazas Activas</span>
-              </div>
-            </div>
-            <div class="stat-card primary">
-              <div class="stat-info">
-                <span class="stat-number">{threatData?.cloudflare?.percentage || 12}%</span>
-                <span class="stat-label">Tráfico Malicioso</span>
-              </div>
-            </div>
-            <div class="stat-card primary">
-              <div class="stat-info">
-                <span class="stat-number">{threatData?.ransomwatch?.count7d || threatData?.ransomwatch?.count || 48}</span>
-                <span class="stat-label">Grupos Ransomware</span>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Métricas Premium -->
-        <div class="metrics-grid-premium">
-          <div class="metric-card-premium critical">
-            <div class="metric-header">
-              <div class="metric-icon-premium">🦠</div>
-              <div class="metric-status">DETECTADO</div>
-            </div>
-            <div class="metric-content-premium">
-              <span class="metric-value-premium">{(threatData?.urlhaus?.count || threatData?.urlhaus?.total_urls || 0).toLocaleString()}</span>
-              <span class="metric-label-premium">Amenazas de Malware</span>
-              <span class="metric-description">URLs maliciosas identificadas en las últimas 24h</span>
-              <div class="metric-trend">
-                <span class="trend-arrow">📈</span>
-                <span class="trend-text">+{Math.floor(Math.random() * 15 + 5)}% incremento diario</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="metric-card-premium high">
-            <div class="metric-header">
-              <div class="metric-icon-premium">🌐</div>
-              <div class="metric-status">MONITOREANDO</div>
-            </div>
-            <div class="metric-content-premium">
-              <span class="metric-value-premium">{threatData?.cloudflare?.percentage || 0}%</span>
-              <span class="metric-label-premium">Tráfico Malicioso</span>
-              <span class="metric-description">Porcentaje del tráfico web global comprometido</span>
-              <div class="metric-trend">
-                <span class="trend-arrow">⚠️</span>
-                <span class="trend-text">Supera umbral crítico del 8% - Monitorización intensiva</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="metric-card-premium warning">
-            <div class="metric-header">
-              <div class="metric-icon-premium">🔒</div>
-              <div class="metric-status">ACTIVO</div>
-            </div>
-            <div class="metric-content-premium">
-              <span class="metric-value-premium">{threatData?.ransomwatch?.count7d || threatData?.ransomwatch?.count || 0}</span>
-              <span class="metric-label-premium">Grupos de Ransomware</span>
-              <span class="metric-description">Organizaciones criminales operando activamente</span>
-              <div class="metric-trend">
-                <span class="trend-arrow">🔥</span>
-                <span class="trend-text">Campañas en curso detectadas</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="metric-card-premium info">
-            <div class="metric-header">
-              <div class="metric-icon-premium icon-analytics">⚡</div>
-              <div class="metric-status">CALCULADO</div>
-            </div>
-            <div class="metric-content-premium">
-              <span class="metric-value-premium">{correlationData?.overallThreatScore || 85}</span>
-              <span class="metric-label-premium">Índice de Riesgo Global</span>
-              <span class="metric-description">Evaluación basada en múltiples fuentes de inteligencia</span>
-              <div class="metric-trend">
-                <span class="trend-arrow">●</span>
-                <span class="trend-text">Nivel Alto</span>
-              </div>
-            </div>
-          </div>
-        </div>
-         
+
+
          <!-- Panel de países más atacados (overlay) -->
          <div class="countries-overlay">
            <div class="overlay-header">
@@ -247,7 +147,7 @@ try {
              <button class="toggle-overlay"></button>
            </div>
            <div class="countries-stats">
-             {threatData?.cloudflare?.topCountries?.slice(0, 5).map((country, index) => {
+             {threatData?.cloudflare?.topCountries?.slice(0, 5).map((country: any, index: number) => {
                const countryName = country.name || country.country || country.code || country.alpha2 || 'Desconocido';
                const countryFlags = {
                  'United States': '🇺🇸', 'USA': '🇺🇸', 'US': '🇺🇸',
@@ -263,7 +163,7 @@ try {
                };
                const flag = countryFlags[countryName] || countryFlags[country.code] || countryFlags[country.alpha2] || '🌍';
                return (
-                 <div class="country-item" key={index}>
+                 <div class="country-item">
                    <div class="country-info">
                      <span class="country-flag">{flag}</span>
                      <span class="country-name">{countryName}</span>
@@ -343,7 +243,7 @@ try {
                
                // Agregar ataques de ransomware recientes
                if (threatData?.ransomwatch?.recent) {
-                 threatData.ransomwatch.recent.slice(0, 2).forEach((attack, index) => {
+                 threatData.ransomwatch.recent.slice(0, 2).forEach((attack: any, index: number) => {
                    recentAttacks.push({
                      type: 'Ransomware',
                      target: attack.victim || 'Objetivo no especificado',
@@ -355,7 +255,7 @@ try {
                
                // Agregar ataques de países top
                if (threatData?.cloudflare?.topAttackPairs) {
-                 threatData.cloudflare.topAttackPairs.slice(0, 2).forEach((pair, index) => {
+                 threatData.cloudflare.topAttackPairs.slice(0, 2).forEach((pair: any, index: number) => {
                    const targetCountry = pair.target_country || pair.destination || 'Desconocido';
                    const countryFlags = {
                      'United States': '🇺🇸', 'USA': '🇺🇸', 'US': '🇺🇸',
@@ -396,7 +296,7 @@ try {
                }
                
                return recentAttacks.slice(0, 4).map((attack, index) => (
-                 <div class={`attack-item ${attack.severity}`} key={index}>
+                 <div class={`attack-item ${attack.severity}`}>
                    <div class="attack-time">{attack.time}</div>
                    <div class="attack-info">
                      <span class="attack-type">{attack.type}</span>
@@ -430,7 +330,27 @@ try {
 
     <!-- Sistema de actualización automática de datos -->
     <script>
+      // Declaraciones globales para TypeScript
+      declare global {
+  interface Window {
+    threatMapProps: any;
+    timelineData: any;
+    webglThreatMap: any;
+    loadCountryData: () => void;
+    currentThreatFilters: any;
+    removeFilter: (filterKey: string) => void;
+    threatDataUpdater: ThreatDataUpdater;
+  }
+}
+      
       class ThreatDataUpdater {
+        updateInterval: number;
+        isUpdating: boolean;
+        lastUpdate: Date;
+        updateTimer: number | null;
+        retryCount: number;
+        maxRetries: number;
+        
         constructor() {
           this.updateInterval = 30 * 1000; // 30 segundos
           this.isUpdating = false;
@@ -469,7 +389,8 @@ try {
           this.showUpdateIndicator(true);
           
           try {
-            const response = await fetch('/api/threat-data', {
+            const backendUrl = window.BACKEND_URL;
+            const response = await fetch(`${backendUrl}/api/threat/data`, {
               method: 'GET',
               headers: {
                 'Accept': 'application/json',
@@ -481,17 +402,21 @@ try {
               throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
-            const newData = await response.json();
+            const response_data = await response.json();
             
-            if (newData && this.validateData(newData)) {
-              // Actualizar datos globales incluyendo eventos de timeline
-              window.threatMapProps.threatData = {
-            ...newData,
-            recentEvents: window.timelineData.events || []
-          };
+            if (response_data && response_data.success && this.validateData(response_data.data)) {
+              const newData = response_data.data;
               
-              // Actualizar tarjetas de métricas
-              this.updateMetricCards(newData);
+              // Actualizar datos globales incluyendo eventos de timeline
+              if (!window.threatMapProps) window.threatMapProps = {};
+              if (!window.timelineData) window.timelineData = { events: [] };
+              
+              window.threatMapProps.threatData = {
+                ...newData,
+                recentEvents: window.timelineData.events || []
+              };
+              
+
               
               // Actualizar países
               this.updateCountriesPanel(newData);
@@ -530,33 +455,40 @@ try {
           }
         }
         
-        validateData(data) {
-          return data && 
-                 typeof data === 'object' && 
-                 (data.urlhaus || data.cloudflare || data.ransomwatch);
-        }
-        
-        updateMetricCards(data) {
-          // Actualizar tarjeta de malware
-          const malwareValue = document.querySelector('.metric-card-premium:nth-child(1) .metric-value-premium');
-          if (malwareValue && data.urlhaus) {
-            malwareValue.textContent = (data.urlhaus.count || data.urlhaus.total_urls || 0).toLocaleString();
+        validateData(data: any) {
+          if (!data || typeof data !== 'object') {
+            console.log('❌ Validación falló: datos no válidos o no es objeto');
+            return false;
           }
           
-          // Actualizar tarjeta de tráfico malicioso
-          const trafficValue = document.querySelector('.metric-card-premium:nth-child(2) .metric-value-premium');
-          if (trafficValue && data.cloudflare) {
-            trafficValue.textContent = `${data.cloudflare.percentage || 0}%`;
+          // Verificar que al menos una fuente de datos esté disponible y sin errores
+          const validSources = [
+            data.urlhaus && !data.urlhaus.error,
+            data.cloudflare && !data.cloudflare.error,
+            data.ransomwatch && !data.ransomwatch.error,
+            data.sansISC && !data.sansISC.error
+          ].filter(Boolean);
+          
+          const isValid = validSources.length > 0;
+          
+          if (!isValid) {
+            console.log('❌ Validación falló: no hay fuentes de datos válidas disponibles');
+            console.log('Errores encontrados:', {
+              urlhaus: data.urlhaus?.error,
+              cloudflare: data.cloudflare?.error,
+              ransomwatch: data.ransomwatch?.error,
+              sansISC: data.sansISC?.error
+            });
+          } else {
+            console.log('✅ Validación exitosa:', validSources.length, 'fuentes válidas');
           }
           
-          // Actualizar tarjeta de ransomware
-          const ransomValue = document.querySelector('.metric-card-premium:nth-child(3) .metric-value-premium');
-          if (ransomValue && data.ransomwatch) {
-            ransomValue.textContent = (data.ransomwatch.count7d || data.ransomwatch.count || 0).toLocaleString();
-          }
+          return isValid;
         }
         
-        updateCountriesPanel(data) {
+
+        
+        updateCountriesPanel(data: any) {
           const countriesContainer = document.querySelector('.countries-stats');
           if (!countriesContainer || !data.cloudflare?.topCountries) return;
           
@@ -573,7 +505,7 @@ try {
             'Canada': '🇨🇦', 'CA': '🇨🇦'
           };
           
-          const html = data.cloudflare.topCountries.slice(0, 5).map(country => {
+          const html = data.cloudflare.topCountries.slice(0, 5).map((country: any) => {
             const countryName = country.name || country.country || country.code || country.alpha2 || 'Desconocido';
             const flag = countryFlags[countryName] || countryFlags[country.code] || countryFlags[country.alpha2] || '🌍';
             const attacks = (country.attacks || country.count || Math.floor(Math.random() * 10000 + 1000)).toLocaleString();
@@ -592,7 +524,7 @@ try {
           countriesContainer.innerHTML = html;
         }
         
-        updateAttackCategories(data) {
+        updateAttackCategories(data: any) {
           // Actualizar conteos de categorías
           const categories = document.querySelectorAll('.category-item');
           categories.forEach((category, index) => {
@@ -621,9 +553,9 @@ try {
           });
         }
         
-        getTimeDifference(date) {
-          const now = new Date();
-          const attackDate = new Date(date);
+        getTimeDifference(date: any) {
+          const now = new Date().getTime();
+          const attackDate = new Date(date).getTime();
           const diffMs = now - attackDate;
           
           const diffMinutes = Math.floor(diffMs / (1000 * 60));
@@ -641,7 +573,7 @@ try {
           }
         }
         
-        updateRecentAttacks(data) {
+        updateRecentAttacks(data: any) {
           console.log('🔄 Actualizando ataques recientes...', data);
           console.log('📊 Datos ransomwatch:', data.ransomwatch);
           console.log('📊 Datos cloudflare:', data.cloudflare);
@@ -664,7 +596,7 @@ try {
           
           if (ransomPosts && ransomPosts.length > 0) {
             console.log('✅ Datos de ransomware encontrados:', ransomPosts.length, 'posts');
-            ransomPosts.slice(0, 3).forEach((attack, index) => {
+            ransomPosts.slice(0, 3).forEach((attack: any, index: number) => {
               const attackDate = attack.discovered || attack.published || new Date();
               const timeDiff = this.getTimeDifference(attackDate);
               recentAttacks.push({
@@ -681,11 +613,11 @@ try {
           console.log('⚡ Procesando DDoS...', data.cloudflare?.topAttackPairs);
           const attackPairs = data.cloudflare?.topAttackPairs?.length > 0 ? 
             data.cloudflare.topAttackPairs : 
-            (data.cloudflare?.topCountries?.slice(0, 4).map(country => ({ target_country: country.name || country.country || 'Desconocido' })) || []);
+            (data.cloudflare?.topCountries?.slice(0, 4).map((country: any) => ({ target_country: country.name || country.country || 'Desconocido' })) || []);
           
           if (attackPairs && attackPairs.length > 0) {
             console.log('✅ Datos de DDoS encontrados:', attackPairs.length, 'pares');
-            attackPairs.slice(0, 4).forEach((pair, index) => {
+            attackPairs.slice(0, 4).forEach((pair: any, index: number) => {
               const targetCountry = pair.target_country || pair.destination || 'Desconocido';
               const countryFlags = {
                 'United States': '🇺🇸', 'China': '🇨🇳', 'Germany': '🇩🇪',
@@ -708,7 +640,7 @@ try {
           console.log('🔧 Procesando técnicas...', data.cloudflare?.topTechniques);
           if (data.cloudflare?.topTechniques) {
             console.log('✅ Datos de técnicas encontrados:', data.cloudflare.topTechniques.length, 'técnicas');
-            data.cloudflare.topTechniques.slice(0, 2).forEach((technique, index) => {
+            data.cloudflare.topTechniques.slice(0, 2).forEach((technique: any, index: number) => {
               const attackTime = new Date(Date.now() - (index + 2) * 1800000); // 30 min, 1h atrás
               recentAttacks.push({
                 type: technique.technique || 'Cyber Attack',
@@ -788,16 +720,16 @@ try {
           header.appendChild(updateButton);
         }
         
-        showUpdateIndicator(show) {
+        showUpdateIndicator(show: any) {
           const indicator = document.querySelector('.update-indicator') || this.createUpdateIndicator();
-          indicator.style.display = show ? 'block' : 'none';
+          (indicator as HTMLElement).style.display = show ? 'block' : 'none';
         }
         
         createUpdateIndicator() {
           const indicator = document.createElement('div');
           indicator.className = 'update-indicator';
-          indicator.innerHTML = '⏳ Actualizando datos...';
-          indicator.style.cssText = `
+          (indicator as HTMLElement).innerHTML = '⏳ Actualizando datos...';
+          (indicator as HTMLElement).style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
@@ -823,8 +755,8 @@ try {
         showNotification(message, type) {
           const notification = document.createElement('div');
           notification.className = `notification ${type}`;
-          notification.textContent = message;
-          notification.style.cssText = `
+          (notification as HTMLElement).textContent = message;
+          (notification as HTMLElement).style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
@@ -838,19 +770,19 @@ try {
           document.body.appendChild(notification);
           
           setTimeout(() => {
-            notification.remove();
+            (notification as HTMLElement).remove();
           }, 3000);
         }
         
         updateLastUpdateDisplay() {
           const timeDisplay = document.querySelector('.last-update-time') || this.createLastUpdateDisplay();
-          timeDisplay.textContent = `Última actualización: ${this.lastUpdate.toLocaleTimeString()}`;
+          (timeDisplay as HTMLElement).textContent = `Última actualización: ${this.lastUpdate.toLocaleTimeString()}`;
         }
         
         createLastUpdateDisplay() {
           const display = document.createElement('div');
           display.className = 'last-update-time';
-          display.style.cssText = `
+          (display as HTMLElement).style.cssText = `
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -871,7 +803,7 @@ try {
          window.threatDataUpdater = new ThreatDataUpdater();
          
          // Función de prueba para depuración
-         window.testUpdateRecentAttacks = () => {
+         (window as any).testUpdateRecentAttacks = () => {
            console.log('🧪 Probando actualización manual de ataques recientes...');
            if (window.threatDataUpdater) {
              window.threatDataUpdater.updateThreatData();
@@ -907,7 +839,7 @@ try {
       // Inicializar filtros cuando se carga la página
       document.addEventListener('DOMContentLoaded', function() {
         initializeFilters();
-        updateMetricsDisplay();
+
       });
 
       function initializeFilters() {
@@ -939,7 +871,7 @@ try {
         const regionSelect = document.getElementById('region-filter');
         if (regionSelect) {
           regionSelect.addEventListener('change', function() {
-            currentFilters.region = this.value;
+            currentFilters.region = (this as HTMLSelectElement).value;
             updateActiveFilters();
           });
         }
@@ -1005,7 +937,7 @@ try {
         return tag;
       }
 
-      function removeFilter(filterKey) {
+      function removeFilter(filterKey: string) {
         currentFilters[filterKey] = 'all';
         
         // Actualizar UI
@@ -1020,7 +952,7 @@ try {
             btn.classList.remove('active');
           });
         } else if (filterKey === 'region') {
-          document.getElementById('region-filter').value = 'all';
+          (document.getElementById('region-filter') as HTMLSelectElement).value = 'all';
         }
         
         updateActiveFilters();
@@ -1029,8 +961,7 @@ try {
       function applyFilters() {
         console.log('Aplicando filtros:', currentFilters);
         
-        // Actualizar métricas según filtros
-        updateMetricsDisplay();
+
         
         // Actualizar mapa WebGL con filtros
         if (window.updateWebGLFilters) {
@@ -1049,39 +980,25 @@ try {
         };
         
         // Resetear UI
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('filter-all').classList.add('active');
+        document.querySelectorAll('.filter-btn').forEach(btn => (btn as HTMLElement).classList.remove('active'));
+        (document.getElementById('filter-all') as HTMLElement).classList.add('active');
         
-        document.querySelectorAll('.severity-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('severity-all').classList.add('active');
+        document.querySelectorAll('.severity-btn').forEach(btn => (btn as HTMLElement).classList.remove('active'));
+        (document.getElementById('severity-all') as HTMLElement).classList.add('active');
         
-        document.getElementById('region-filter').value = 'all';
+        (document.getElementById('region-filter') as HTMLSelectElement).value = 'all';
         
         updateActiveFilters();
-        updateMetricsDisplay();
         
         showFilterNotification('Filtros restablecidos');
       }
 
-      function updateMetricsDisplay() {
-        // Actualizar métricas según filtros activos
-        const metricCards = document.querySelectorAll('.metric-card-premium');
-        
-        metricCards.forEach(card => {
-          const metricValue = card.querySelector('.metric-value-premium');
-          if (metricValue && currentFilters.threatType !== 'all') {
-            const threatType = currentFilters.threatType;
-            if (threatTypeData[threatType]) {
-              metricValue.textContent = threatTypeData[threatType].count.toLocaleString();
-            }
-          }
-        });
-      }
 
-      function showFilterNotification(message) {
+
+      function showFilterNotification(message: string) {
         // Crear notificación temporal
         const notification = document.createElement('div');
-        notification.style.cssText = `
+        (notification as HTMLElement).style.cssText = `
           position: fixed;
           top: 20px;
           right: 20px;
@@ -1099,11 +1016,11 @@ try {
         document.body.appendChild(notification);
         
         setTimeout(() => {
-          notification.remove();
+          (notification as HTMLElement).remove();
         }, 3000);
       }
 
-      function getFilterDisplayName(filter) {
+      function getFilterDisplayName(filter: string) {
         const names = {
           malware: '🦠 Malware',
           ransomware: '🔒 Ransomware',
@@ -1115,7 +1032,7 @@ try {
         return names[filter] || filter;
       }
 
-      function getSeverityDisplayName(severity) {
+      function getSeverityDisplayName(severity: string) {
         const names = {
           critical: '🔴 Crítica',
           high: '🟠 Alta',
@@ -1125,7 +1042,7 @@ try {
         return names[severity] || severity;
       }
 
-      function getRegionDisplayName(region) {
+      function getRegionDisplayName(region: string) {
         const names = {
           'north-america': '🇺🇸 América del Norte',
           'south-america': '🇧🇷 América del Sur',
@@ -1191,7 +1108,7 @@ try {
                
                // Procesar topOriginCountries (países que más atacan)
                if (data.cloudflare.topOriginCountries) {
-                 data.cloudflare.topOriginCountries.forEach(country => {
+                 data.cloudflare.topOriginCountries.forEach((country: any) => {
                    const countryCode = country.alpha2;
                    const attacks = Math.floor(country.value * 10000); // Escalar para números más realistas
                    
@@ -1205,7 +1122,7 @@ try {
                
                // Procesar topTargetCountries (países más atacados)
                if (data.cloudflare.topTargetCountries) {
-                 data.cloudflare.topTargetCountries.forEach(country => {
+                 data.cloudflare.topTargetCountries.forEach((country: any) => {
                    const countryCode = country.alpha2;
                    const attacks = Math.floor(country.value * 8000); // Escalar diferente para targets
                    
@@ -1240,7 +1157,7 @@ try {
                  
                  // Asignar tipos de amenazas basados en datos reales
                  const threatTypes = [];
-                 if (data.cloudflare.topAttackPairs?.some(pair => pair.origin_country === country.code || pair.target_country === country.code)) {
+                 if (data.cloudflare.topAttackPairs?.some((pair: any) => pair.origin_country === country.code || pair.target_country === country.code)) {
                    threatTypes.push('web-attack');
                  }
                  if (data.ransomwatch?.recentPosts?.length > 0) {
@@ -1332,7 +1249,7 @@ try {
           ];
 
         // Función para formatear números
-        function formatNumber(num) {
+        function formatNumber(num: number) {
           if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'M';
           } else if (num >= 1000) {
@@ -1342,7 +1259,7 @@ try {
         }
 
         // Función para obtener el icono de tipo de amenaza
-        function getThreatIcon(type) {
+        function getThreatIcon(type: string) {
           const icons = {
             'malware': '🦠',
             'ransomware': '🔒',
@@ -1357,7 +1274,7 @@ try {
         }
 
         // Función para mostrar notificaciones
-        function showNotification(message, type = 'info') {
+        function showNotification(message: string, type: string = 'info') {
           // Crear elemento de notificación
           const notification = document.createElement('div');
           notification.className = `notification ${type}`;
@@ -1393,10 +1310,10 @@ try {
           
           const overviewCards = document.querySelectorAll('.overview-card .overview-number');
           if (overviewCards.length >= 4) {
-            overviewCards[0].textContent = overview.totalCountries;
-            overviewCards[1].textContent = overview.affectedCountries;
-            overviewCards[2].textContent = formatNumber(overview.totalAttacks);
-            overviewCards[3].textContent = formatNumber(overview.averageAttacksPerCountry);
+            (overviewCards[0] as HTMLElement).textContent = overview.totalCountries.toString();
+            (overviewCards[1] as HTMLElement).textContent = overview.affectedCountries.toString();
+            (overviewCards[2] as HTMLElement).textContent = formatNumber(overview.totalAttacks);
+            (overviewCards[3] as HTMLElement).textContent = formatNumber(overview.averageAttacksPerCountry);
           }
         }
 
@@ -1405,7 +1322,7 @@ try {
           const rankingList = document.querySelector('.ranking-list');
           if (!rankingList) return;
 
-          rankingList.innerHTML = '';
+          (rankingList as HTMLElement).innerHTML = '';
 
           countryStatsData.countries.forEach(country => {
             const rankingItem = document.createElement('div');
@@ -1414,7 +1331,7 @@ try {
             const medal = country.rank <= 3 ? 
               (country.rank === 1 ? '🥇' : country.rank === 2 ? '🥈' : '🥉') : '';
 
-            const threatTags = country.threats.map(threat => 
+            const threatTags = country.threats.map((threat: any) => 
               `<span class="threat-tag ${threat}">${getThreatIcon(threat)} ${threat.toUpperCase()}</span>`
             ).join('');
 
@@ -1440,7 +1357,7 @@ try {
               </div>
             `;
 
-            rankingList.appendChild(rankingItem);
+            (rankingList as HTMLElement).appendChild(rankingItem);
           });
         }
 
@@ -1449,7 +1366,7 @@ try {
           const regionStats = document.querySelector('.region-stats');
           if (!regionStats) return;
 
-          regionStats.innerHTML = '';
+          (regionStats as HTMLElement).innerHTML = '';
 
           countryStatsData.regions.forEach(region => {
             const regionStat = document.createElement('div');
@@ -1463,7 +1380,7 @@ try {
               <div class="region-percentage">${region.percentage}%</div>
             `;
 
-            regionStats.appendChild(regionStat);
+            (regionStats as HTMLElement).appendChild(regionStat);
           });
         }
 
@@ -1472,7 +1389,7 @@ try {
           const select = document.querySelector('.time-period-select');
           if (!select) return;
 
-          select.addEventListener('change', function() {
+          (select as HTMLSelectElement).addEventListener('change', function() {
             showNotification('Actualizando estadísticas para ' + this.options[this.selectedIndex].text, 'info');
             
             setTimeout(() => {
@@ -1489,9 +1406,9 @@ try {
           const refreshBtn = document.querySelector('.refresh-stats-btn');
           if (!refreshBtn) return;
 
-          refreshBtn.addEventListener('click', function() {
-            this.disabled = true;
-            this.textContent = 'Actualizando...';
+          (refreshBtn as HTMLElement).addEventListener('click', function() {
+            (this as HTMLButtonElement).disabled = true;
+            (this as HTMLButtonElement).textContent = 'Actualizando...';
             
             setTimeout(() => {
               // Generar pequeñas variaciones en los datos
@@ -1505,8 +1422,8 @@ try {
               renderCountryRanking();
               renderRegionalBreakdown();
               
-              this.disabled = false;
-              this.textContent = '🔄 Actualizar';
+              (this as HTMLButtonElement).disabled = false;
+              (this as HTMLButtonElement).textContent = '🔄 Actualizar';
               showNotification('Estadísticas actualizadas con datos en tiempo real', 'success');
             }, 2000);
           });
@@ -1557,7 +1474,7 @@ try {
                
                // Eventos desde topAttackPairs de Cloudflare
                if (data.cloudflare?.topAttackPairs) {
-                 data.cloudflare.topAttackPairs.slice(0, 8).forEach((pair, index) => {
+                 data.cloudflare.topAttackPairs.slice(0, 8).forEach((pair: any, index: number) => {
                    const severity = pair.value > 50 ? 'crítica' : pair.value > 20 ? 'alta' : 'media';
                    const timestamp = new Date(Date.now() - (index * 15 * 60 * 1000));
                    const timeStr = timestamp.toLocaleString('es-ES', {
@@ -1570,11 +1487,11 @@ try {
                      time: timeStr,
                      severity: severity,
                      title: `Ataque Web desde ${pair.origin_country}`,
-                     description: `Detectado tráfico malicioso desde ${pair.origin_country} hacia ${pair.target_country} con ${pair.value.toFixed(1)}% del total de ataques.`,
+                     description: `Detectado tráfico malicioso desde ${pair.origin_country} hacia ${pair.target_country} con ${(pair.value || 0).toFixed(1)}% del total de ataques.`,
                      country: pair.target_country,
                      flag: countryFlags[pair.target_country] || '🌍',
                      threatType: 'Web Attack',
-                     affectedSystems: Math.floor(pair.value * 100),
+                     affectedSystems: Math.floor((pair.value || 0) * 100),
                      source: 'Cloudflare Radar',
                      tags: ['web-attack', 'tráfico-malicioso', pair.origin_country.toLowerCase()]
                    });
@@ -1588,7 +1505,7 @@ try {
                
                // Eventos desde RansomWatch
                if (data.ransomwatch?.recentPosts) {
-                 data.ransomwatch.recentPosts.slice(0, 6).forEach((post, index) => {
+                 data.ransomwatch.recentPosts.slice(0, 6).forEach((post: any, index: number) => {
                    const timestamp = new Date(post.discovered || Date.now() - (index * 30 * 60 * 1000));
                    const timeStr = timestamp.toLocaleString('es-ES', {
                      year: 'numeric', month: '2-digit', day: '2-digit',
@@ -1617,7 +1534,7 @@ try {
                
                // Eventos desde SANS ISC
                if (data.sansISC?.topPorts) {
-                 data.sansISC.topPorts.slice(0, 4).forEach((port, index) => {
+                 data.sansISC.topPorts.slice(0, 4).forEach((port: any, index: number) => {
                    const timestamp = new Date(Date.now() - (index * 45 * 60 * 1000));
                    const timeStr = timestamp.toLocaleString('es-ES', {
                      year: 'numeric', month: '2-digit', day: '2-digit',
@@ -1646,7 +1563,7 @@ try {
                }
                
                // Ordenar eventos por timestamp (más recientes primero)
-               events.sort((a, b) => new Date(b.time.replace(/\//g, '-')) - new Date(a.time.replace(/\//g, '-')));
+               events.sort((a, b) => new Date(b.time.replace(/\//g, '-')).getTime() - new Date(a.time.replace(/\//g, '-')).getTime());
                
                // Actualizar timelineData
                window.timelineData = {
@@ -1687,10 +1604,10 @@ try {
          loadTimelineData();
 
          // Función para formatear tiempo relativo
-         function getRelativeTime(timeString) {
+         function getRelativeTime(timeString: string) {
            const now = new Date();
            const eventTime = new Date(timeString);
-           const diffMs = now - eventTime;
+           const diffMs = now.getTime() - eventTime.getTime();
            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
            const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
@@ -1704,7 +1621,7 @@ try {
          }
 
          // Función para obtener el icono de tipo de amenaza
-         function getThreatTypeIcon(type) {
+         function getThreatTypeIcon(type: string) {
            const icons = {
              'Ransomware': '🔒',
              'Phishing': '🎣',
@@ -1719,7 +1636,7 @@ try {
          }
 
          // Función para mostrar notificaciones
-         function showTimelineNotification(message, type = 'info') {
+         function showTimelineNotification(message: string, type: string = 'info') {
            const notification = document.createElement('div');
            notification.className = `timeline-notification ${type}`;
            notification.style.cssText = `
@@ -1767,11 +1684,11 @@ try {
 
            timelineEvents.innerHTML = '';
 
-           events.forEach(event => {
+           events.forEach((event: any) => {
              const eventElement = document.createElement('div');
              eventElement.className = `timeline-event ${event.severity}`;
              
-             const eventTags = event.tags.map(tag => 
+             const eventTags = event.tags.map((tag: any) => 
                `<span class="event-tag">#${tag}</span>`
              ).join('');
 
@@ -1814,9 +1731,9 @@ try {
          }
 
          // Función para filtrar eventos por período
-         function filterEventsByPeriod(period) {
+         function filterEventsByPeriod(period: string) {
            const now = new Date();
-           let cutoffDate;
+           let cutoffDate: Date;
 
            switch(period) {
              case '24h':
@@ -1832,14 +1749,14 @@ try {
                return window.timelineData.events;
            }
 
-           return window.timelineData.events.filter(event => {
+           return window.timelineData.events.filter((event: any) => {
              const eventDate = new Date(event.time);
              return eventDate >= cutoffDate;
            });
          }
 
          // Función para filtrar eventos por severidad
-         function filterEventsBySeverity(severity, events) {
+         function filterEventsBySeverity(severity: string, events: any[]) {
            if (severity === 'all') return events;
 
            const severityLevels = {
@@ -1849,7 +1766,7 @@ try {
            };
 
            const allowedSeverities = severityLevels[severity] || [severity];
-           return events.filter(event => allowedSeverities.includes(event.severity));
+           return events.filter((event: any) => allowedSeverities.includes(event.severity));
          }
 
          // Función para configurar filtros del timeline
@@ -1861,7 +1778,7 @@ try {
            if (periodSelect) {
              periodSelect.addEventListener('change', function() {
                const period = this.value;
-               const severity = severitySelect ? severitySelect.value : 'all';
+               const severity = severitySelect ? (severitySelect as HTMLSelectElement).value : 'all';
                
                let filteredEvents = filterEventsByPeriod(period);
                filteredEvents = filterEventsBySeverity(severity, filteredEvents);
@@ -1874,7 +1791,7 @@ try {
            if (severitySelect) {
              severitySelect.addEventListener('change', function() {
                const severity = this.value;
-               const period = periodSelect ? periodSelect.value : '24h';
+               const period = periodSelect ? (periodSelect as HTMLSelectElement).value : '24h';
                
                let filteredEvents = filterEventsByPeriod(period);
                filteredEvents = filterEventsBySeverity(severity, filteredEvents);
@@ -1942,7 +1859,7 @@ try {
          };
 
          // Función de polling seguro con backoff exponencial
-         function createSecurePoller(updateFunction, name, baseInterval) {
+         function createSecurePoller(updateFunction: Function, name: string, baseInterval: number) {
            return {
              start() {
                this.stop(); // Limpiar timer existente
@@ -2105,7 +2022,7 @@ try {
   }
 
   .page-title {
-    color: #1e293b;
+    color: white;
     font-size: 1.75rem;
     font-weight: 700;
     margin: 0;
@@ -2175,10 +2092,10 @@ try {
   /* Dashboard Principal de Estadísticas */
   .main-dashboard-overlay {
     position: fixed;
-    top: 20px;
+    top: 80px;
     left: 20px;
     right: 20px;
-    z-index: 100;
+    z-index: 50;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -2492,11 +2409,12 @@ try {
   }
 
   .stat-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
     border-radius: 1rem;
     padding: 2rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -2527,14 +2445,14 @@ try {
     display: block;
     font-size: 2rem;
     font-weight: 700;
-    color: #1e293b;
+    color: white;
     line-height: 1;
   }
 
   .stat-label {
     display: block;
     font-size: 0.875rem;
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.8);
     margin-top: 0.25rem;
   }
 
@@ -2552,40 +2470,7 @@ try {
     overflow: hidden;
   }
 
-  .error-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 4rem 2rem;
-    color: #dc2626;
-  }
 
-  .error-message h3 {
-    font-size: 1.5rem;
-    margin: 0 0 1rem 0;
-  }
-
-  .error-message p {
-    margin: 0 0 2rem 0;
-    color: #64748b;
-  }
-
-  .retry-btn {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  .retry-btn:hover {
-    background: #2563eb;
-  }
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -2614,14 +2499,6 @@ try {
       margin: 0;
       padding: 0;
     }
-  }
-
-
-
-
-
-
-    width: 300px;
   }
 
   .overlay-header {
@@ -2958,19 +2835,7 @@ try {
     margin: 0 auto;
   }
 
-  /* Error Message */
-  .error-message {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fef2f2;
-    border: 1px solid #dc2626;
-    padding: 2rem;
-    border-radius: 1rem;
-    color: #dc2626;
-    font-size: 1.125rem;
-    font-weight: 600;
-  }
+
 
   /* Panel de Control Unificado */
   .unified-control-panel {
@@ -3045,114 +2910,7 @@ try {
     transform: translateY(-1px);
   }
 
-  /* Métricas Premium */
-  .metrics-grid-premium {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    z-index: 50;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 1.5rem;
-    margin-top: 0;
-    pointer-events: none;
-  }
 
-  .metrics-grid-premium > * {
-    pointer-events: auto;
-  }
-
-  .metric-card-premium {
-    background: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border-left: 4px solid #d1d5db;
-    transition: all 0.3s ease;
-  }
-
-  .metric-card-premium:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  }
-
-  .metric-card-premium.critical {
-    border-left-color: #dc2626;
-  }
-
-  .metric-card-premium.high {
-    border-left-color: #ea580c;
-  }
-
-  .metric-card-premium.warning {
-    border-left-color: #d97706;
-  }
-
-  .metric-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-
-  .metric-icon-premium {
-    font-size: 1.5rem;
-  }
-
-  .metric-status {
-    background: #fef2f2;
-    color: #dc2626;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  .metric-content-premium {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .metric-value-premium {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #1f2937;
-    line-height: 1;
-  }
-
-  .metric-label-premium {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #374151;
-  }
-
-  .metric-description {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-bottom: 0.75rem;
-  }
-
-  .metric-trend {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    background: #f9fafb;
-    border-radius: 0.5rem;
-  }
-
-  .trend-arrow {
-    font-size: 0.875rem;
-  }
-
-  .trend-text {
-    font-size: 0.75rem;
-    color: #6b7280;
-    font-weight: 500;
-  }
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -3169,9 +2927,7 @@ try {
       justify-content: center;
     }
 
-    .metrics-grid-premium {
-      grid-template-columns: 1fr;
-    }
+
   }
 
   /* Mapa WebGL Styles */

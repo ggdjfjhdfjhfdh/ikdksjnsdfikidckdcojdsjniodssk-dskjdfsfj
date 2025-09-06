@@ -16,6 +16,11 @@ export default defineConfig({
     assetsPrefix: '/',
   },
   
+  // Configuración de seguridad para scripts
+  security: {
+    checkOrigin: true,
+  },
+  
   // Compresión y optimización
   compressHTML: true,
   
@@ -37,7 +42,7 @@ export default defineConfig({
     build: {
       minify: 'terser',
       sourcemap: false,
-      cssMinify: 'lightningcss',
+      cssMinify: 'esbuild',
       rollupOptions: {
         output: {
           manualChunks: {
@@ -49,6 +54,10 @@ export default defineConfig({
           chunkFileNames: 'assets/[name].[hash].js',
           entryFileNames: 'assets/[name].[hash].js',
         },
+      },
+      // Configuración para crossorigin en preloads
+      modulePreload: {
+        polyfill: false,
       },
     },
     ssr: {

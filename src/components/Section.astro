@@ -6,6 +6,9 @@ export interface Props {
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   centered?: boolean;
   id?: string;
+  spacing?: 'small' | 'normal' | 'large';
+  alignment?: 'left' | 'center' | 'right';
+  variant?: 'default' | 'light' | 'dark';
 }
 
 const { 
@@ -14,7 +17,10 @@ const {
   background = 'default', 
   padding = 'lg', 
   centered = false,
-  id 
+  id,
+  spacing = 'normal',
+  alignment = 'left',
+  variant = 'default'
 } = Astro.props;
 
 const paddingClasses = {
@@ -29,10 +35,22 @@ const backgroundClasses = {
   soft: 'bg-soft',
   gradient: 'bg-gradient'
 };
+
+const alignmentClasses = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right'
+};
+
+const variantClasses = {
+  default: '',
+  light: 'text-gray-600',
+  dark: 'text-gray-900'
+};
 ---
 
 <section 
-  class={`section ${backgroundClasses[background]} ${paddingClasses[padding]} scroll-reveal`}
+  class={`section ${backgroundClasses[background]} ${paddingClasses[padding]} ${alignmentClasses[alignment]} ${variantClasses[variant]} scroll-reveal`}
   id={id}
 >
   <div class="container">

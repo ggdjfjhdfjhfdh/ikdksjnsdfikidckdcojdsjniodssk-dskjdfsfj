@@ -36,6 +36,9 @@ const getAlternateUrl = (targetLang: string) => {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     
+    <!-- Configuración de crossorigin para recursos -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; worker-src 'self' blob:; object-src 'none';" />
+    
     <!-- SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -65,13 +68,17 @@ const getAlternateUrl = (targetLang: string) => {
     <!-- Preload critical fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    
-    <!-- Microinteracciones y animaciones -->
-    <link rel="stylesheet" href="/src/styles/animations.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
     
     <!-- Critical CSS -->
-    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    <style>
+      @import '../styles/animations.css';
+      @import '../styles/tokens.css';
+    </style>
+    
+    <!-- Fix para module preloads -->
+    <script src="/src/scripts/module-preload-fix.js" type="module"></script>
     
     <!-- Performance hints -->
     <meta name="theme-color" content="#0b0f14" />
@@ -83,7 +90,7 @@ const getAlternateUrl = (targetLang: string) => {
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     
     <!-- Structured data for better SEO -->
-    <script type="application/ld+json">
+    <script type="application/ld+json" is:inline>
     {
       "@context": "https://schema.org",
       "@type": "Organization",
@@ -128,11 +135,16 @@ const getAlternateUrl = (targetLang: string) => {
       <Footer lang={lang} />
     </div>
     
+    <!-- Configuración global -->
+    <script define:vars={{ backendUrl: import.meta.env.BACKEND_URL }}>
+      window.BACKEND_URL = backendUrl;
+    </script>
+    
     <!-- Scripts de microinteracciones -->
-  <script src="/src/scripts/microinteractions.js"></script>
-  
-  <!-- Scripts de optimización de rendimiento -->
-  <script src="/src/scripts/performance.js"></script>
+  <script>
+    import('../scripts/microinteractions.js');
+    import('../scripts/performance.js');
+  </script>
     
     <!-- Service Worker Registration -->
     <script>

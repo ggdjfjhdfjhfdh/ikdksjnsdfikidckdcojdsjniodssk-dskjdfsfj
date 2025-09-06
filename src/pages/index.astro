@@ -1176,7 +1176,7 @@ const testimonials = [
   // Cybersecurity Dashboard API Integration
   class CyberDashboard {
     constructor() {
-      this.apiEndpoint = '/api/cybersecurity.json';
+      this.apiEndpoint = import.meta.env.BACKEND_URL + '/api/threat/data';
       this.refreshInterval = 15 * 60 * 1000; // 15 minutes
       this.retryAttempts = 3;
       this.retryDelay = 5000;

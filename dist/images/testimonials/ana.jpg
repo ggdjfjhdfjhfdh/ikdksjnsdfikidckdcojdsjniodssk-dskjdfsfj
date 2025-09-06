@@ -1,0 +1,44 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="anaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6D28D9;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="40" cy="40" r="40" fill="url(#anaGradient)"/>
+  
+  <!-- Face -->
+  <circle cx="40" cy="35" r="12" fill="#FDE68A"/>
+  
+  <!-- Hair -->
+  <path d="M28 28C28 22 33 18 40 18C47 18 52 22 52 28C52 25 50 23 47 23C44 23 42 25 40 25C38 25 36 23 33 23C30 23 28 25 28 28Z" fill="#92400E"/>
+  <path d="M28 28C26 30 26 32 28 34C30 32 32 30 34 28" fill="#92400E"/>
+  <path d="M52 28C54 30 54 32 52 34C50 32 48 30 46 28" fill="#92400E"/>
+  
+  <!-- Eyes -->
+  <circle cx="36" cy="32" r="1.5" fill="#1F2937"/>
+  <circle cx="44" cy="32" r="1.5" fill="#1F2937"/>
+  <path d="M34 30C35 29.5 37 29.5 38 30" stroke="#92400E" stroke-width="0.5" fill="none"/>
+  <path d="M42 30C43 29.5 45 29.5 46 30" stroke="#92400E" stroke-width="0.5" fill="none"/>
+  
+  <!-- Nose -->
+  <ellipse cx="40" cy="36" rx="1" ry="1.5" fill="#F59E0B" opacity="0.2"/>
+  
+  <!-- Mouth -->
+  <path d="M37 39C37 40 38.5 41 40 41C41.5 41 43 40 43 39" stroke="#DC2626" stroke-width="1" fill="none" stroke-linecap="round"/>
+  
+  <!-- Blouse -->
+  <path d="M25 55C25 50 30 47 40 47C50 47 55 50 55 55V80H25V55Z" fill="#FFFFFF"/>
+  
+  <!-- Blazer -->
+  <path d="M28 50C28 48 30 47 32 47H48C50 47 52 48 52 50V80H48V52H32V80H28V50Z" fill="#1F2937"/>
+  
+  <!-- Necklace -->
+  <circle cx="40" cy="48" r="2" fill="#F59E0B" opacity="0.8"/>
+  
+  <!-- Professional badge -->
+  <circle cx="65" cy="15" r="8" fill="#EC4899" opacity="0.9"/>
+  <text x="65" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="5" font-weight="bold" fill="white">CTO</text>
+</svg>

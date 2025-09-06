@@ -681,18 +681,18 @@ const maxThreat = Math.max(...regions.map(r => r.threats));
           const regionData = threatTypeData[regionId];
           
           if (type === 'all') {
-            marker.style.display = 'block';
-            const totalThreats = Object.values(regionData).reduce((a, b) => a + b, 0);
-            const threatCountEl = marker.parentNode.querySelector('.threat-count');
-            if (threatCountEl) threatCountEl.textContent = totalThreats;
+            (marker as HTMLElement).style.display = 'block';
+            const totalThreats = Object.values(regionData).reduce((a: number, b: number) => a + b, 0);
+            const threatCountEl = marker.parentNode?.querySelector('.threat-count');
+            if (threatCountEl) threatCountEl.textContent = totalThreats.toString();
           } else {
             const threatCount = regionData[type] || 0;
             if (threatCount > 0) {
-              marker.style.display = 'block';
-              const threatCountEl = marker.parentNode.querySelector('.threat-count');
-              if (threatCountEl) threatCountEl.textContent = threatCount;
+              (marker as HTMLElement).style.display = 'block';
+              const threatCountEl = marker.parentNode?.querySelector('.threat-count');
+              if (threatCountEl) threatCountEl.textContent = threatCount.toString();
             } else {
-              marker.style.display = 'none';
+              (marker as HTMLElement).style.display = 'none';
             }
           }
         });
@@ -716,7 +716,7 @@ const maxThreat = Math.max(...regions.map(r => r.threats));
 
       // Función para simular actualización de datos
       function refreshMapData() {
-        const refreshBtn = document.getElementById('refreshMap');
+        const refreshBtn = document.getElementById('refreshMap') as HTMLButtonElement;
         refreshBtn.textContent = '🔄 Actualizando...';
         refreshBtn.disabled = true;
         
@@ -730,7 +730,7 @@ const maxThreat = Math.max(...regions.map(r => r.threats));
           });
           
           // Actualizar filtro actual
-          const currentFilter = document.getElementById('threatFilter').value;
+          const currentFilter = (document.getElementById('threatFilter') as HTMLSelectElement).value;
           filterThreats(currentFilter);
           
           refreshBtn.textContent = '🔄 Actualizar';
@@ -744,7 +744,7 @@ const maxThreat = Math.max(...regions.map(r => r.threats));
       
       if (threatFilter) {
         threatFilter.addEventListener('change', function() {
-          filterThreats(this.value);
+          filterThreats((this as HTMLSelectElement).value);
         });
       }
       

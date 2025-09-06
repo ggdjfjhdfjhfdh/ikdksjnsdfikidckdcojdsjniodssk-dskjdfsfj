@@ -149,3 +149,38 @@ export function resetCacheStats() {
   };
   console.log('📊 Cache statistics reset');
 }
+
+/**
+ * Start automatic cache updates
+ */
+export function startCacheUpdates() {
+  console.log('🚀 Starting automatic cache updates...');
+  
+  // Initial cache load
+  getCachedThreatData().catch(error => {
+    console.error('❌ Error during initial cache load:', error);
+  });
+  
+  // Set up periodic updates every 5 minutes
+  const updateInterval = setInterval(async () => {
+    try {
+      await updateThreatCache();
+      console.log('🔄 Automatic cache update completed');
+    } catch (error) {
+      console.error('❌ Error during automatic cache update:', error);
+    }
+  }, CACHE_DURATION);
+  
+  // Cleanup on process termination
+  process.on('SIGTERM', () => {
+    clearInterval(updateInterval);
+    console.log('🛑 Cache update interval cleared');
+  });
+  
+  process.on('SIGINT', () => {
+    clearInterval(updateInterval);
+    console.log('🛑 Cache update interval cleared');
+  });
+  
+  console.log('✅ Automatic cache updates started');
+}

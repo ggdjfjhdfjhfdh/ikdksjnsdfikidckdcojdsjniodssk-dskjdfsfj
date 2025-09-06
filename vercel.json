@@ -7,11 +7,7 @@
   "env": {
     "BACKEND_URL": "https://sesec-backend.fly.dev"
   },
-  "functions": {
-    "src/pages/api/**/*.js": {
-      "maxDuration": 30
-    }
-  },
+
   "headers": [
     {
       "source": "/api/(.*)",
@@ -34,15 +30,15 @@
   "rewrites": [
     {
       "source": "/api/threat/(.*)",
-      "destination": "https://sesec-backend.fly.dev/api/threat/$1"
+      "destination": "$BACKEND_URL/api/threat/$1"
     },
     {
       "source": "/api/analytics/(.*)",
-      "destination": "https://sesec-backend.fly.dev/api/analytics/$1"
+      "destination": "$BACKEND_URL/api/analytics/$1"
     },
     {
       "source": "/api/alerts/(.*)",
-      "destination": "https://sesec-backend.fly.dev/api/alerts/$1"
+      "destination": "$BACKEND_URL/api/alerts/$1"
     }
   ]
 }

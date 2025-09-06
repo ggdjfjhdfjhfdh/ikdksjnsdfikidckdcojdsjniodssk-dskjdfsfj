@@ -1,0 +1,48 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="miguelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="40" cy="40" r="40" fill="url(#miguelGradient)"/>
+  
+  <!-- Face -->
+  <circle cx="40" cy="35" r="12" fill="#FCD34D"/>
+  
+  <!-- Hair -->
+  <path d="M28 28C28 22 33 18 40 18C47 18 52 22 52 28C52 25 50 23 47 23C44 23 42 25 40 25C38 25 36 23 33 23C30 23 28 25 28 28Z" fill="#374151"/>
+  
+  <!-- Beard -->
+  <path d="M32 40C32 42 34 44 36 45C37 45.5 38.5 46 40 46C41.5 46 43 45.5 44 45C46 44 48 42 48 40C48 38 46 37 44 37H36C34 37 32 38 32 40Z" fill="#374151"/>
+  
+  <!-- Eyes -->
+  <circle cx="36" cy="32" r="1.5" fill="#1F2937"/>
+  <circle cx="44" cy="32" r="1.5" fill="#1F2937"/>
+  
+  <!-- Glasses -->
+  <circle cx="36" cy="32" r="4" stroke="#1F2937" stroke-width="1" fill="none" opacity="0.8"/>
+  <circle cx="44" cy="32" r="4" stroke="#1F2937" stroke-width="1" fill="none" opacity="0.8"/>
+  <path d="M40 32H40" stroke="#1F2937" stroke-width="1"/>
+  
+  <!-- Nose -->
+  <ellipse cx="40" cy="36" rx="1" ry="1.5" fill="#F59E0B" opacity="0.3"/>
+  
+  <!-- Mouth (hidden by beard) -->
+  <path d="M37 42C37 43 38.5 43.5 40 43.5C41.5 43.5 43 43 43 42" stroke="#DC2626" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+  
+  <!-- Shirt -->
+  <path d="M25 55C25 50 30 47 40 47C50 47 55 50 55 55V80H25V55Z" fill="#FFFFFF"/>
+  
+  <!-- Vest/Sweater -->
+  <path d="M30 50C30 48 32 47 35 47H45C48 47 50 48 50 50V80H45V52H35V80H30V50Z" fill="#6B7280"/>
+  
+  <!-- V-neck detail -->
+  <path d="M35 47L40 52L45 47" stroke="#FFFFFF" stroke-width="1" fill="none"/>
+  
+  <!-- Professional badge -->
+  <circle cx="65" cy="15" r="8" fill="#F59E0B" opacity="0.9"/>
+  <text x="65" y="18" text-anchor="middle" font-family="Arial, sans-serif" font-size="5" font-weight="bold" fill="white">CIO</text>
+</svg>
