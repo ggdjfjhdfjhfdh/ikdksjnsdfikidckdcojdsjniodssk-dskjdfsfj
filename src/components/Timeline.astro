@@ -1,0 +1,277 @@
+---
+export interface Props {
+  steps: Array<{
+    title: string;
+    description: string;
+    icon?: string;
+    duration?: string;
+  }>;
+}
+
+const { steps } = Astro.props;
+---
+
+<div class="timeline">
+  <div class="timeline-line" id="timeline-line"></div>
+  
+  {steps.map((step, index) => (
+    <div class={`timeline-item fade-in stagger-${index + 1}`} data-step={index}>
+      <div class="timeline-marker">
+        <div class="timeline-dot">
+          <svg class="timeline-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            {index === 0 && (
+              <!-- Recon -->
+              <>
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+              </>
+            )}
+            {index === 1 && (
+              <!-- Pentest -->
+              <>
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <path d="M9 12l2 2 4-4"/>
+              </>
+            )}
+            {index === 2 && (
+              <!-- Implementación -->
+              <>
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+              </>
+            )}
+            {index === 3 && (
+              <!-- Mantenimiento -->
+              <>
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                <circle cx="12" cy="12" r="1"/>
+              </>
+            )}
+          </svg>
+        </div>
+      </div>
+      
+      <div class="timeline-content">
+        <div class="timeline-header">
+          <h3 class="timeline-title">{step.title}</h3>
+          {step.duration && (
+            <span class="timeline-duration">{step.duration}</span>
+          )}
+        </div>
+        <p class="timeline-description">{step.description}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .timeline-line {
+    position: absolute;
+    left: 24px;
+    top: 24px;
+    bottom: 24px;
+    width: 2px;
+    background: var(--border);
+    border-radius: 1px;
+  }
+  
+  .timeline-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    border-radius: 1px;
+    transition: height 1s var(--ease);
+  }
+  
+  .timeline-line.animate::after {
+    height: 100%;
+  }
+  
+  .timeline-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-6);
+    margin-bottom: var(--sp-12);
+  }
+  
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .timeline-marker {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+  
+  .timeline-dot {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--glass);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--dur) var(--ease);
+    backdrop-filter: blur(10px);
+  }
+  
+  .timeline-item.active .timeline-dot {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 0 20px rgba(124, 247, 212, 0.3);
+    transform: scale(1.1);
+  }
+  
+  .timeline-icon {
+    color: var(--fg-dim);
+    transition: color var(--dur) var(--ease);
+  }
+  
+  .timeline-item.active .timeline-icon {
+    color: var(--bg);
+  }
+  
+  .timeline-content {
+    flex: 1;
+    padding-top: var(--sp-2);
+  }
+  
+  .timeline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--sp-3);
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+  
+  .timeline-title {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin: 0;
+  }
+  
+  .timeline-duration {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 500;
+    background: rgba(124, 247, 212, 0.1);
+    padding: var(--sp-1) var(--sp-3);
+    border-radius: var(--sp-4);
+    border: 1px solid rgba(124, 247, 212, 0.2);
+  }
+  
+  .timeline-description {
+    color: var(--fg-dim);
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .timeline-line {
+      left: 20px;
+    }
+    
+    .timeline-dot {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .timeline-icon {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .timeline-item {
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-8);
+    }
+    
+    .timeline-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script>
+  // Animación de la línea de tiempo
+  class TimelineAnimation {
+    constructor() {
+      this.timeline = document.querySelector('.timeline-line');
+      this.items = document.querySelectorAll('.timeline-item');
+      this.observer = null;
+      
+      if (this.timeline && this.items.length > 0) {
+        this.init();
+      }
+    }
+    
+    init() {
+      // Configurar Intersection Observer
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              this.updateTimelineLine();
+            }
+          });
+        },
+        {
+          threshold: 0.5,
+          rootMargin: '-50px 0px'
+        }
+      );
+      
+      // Observar cada item del timeline
+      this.items.forEach(item => {
+        this.observer.observe(item);
+      });
+    }
+    
+    updateTimelineLine() {
+      const activeItems = document.querySelectorAll('.timeline-item.active');
+      const progress = activeItems.length / this.items.length;
+      
+      if (progress > 0) {
+        this.timeline.classList.add('animate');
+        this.timeline.style.setProperty('--progress', `${progress * 100}%`);
+      }
+    }
+    
+    destroy() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    }
+  }
+  
+  // Inicializar animación
+  let timelineAnimation = null;
+  
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    timelineAnimation = new TimelineAnimation();
+  }
+  
+  // Cleanup al cambiar de página
+  document.addEventListener('astro:before-swap', () => {
+    if (timelineAnimation) {
+      timelineAnimation.destroy();
+    }
+  });
+</script>

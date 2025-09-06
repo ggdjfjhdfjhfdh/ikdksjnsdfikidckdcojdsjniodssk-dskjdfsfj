@@ -1,0 +1,846 @@
+---
+import Button from './Button.astro';
+
+export interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+
+const navigation = {
+  es: {
+    home: 'Inicio',
+    services: 'Servicios',
+    methodology: 'Metodología',
+    contact: 'Contacto'
+  },
+  en: {
+    home: 'Home',
+    services: 'Services',
+    methodology: 'Methodology',
+    contact: 'Contact'
+  }
+};
+
+// Mapeo de rutas entre idiomas
+const routeMapping = {
+  '/': '/en/',
+  '/servicios': '/en/services',
+  '/metodologia': '/en/methodology',
+  '/contacto': '/en/contact',
+  '/aviso-legal': '/en/legal-notice',
+  '/politica-privacidad': '/en/privacy-policy',
+  '/politica-cookies': '/en/cookie-policy',
+  '/terminos-condiciones': '/en/terms-conditions'
+};
+
+// Mapeo inverso para ir de inglés a español
+const reverseRouteMapping = Object.fromEntries(
+  Object.entries(routeMapping).map(([es, en]) => [en, es])
+);
+
+// Función para obtener la ruta alternativa
+function getAlternateRoute(currentPath, currentLang) {
+  if (currentLang === 'es') {
+    return routeMapping[currentPath] || '/en' + currentPath;
+  } else {
+    return reverseRouteMapping[currentPath] || currentPath.replace('/en', '');
+  }
+}
+
+const nav = navigation[lang];
+const basePath = lang === 'en' ? '/en' : '';
+---
+
+<nav class="nav nav-hover-effect" id="main-nav" role="navigation" aria-label={lang === 'es' ? 'Navegación principal' : 'Main navigation'}>
+  <div class="nav-container">
+    <!-- Logo -->
+    <div class="nav-brand">
+      <a href={basePath + '/'} class="brand-link focus-ring" aria-label={lang === 'es' ? 'Ir al inicio - Sesecpro' : 'Go to home - Sesecpro'}>
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <path d="M16 2L30 9v14L16 30 2 23V9l14-7z" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="16" cy="16" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="16" cy="16" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+        <span class="brand-text">Sesecpro</span>
+      </a>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <div class="nav-links" role="menubar" aria-label={lang === 'es' ? 'Menú principal' : 'Main menu'}>
+      <a href={basePath + '/'} class="nav-link nav-link-hover focus-ring" data-nav="home" role="menuitem" aria-current={Astro.url.pathname === (basePath + '/') ? 'page' : undefined}>
+        <span class="nav-text">{nav.home}</span>
+        <div class="nav-indicator" aria-hidden="true"></div>
+      </a>
+      <a href={lang === 'en' ? '/en/services' : '/servicios'} class="nav-link focus-ring" data-nav="services" role="menuitem" aria-current={Astro.url.pathname.includes('service') ? 'page' : undefined}>
+        <span class="nav-text">{nav.services}</span>
+        <div class="nav-indicator" aria-hidden="true"></div>
+      </a>
+      <a href={lang === 'en' ? '/en/methodology' : '/metodologia'} class="nav-link focus-ring" data-nav="methodology" role="menuitem" aria-current={Astro.url.pathname.includes('method') ? 'page' : undefined}>
+        <span class="nav-text">{nav.methodology}</span>
+        <div class="nav-indicator" aria-hidden="true"></div>
+      </a>
+      <a href={lang === 'en' ? '/en/contact' : '/contacto'} class="nav-link focus-ring" data-nav="contact" role="menuitem" aria-current={Astro.url.pathname.includes('contact') ? 'page' : undefined}>
+        <span class="nav-text">{nav.contact}</span>
+        <div class="nav-indicator" aria-hidden="true"></div>
+      </a>
+    </div>
+
+    <!-- Language Switcher -->
+    <div class="nav-actions">
+      <div class="lang-switcher">
+        <button class="lang-btn focus-ring" id="lang-toggle" 
+                aria-label={lang === 'es' ? 'Cambiar idioma' : 'Change language'}
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-controls="lang-dropdown">
+          <span class="lang-current" aria-hidden="true">{lang.toUpperCase()}</span>
+          <svg class="lang-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 3C10.7614 3 13 5.23858 13 8C13 10.7614 10.7614 13 8 13C5.23858 13 3 10.7614 3 8C3 5.23858 5.23858 3 8 3Z" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 1V3M8 13V15M15 8H13M3 8H1" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown" role="menu" aria-labelledby="lang-toggle">
+          <a href={getAlternateRoute(Astro.url.pathname, lang)} 
+             class="lang-option focus-ring" 
+             role="menuitem"
+             aria-label={lang === 'es' ? 'Cambiar a inglés' : 'Switch to Spanish'}>
+            <span class="lang-flag" aria-hidden="true">{lang === 'es' ? '🇺🇸' : '🇪🇸'}</span>
+            <span>{lang === 'es' ? 'English' : 'Español'}</span>
+          </a>
+        </div>
+      </div>
+
+
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-toggle magnetic-hover focus-ring" 
+              id="mobile-toggle" 
+              aria-label={lang === 'es' ? 'Abrir menú de navegación' : 'Open navigation menu'}
+              aria-expanded="false"
+              aria-controls="mobile-menu">
+        <span class="hamburger-line" aria-hidden="true"></span>
+        <span class="hamburger-line" aria-hidden="true"></span>
+        <span class="hamburger-line" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu" 
+       role="dialog" 
+       aria-modal="true" 
+       aria-labelledby="mobile-menu-title"
+       aria-hidden="true">
+    <div class="mobile-menu-content">
+      <h2 id="mobile-menu-title" class="sr-only">{lang === 'es' ? 'Menú de navegación móvil' : 'Mobile navigation menu'}</h2>
+      <nav class="mobile-links" role="navigation" aria-label={lang === 'es' ? 'Navegación móvil' : 'Mobile navigation'}>
+        <a href={basePath + '/'} 
+           class="mobile-link focus-ring"
+           aria-current={Astro.url.pathname === (basePath + '/') ? 'page' : undefined}>
+          <span class="mobile-link-text">{nav.home}</span>
+        </a>
+        <a href={lang === 'en' ? '/en/services' : '/servicios'} 
+           class="mobile-link focus-ring"
+           aria-current={Astro.url.pathname.includes('service') ? 'page' : undefined}>
+          <span class="mobile-link-text">{nav.services}</span>
+        </a>
+        <a href={lang === 'en' ? '/en/methodology' : '/metodologia'} 
+           class="mobile-link focus-ring"
+           aria-current={Astro.url.pathname.includes('method') ? 'page' : undefined}>
+          <span class="mobile-link-text">{nav.methodology}</span>
+        </a>
+        <a href={lang === 'en' ? '/en/contact' : '/contacto'} 
+           class="mobile-link focus-ring"
+           aria-current={Astro.url.pathname.includes('contact') ? 'page' : undefined}>
+          <span class="mobile-link-text">{nav.contact}</span>
+        </a>
+      </nav>
+
+    </div>
+  </div>
+
+  <!-- Navigation Background Blur -->
+  <div class="nav-backdrop"></div>
+</nav>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: all var(--dur) var(--ease);
+  }
+
+  .nav-backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--glass);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px) saturate(180%);
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+
+  .nav.scrolled .nav-backdrop {
+    opacity: 1;
+  }
+
+  .nav-container {
+    position: relative;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: var(--sp-4) var(--sp-4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-6);
+  }
+
+  /* Brand */
+  .nav-brand {
+    flex-shrink: 0;
+  }
+
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    text-decoration: none;
+    color: var(--fg);
+    transition: all var(--dur) var(--ease);
+  }
+
+  .brand-link:hover {
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .brand-icon {
+    color: var(--accent);
+    transition: all var(--dur) var(--ease);
+  }
+
+  .brand-link:hover .brand-icon {
+    transform: rotate(5deg) scale(1.05);
+  }
+
+  .brand-text {
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* Desktop Navigation */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-8);
+    flex: 1;
+    justify-content: center;
+  }
+
+  .nav-link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--fg-dim);
+    font-weight: 500;
+    padding: var(--sp-2) var(--sp-3);
+    transition: all var(--dur) var(--ease);
+  }
+
+  .nav-link:hover {
+    color: var(--fg);
+    transform: translateY(-1px);
+  }
+
+  .nav-link.active {
+    color: var(--accent);
+  }
+
+  .nav-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-indicator {
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 1px;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .nav-link:hover .nav-indicator,
+  .nav-link.active .nav-indicator {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  /* Actions */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    flex-shrink: 0;
+  }
+
+  /* Language Switcher */
+  .lang-switcher {
+    position: relative;
+    z-index: 10000;
+  }
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    padding: var(--sp-3) var(--sp-4);
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--fg-dim);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--dur) var(--ease);
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+    position: relative;
+    z-index: 10001;
+  }
+
+  .lang-btn:hover {
+    background: var(--glass-border);
+    border-color: var(--accent);
+    color: var(--fg);
+  }
+
+  .lang-icon {
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .lang-btn:hover .lang-icon {
+    transform: rotate(180deg);
+  }
+
+  .lang-dropdown {
+    position: absolute;
+    top: calc(100% + var(--sp-2));
+    right: 0;
+    min-width: 140px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-2);
+    backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all var(--dur) var(--ease);
+    z-index: 10002;
+     pointer-events: none;
+  }
+  
+  .lang-dropdown.active {
+    pointer-events: auto;
+  }
+
+  .lang-switcher:hover .lang-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .lang-option {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    text-decoration: none;
+    color: var(--fg-dim);
+    font-size: var(--fs-sm);
+    transition: all var(--dur-fast) var(--ease);
+  }
+
+  .lang-option:hover {
+    background: var(--glass);
+    color: var(--fg);
+  }
+
+  .lang-flag {
+    font-size: 16px;
+  }
+
+  /* CTA Button */
+  .nav-cta {
+    font-size: var(--fs-sm);
+    padding: var(--sp-3) var(--sp-4);
+    white-space: nowrap;
+  }
+
+  /* Mobile Toggle */
+  .mobile-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--dur) var(--ease);
+    touch-action: manipulation;
+  }
+
+  .mobile-toggle:hover {
+    background: var(--glass-border);
+    border-color: var(--accent);
+  }
+
+  .hamburger-line {
+    width: 18px;
+    height: 2px;
+    background: var(--fg);
+    border-radius: 1px;
+    transition: all var(--dur) var(--ease);
+    transform-origin: center;
+  }
+
+  .hamburger-line:not(:last-child) {
+    margin-bottom: 3px;
+  }
+
+  .mobile-toggle.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(3px, 3px);
+  }
+
+  .mobile-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .mobile-toggle.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(3px, -3px);
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all var(--dur) var(--ease);
+  }
+
+  .mobile-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .mobile-menu-content {
+    padding: var(--sp-6) var(--sp-4);
+    max-width: var(--container);
+    margin: 0 auto;
+  }
+
+  .mobile-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    margin-bottom: var(--sp-6);
+  }
+
+  .mobile-link {
+    display: flex;
+    align-items: center;
+    padding: var(--sp-4) var(--sp-4);
+    text-decoration: none;
+    color: var(--fg-dim);
+    font-weight: 500;
+    border-radius: var(--radius);
+    transition: all var(--dur-fast) var(--ease);
+    min-height: 48px;
+    position: relative;
+  }
+
+  .mobile-link:hover,
+  .mobile-link:focus {
+    background: var(--glass);
+    color: var(--fg);
+    transform: translateX(4px);
+  }
+
+  .mobile-link:active {
+    transform: translateX(2px) scale(0.98);
+  }
+
+  .mobile-link-text {
+    display: block;
+  }
+
+  .mobile-cta {
+    padding-top: var(--sp-4);
+    border-top: 1px solid var(--border);
+  }
+
+  .btn-large {
+    width: 100%;
+    padding: var(--sp-4) var(--sp-6);
+    font-size: var(--fs-body);
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .nav-links {
+      gap: var(--sp-6);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+
+    .nav-cta {
+      display: none;
+    }
+
+    .mobile-toggle {
+      display: flex;
+    }
+
+    .nav-container {
+      padding: var(--sp-3) var(--sp-4);
+    }
+    
+    .mobile-menu {
+      position: fixed;
+      top: var(--nav-height, 70px);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      z-index: 9999;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .mobile-menu-content {
+      padding: var(--sp-6) var(--sp-4) calc(var(--sp-6) + env(safe-area-inset-bottom));
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .mobile-links {
+      flex: 1;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-8);
+    }
+    
+    .mobile-link {
+      padding: var(--sp-4) var(--sp-6);
+      min-height: 56px;
+      font-size: var(--fs-lg);
+      border-radius: var(--radius-lg);
+    }
+    
+    .mobile-cta {
+      margin-top: auto;
+      padding-top: var(--sp-6);
+      border-top: 1px solid var(--border);
+    }
+    
+    .btn-large {
+      min-height: 56px;
+      font-size: var(--fs-lg);
+      font-weight: 600;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .brand-text {
+      display: none;
+    }
+
+    .lang-switcher {
+      order: -1;
+    }
+  }
+
+  /* Animations */
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .nav {
+    animation: slideInDown var(--dur-slow) var(--ease) forwards;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .nav,
+    .nav-backdrop,
+    .nav-link,
+    .brand-link,
+    .mobile-toggle,
+    .mobile-menu,
+    .lang-dropdown {
+      transition: none;
+    }
+
+    .nav {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  class Navigation {
+    constructor() {
+      this.nav = document.getElementById('main-nav');
+      this.mobileToggle = document.getElementById('mobile-toggle');
+      this.mobileMenu = document.getElementById('mobile-menu');
+      this.langToggle = document.getElementById('lang-toggle');
+      this.langDropdown = document.getElementById('lang-dropdown');
+      this.lastScrollY = 0;
+      this.isMenuOpen = false;
+      
+      this.init();
+    }
+
+    init() {
+      this.setupScrollHandler();
+      this.setupMobileMenu();
+      this.setupLanguageSwitcher();
+      this.setupActiveLinks();
+      this.setupKeyboardNavigation();
+    }
+
+    setupScrollHandler() {
+      let ticking = false;
+      
+      const updateNav = () => {
+        const scrollY = window.scrollY;
+        
+        // Add scrolled class for backdrop
+        if (scrollY > 50) {
+          this.nav.classList.add('scrolled');
+        } else {
+          this.nav.classList.remove('scrolled');
+        }
+        
+        // Hide nav on scroll down, show on scroll up
+        if (scrollY > this.lastScrollY && scrollY > 100) {
+          this.nav.style.transform = 'translateY(-100%)';
+        } else {
+          this.nav.style.transform = 'translateY(0)';
+        }
+        
+        this.lastScrollY = scrollY;
+        ticking = false;
+      };
+      
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateNav);
+          ticking = true;
+        }
+      });
+    }
+
+    setupMobileMenu() {
+      this.mobileToggle?.addEventListener('click', () => {
+        this.toggleMobileMenu();
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (this.isMenuOpen && !this.nav.contains(e.target)) {
+          this.closeMobileMenu();
+        }
+      });
+
+      // Close menu on escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.isMenuOpen) {
+          this.closeMobileMenu();
+        }
+      });
+    }
+
+    toggleMobileMenu() {
+      if (this.isMenuOpen) {
+        this.closeMobileMenu();
+      } else {
+        this.openMobileMenu();
+      }
+    }
+
+    openMobileMenu() {
+      this.isMenuOpen = true;
+      this.mobileToggle.classList.add('active');
+      this.mobileMenu.classList.add('active');
+      this.mobileToggle.setAttribute('aria-label', 'Cerrar menú');
+      
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+    }
+
+    closeMobileMenu() {
+      this.isMenuOpen = false;
+      this.mobileToggle.classList.remove('active');
+      this.mobileMenu.classList.remove('active');
+      this.mobileToggle.setAttribute('aria-label', 'Abrir menú');
+      
+      // Restore body scroll
+      document.body.style.overflow = '';
+    }
+
+    setupActiveLinks() {
+      const currentPath = window.location.pathname;
+      const navLinks = this.nav.querySelectorAll('.nav-link, .mobile-link');
+      
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath !== '/' && href !== '/' && currentPath.includes(href))) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    setupLanguageSwitcher() {
+      if (!this.langToggle || !this.langDropdown) return;
+      
+      let isDropdownOpen = false;
+      
+      // Toggle dropdown on click
+      this.langToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (isDropdownOpen) {
+          this.closeLangDropdown();
+        } else {
+          this.openLangDropdown();
+        }
+        isDropdownOpen = !isDropdownOpen;
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (isDropdownOpen && !this.langToggle.contains(e.target) && !this.langDropdown.contains(e.target)) {
+          this.closeLangDropdown();
+          isDropdownOpen = false;
+        }
+      });
+      
+      // Close dropdown on escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isDropdownOpen) {
+          this.closeLangDropdown();
+          isDropdownOpen = false;
+          this.langToggle.focus();
+        }
+      });
+    }
+    
+    openLangDropdown() {
+      this.langDropdown.classList.add('active');
+      this.langDropdown.style.opacity = '1';
+      this.langDropdown.style.visibility = 'visible';
+      this.langDropdown.style.transform = 'translateY(0)';
+      this.langToggle.setAttribute('aria-expanded', 'true');
+    }
+    
+    closeLangDropdown() {
+      this.langDropdown.classList.remove('active');
+      this.langDropdown.style.opacity = '0';
+      this.langDropdown.style.visibility = 'hidden';
+      this.langDropdown.style.transform = 'translateY(-8px)';
+      this.langToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    setupKeyboardNavigation() {
+      // Focus management for dropdown
+      this.langToggle?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          // Click event will handle the toggle
+          this.langToggle.click();
+        }
+      });
+    }
+  }
+
+  // Cleanup mobile menu state immediately on page load
+  function cleanupMobileMenuState() {
+    const mobileToggle = document.querySelector('.nav-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    
+    if (mobileToggle) {
+      mobileToggle.classList.remove('active');
+      mobileToggle.setAttribute('aria-label', 'Abrir menú');
+    }
+    
+    if (mobileMenu) {
+      mobileMenu.classList.remove('active');
+    }
+    
+    // Ensure body scroll is restored
+    document.body.style.overflow = '';
+  }
+
+  // Clean up immediately
+  cleanupMobileMenuState();
+
+  // Initialize navigation when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      cleanupMobileMenuState();
+      new Navigation();
+    });
+  } else {
+    cleanupMobileMenuState();
+    new Navigation();
+  }
+
+  // Cleanup on page navigation
+  document.addEventListener('astro:before-preparation', () => {
+    cleanupMobileMenuState();
+  });
+
+  // Additional cleanup on page show (handles back/forward navigation)
+  window.addEventListener('pageshow', () => {
+    cleanupMobileMenuState();
+  });
+</script>

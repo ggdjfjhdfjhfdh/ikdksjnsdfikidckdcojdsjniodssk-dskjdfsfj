@@ -1,0 +1,186 @@
+---
+// WebGL Threat Map Component using MapLibre GL + deck.gl
+// Handles thousands of threat points and attack lines with high performance
+
+// Props interface
+export interface Props {
+  threatData?: any;
+}
+
+const { threatData } = Astro.props;
+---
+
+<!-- WebGL Threat Map Container -->
+<div id="map-container" class="w-full h-full relative overflow-hidden bg-gray-900">
+
+
+
+
+  <!-- Threat information panel -->
+  <div id="threat-info-panel" class="absolute bottom-4 left-4 bg-gray-800 bg-opacity-95 backdrop-blur-sm rounded-lg p-4 z-40 min-w-64 hidden">
+    <div class="flex justify-between items-start mb-3">
+      <h3 class="text-cyan-400 font-semibold text-lg">Información de Amenaza</h3>
+      <button id="close-panel" class="text-gray-400 hover:text-white transition-colors">
+        ✕
+      </button>
+    </div>
+    
+    <div class="space-y-2 text-sm">
+      <div>
+        <span class="text-gray-400">Región:</span>
+        <span id="threat-region" class="text-white ml-2 font-medium">-</span>
+      </div>
+      <div>
+        <span class="text-gray-400">Tipo:</span>
+        <span id="threat-type" class="text-red-400 ml-2 font-medium uppercase">-</span>
+      </div>
+      <div>
+        <span class="text-gray-400">Incidentes:</span>
+        <span id="threat-count" class="text-yellow-400 ml-2 font-medium">-</span>
+      </div>
+      <div>
+        <span class="text-gray-400">Última actualización:</span>
+        <span id="threat-timestamp" class="text-gray-300 ml-2">-</span>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+
+<style>
+  #map-container {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
+  .maplibregl-popup {
+    max-width: 300px;
+  }
+  
+  .maplibregl-popup-content {
+    background: rgba(17, 24, 39, 0.95);
+    color: white;
+    border-radius: 8px;
+    padding: 12px;
+    backdrop-filter: blur(8px);
+  }
+  
+  .maplibregl-popup-close-button {
+    color: #9CA3AF;
+    font-size: 18px;
+    padding: 4px;
+  }
+  
+  .maplibregl-popup-close-button:hover {
+    color: white;
+  }
+  
+  .maplibregl-popup-tip {
+    border-top-color: rgba(17, 24, 39, 0.95) !important;
+  }
+  
+  .maplibregl-ctrl-group {
+    background: rgba(17, 24, 39, 0.9);
+    border-radius: 8px;
+  }
+  
+  .maplibregl-ctrl-group button {
+    background: transparent;
+    border: none;
+    color: #9CA3AF;
+  }
+  
+  .maplibregl-ctrl-group button:hover {
+    background: rgba(55, 65, 81, 0.8);
+    color: white;
+  }
+  
+  /* Custom button styles */
+  button.active {
+    background-color: #0891b2 !important;
+    color: white !important;
+  }
+  
+  /* Smooth transitions for all interactive elements */
+  button, .maplibregl-popup {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  /* Hide loading indicator when map is ready */
+  .map-loaded #loading-indicator {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease-out;
+  }
+</style>
+
+<script type="module" define:vars={{ threatData }}>
+  // Pass props to global scope for the external script
+  window.threatMapProps = {
+    threatData: threatData || {}
+  };
+  
+  console.log('Threat data passed to WebGL map:', {
+    hasData: !!threatData,
+    dataKeys: threatData ? Object.keys(threatData) : []
+  });
+  
+  // Clean up any existing map instance before loading
+  if (window.cleanupMap) {
+    window.cleanupMap();
+  }
+  
+  // Import and initialize the external script
+  import('/src/scripts/webgl-threat-map.js')
+    .then(() => {
+      console.log('WebGL Threat Map script loaded successfully');
+      // Force reinitialization by clearing the flag
+      window.mapInitialized = false;
+      
+      // Initialize the map explicitly
+      if (window.initWebGLThreatMap) {
+        window.mapInitialized = true;
+        window.initWebGLThreatMap().catch(error => {
+          console.error('Error initializing WebGL threat map:', error);
+          window.mapInitialized = false; // Reset flag on error
+          // Fallback: generate demo data if initialization fails
+          if (window.generateFallbackData) {
+            console.log('Generating fallback data...');
+            window.generateFallbackData();
+          }
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Failed to load WebGL Threat Map script:', error);
+      // Fallback: generate demo data if script fails
+      if (window.generateFallbackData) {
+        console.log('Generating fallback data...');
+        window.generateFallbackData();
+      }
+    });
+  
+  // Clean up on page unload to prevent memory leaks
+  window.addEventListener('beforeunload', () => {
+    if (window.cleanupMap) {
+      window.cleanupMap();
+    }
+    window.mapInitialized = false;
+  });
+  
+  // Also clean up on page visibility change (when tab becomes hidden)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && window.cleanupMap) {
+      console.log('Page hidden, cleaning up map resources');
+      // Don't fully cleanup, just pause animations to save resources
+      if (window.stopAnimationLoop) {
+        window.stopAnimationLoop();
+      }
+    } else if (!document.hidden && window.startAnimationLoop) {
+      console.log('Page visible, resuming map animations');
+      window.startAnimationLoop();
+    }
+  });
+</script>

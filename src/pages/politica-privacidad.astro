@@ -1,0 +1,152 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Section from '../components/Section.astro';
+---
+
+<Layout 
+  title="Política de Privacidad | SESEC"
+  description="Política de privacidad y protección de datos de SESEC. Información sobre el tratamiento de datos personales según RGPD."
+  lang="es"
+>
+  <Section title="Política de Privacidad" padding="xl">
+    <div class="legal-content">
+      <div class="legal-section">
+        <h3>1. Responsable del Tratamiento</h3>
+        <p>SESEC, con domicilio en España, es el responsable del tratamiento de los datos personales que nos facilite a través de este sitio web.</p>
+        
+        <h4>Datos de contacto:</h4>
+        <ul>
+          <li><strong>Email:</strong> info@sesecpro.com</li>
+          <li><strong>Teléfono:</strong> +34 XXX XXX XXX</li>
+        </ul>
+      </div>
+
+      <div class="legal-section">
+        <h3>2. Finalidades del Tratamiento</h3>
+        <p>Los datos personales que recabamos se utilizan para las siguientes finalidades:</p>
+        <ul>
+          <li>Gestión de consultas y solicitudes de información</li>
+          <li>Prestación de servicios de ciberseguridad</li>
+          <li>Comunicaciones comerciales (con su consentimiento)</li>
+          <li>Cumplimiento de obligaciones legales</li>
+          <li>Mejora de nuestros servicios</li>
+        </ul>
+      </div>
+
+      <div class="legal-section">
+        <h3>3. Base Jurídica</h3>
+        <p>El tratamiento de sus datos se basa en:</p>
+        <ul>
+          <li><strong>Consentimiento:</strong> Para comunicaciones comerciales</li>
+          <li><strong>Ejecución contractual:</strong> Para la prestación de servicios</li>
+          <li><strong>Interés legítimo:</strong> Para la gestión de consultas</li>
+          <li><strong>Cumplimiento legal:</strong> Para obligaciones fiscales y contables</li>
+        </ul>
+      </div>
+
+      <div class="legal-section">
+        <h3>4. Conservación de Datos</h3>
+        <p>Los datos personales se conservarán durante el tiempo necesario para cumplir con las finalidades para las que fueron recabados y, en todo caso, durante los plazos establecidos por la legislación aplicable.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>5. Derechos del Usuario</h3>
+        <p>Usted tiene derecho a:</p>
+        <ul>
+          <li>Acceder a sus datos personales</li>
+          <li>Rectificar datos inexactos</li>
+          <li>Suprimir sus datos</li>
+          <li>Limitar el tratamiento</li>
+          <li>Portabilidad de datos</li>
+          <li>Oposición al tratamiento</li>
+          <li>No ser objeto de decisiones automatizadas</li>
+        </ul>
+        <p>Para ejercer estos derechos, puede contactarnos en: <a href="mailto:info@sesecpro.com">info@sesecpro.com</a></p>
+      </div>
+
+      <div class="legal-section">
+        <h3>6. Medidas de Seguridad</h3>
+        <p>Como empresa especializada en ciberseguridad, implementamos las medidas técnicas y organizativas más avanzadas para proteger sus datos personales contra accesos no autorizados, pérdida o destrucción.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>7. Cookies</h3>
+        <p>Este sitio web utiliza cookies técnicas necesarias para su funcionamiento. Para más información, consulte nuestra <a href="/politica-cookies">Política de Cookies</a>.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>8. Modificaciones</h3>
+        <p>Esta política de privacidad puede ser modificada. Las modificaciones serán publicadas en esta página con indicación de la fecha de la última actualización.</p>
+        <p><strong>Última actualización:</strong> Enero 2025</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>9. Autoridad de Control</h3>
+        <p>Si considera que el tratamiento de sus datos no se ajusta a la normativa, puede presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD): <a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a></p>
+      </div>
+    </div>
+  </Section>
+</Layout>
+
+<style>
+  .legal-content {
+    max-width: 800px;
+    margin: 0 auto;
+    color: var(--fg-dim);
+    line-height: 1.7;
+  }
+  
+  .legal-section {
+    margin-bottom: var(--space-8);
+  }
+  
+  .legal-section h3 {
+    color: var(--fg);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    margin-bottom: var(--space-4);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: var(--space-2);
+  }
+  
+  .legal-section h4 {
+    color: var(--fg);
+    font-size: var(--fs-lg);
+    font-weight: 500;
+    margin: var(--space-4) 0 var(--space-2) 0;
+  }
+  
+  .legal-section p {
+    margin-bottom: var(--space-3);
+  }
+  
+  .legal-section ul {
+    margin: var(--space-3) 0;
+    padding-left: var(--space-6);
+  }
+  
+  .legal-section li {
+    margin-bottom: var(--space-2);
+  }
+  
+  .legal-section a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+  
+  .legal-section a:hover {
+    color: var(--accent-2);
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .legal-content {
+      padding: 0 var(--space-4);
+    }
+    
+    .legal-section h3 {
+      font-size: var(--fs-lg);
+    }
+  }
+</style>

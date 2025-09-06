@@ -1,0 +1,898 @@
+---
+// Sistema de Notificaciones en Tiempo Real
+export interface Props {
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+  maxNotifications?: number;
+  autoHide?: boolean;
+  hideDelay?: number;
+  enableSound?: boolean;
+}
+
+const { 
+  position = 'top-right',
+  maxNotifications = 5,
+  autoHide = true,
+  hideDelay = 5000,
+  enableSound = true
+} = Astro.props;
+---
+
+<div class={`notification-system ${position}`} id="notification-system">
+  <div class="notifications-container" id="notifications-container">
+    <!-- Las notificaciones se insertan dinámicamente aquí -->
+  </div>
+  
+  <!-- Botón de configuración -->
+  <button class="notification-settings" id="notification-settings" title="Configurar notificaciones">
+    <span class="settings-icon">⚙️</span>
+  </button>
+  
+  <!-- Panel de configuración -->
+  <div class="settings-panel" id="settings-panel">
+    <div class="settings-header">
+      <h3>Configuración de Notificaciones</h3>
+      <button class="close-settings" id="close-settings">✕</button>
+    </div>
+    
+    <div class="settings-content">
+      <div class="setting-item">
+        <label class="setting-label">
+          <input type="checkbox" id="enable-sound" checked={enableSound}>
+          <span class="checkmark"></span>
+          Sonidos de notificación
+        </label>
+      </div>
+      
+      <div class="setting-item">
+        <label class="setting-label">
+          <input type="checkbox" id="auto-hide" checked={autoHide}>
+          <span class="checkmark"></span>
+          Ocultar automáticamente
+        </label>
+      </div>
+      
+      <div class="setting-item">
+        <label class="setting-text">Duración (segundos):</label>
+        <input type="range" id="hide-delay" min="3" max="15" value={hideDelay / 1000} class="slider">
+        <span class="slider-value" id="delay-value">{hideDelay / 1000}s</span>
+      </div>
+      
+      <div class="setting-item">
+        <label class="setting-text">Máximo de notificaciones:</label>
+        <input type="range" id="max-notifications" min="3" max="10" value={maxNotifications} class="slider">
+        <span class="slider-value" id="max-value">{maxNotifications}</span>
+      </div>
+      
+      <div class="setting-item">
+        <label class="setting-text">Tipos de notificación:</label>
+        <div class="notification-types">
+          <label class="type-label">
+            <input type="checkbox" id="type-critical" checked>
+            <span class="type-color critical"></span>
+            Críticas
+          </label>
+          <label class="type-label">
+            <input type="checkbox" id="type-warning" checked>
+            <span class="type-color warning"></span>
+            Advertencias
+          </label>
+          <label class="type-label">
+            <input type="checkbox" id="type-info" checked>
+            <span class="type-color info"></span>
+            Información
+          </label>
+          <label class="type-label">
+            <input type="checkbox" id="type-success" checked>
+            <span class="type-color success"></span>
+            Éxito
+          </label>
+        </div>
+      </div>
+      
+      <div class="settings-actions">
+        <button class="test-notification" id="test-notification">
+          🧪 Probar Notificación
+        </button>
+        <button class="clear-all" id="clear-all">
+          🗑️ Limpiar Todo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Audio para notificaciones -->
+<audio id="notification-sound" preload="auto">
+  <!-- Sonido generado por código -->
+</audio>
+
+<style>
+  .notification-system {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+  }
+
+  .notification-system.top-right {
+    top: 2rem;
+    right: 2rem;
+  }
+
+  .notification-system.top-left {
+    top: 2rem;
+    left: 2rem;
+  }
+
+  .notification-system.bottom-right {
+    bottom: 2rem;
+    right: 2rem;
+  }
+
+  .notification-system.bottom-left {
+    bottom: 2rem;
+    left: 2rem;
+  }
+
+  .notifications-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 400px;
+    min-width: 300px;
+  }
+
+  .notification {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .notification.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .notification.hide {
+    transform: translateX(100%);
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .notification::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--notification-color);
+  }
+
+  .notification.critical {
+    --notification-color: #ef4444;
+    border-left-color: #ef4444;
+  }
+
+  .notification.warning {
+    --notification-color: #f59e0b;
+    border-left-color: #f59e0b;
+  }
+
+  .notification.info {
+    --notification-color: #3b82f6;
+    border-left-color: #3b82f6;
+  }
+
+  .notification.success {
+    --notification-color: #22c55e;
+    border-left-color: #22c55e;
+  }
+
+  .notification-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .notification-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .notification-icon {
+    font-size: 1.125rem;
+  }
+
+  .notification-close {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+  }
+
+  .notification-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .notification-message {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: #e2e8f0;
+    margin-bottom: 0.75rem;
+  }
+
+  .notification-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+
+  .notification-time {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .notification-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .notification-action {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .notification-action:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .notification-action.primary {
+    background: var(--notification-color);
+    border-color: var(--notification-color);
+  }
+
+  /* Progress bar para auto-hide */
+  .notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--notification-color);
+    transition: width linear;
+    opacity: 0.7;
+  }
+
+  /* Configuración */
+  .notification-settings {
+    position: absolute;
+    bottom: -3rem;
+    right: 0;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+  }
+
+  .notification-settings:hover {
+    background: rgba(15, 23, 42, 1);
+    transform: scale(1.05);
+  }
+
+  .settings-icon {
+    font-size: 1rem;
+  }
+
+  .settings-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 350px;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    transform: translateX(100%) scale(0.9);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    color: white;
+  }
+
+  .settings-panel.show {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .settings-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .close-settings {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .close-settings:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .settings-content {
+    padding: 1rem;
+  }
+
+  .setting-item {
+    margin-bottom: 1.5rem;
+  }
+
+  .setting-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+
+  .setting-text {
+    display: block;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    color: #e2e8f0;
+  }
+
+  /* Checkbox personalizado */
+  .setting-label input[type="checkbox"] {
+    display: none;
+  }
+
+  .checkmark {
+    width: 18px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  .setting-label input[type="checkbox"]:checked + .checkmark {
+    background: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  .setting-label input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  /* Slider personalizado */
+  .slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    margin-bottom: 0.5rem;
+  }
+
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .slider-value {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+
+  .notification-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .type-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+  }
+
+  .type-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+
+  .type-color.critical { background: #ef4444; }
+  .type-color.warning { background: #f59e0b; }
+  .type-color.info { background: #3b82f6; }
+  .type-color.success { background: #22c55e; }
+
+  .settings-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .test-notification,
+  .clear-all {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .test-notification:hover,
+  .clear-all:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .notification-system {
+      left: 1rem !important;
+      right: 1rem !important;
+      top: 1rem !important;
+    }
+
+    .notifications-container {
+      min-width: auto;
+      max-width: none;
+    }
+
+    .settings-panel {
+      width: 300px;
+    }
+  }
+
+  /* Animaciones de entrada desde diferentes posiciones */
+  .notification-system.top-left .notification,
+  .notification-system.bottom-left .notification {
+    transform: translateX(-100%);
+  }
+
+  .notification-system.top-left .notification.show,
+  .notification-system.bottom-left .notification.show {
+    transform: translateX(0);
+  }
+
+  .notification-system.top-left .notification.hide,
+  .notification-system.bottom-left .notification.hide {
+    transform: translateX(-100%);
+  }
+
+  /* Reducir animaciones */
+  @media (prefers-reduced-motion: reduce) {
+    .notification,
+    .settings-panel {
+      transition: opacity 0.2s ease;
+    }
+
+    .notification {
+      transform: none;
+    }
+
+    .notification.show {
+      opacity: 1;
+    }
+
+    .notification.hide {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  class NotificationSystem {
+    constructor() {
+      this.container = document.getElementById('notifications-container');
+      this.settingsBtn = document.getElementById('notification-settings');
+      this.settingsPanel = document.getElementById('settings-panel');
+      this.closeSettingsBtn = document.getElementById('close-settings');
+      this.sound = document.getElementById('notification-sound');
+      
+      this.notifications = new Map();
+      this.settings = {
+        enableSound: true,
+        autoHide: true,
+        hideDelay: 5000,
+        maxNotifications: 5,
+        enabledTypes: {
+          critical: true,
+          warning: true,
+          info: true,
+          success: true
+        }
+      };
+      
+      this.init();
+    }
+
+    init() {
+      this.loadSettings();
+      this.setupEventListeners();
+      this.generateNotificationSound();
+      this.startSimulation();
+    }
+
+    loadSettings() {
+      const saved = localStorage.getItem('notification-settings');
+      if (saved) {
+        this.settings = { ...this.settings, ...JSON.parse(saved) };
+      }
+      this.updateSettingsUI();
+    }
+
+    saveSettings() {
+      localStorage.setItem('notification-settings', JSON.stringify(this.settings));
+    }
+
+    updateSettingsUI() {
+      document.getElementById('enable-sound').checked = this.settings.enableSound;
+      document.getElementById('auto-hide').checked = this.settings.autoHide;
+      document.getElementById('hide-delay').value = this.settings.hideDelay / 1000;
+      document.getElementById('delay-value').textContent = `${this.settings.hideDelay / 1000}s`;
+      document.getElementById('max-notifications').value = this.settings.maxNotifications;
+      document.getElementById('max-value').textContent = this.settings.maxNotifications;
+      
+      Object.keys(this.settings.enabledTypes).forEach(type => {
+        document.getElementById(`type-${type}`).checked = this.settings.enabledTypes[type];
+      });
+    }
+
+    setupEventListeners() {
+      // Configuración
+      this.settingsBtn?.addEventListener('click', () => this.toggleSettings());
+      this.closeSettingsBtn?.addEventListener('click', () => this.hideSettings());
+      
+      // Configuraciones
+      document.getElementById('enable-sound')?.addEventListener('change', (e) => {
+        this.settings.enableSound = e.target.checked;
+        this.saveSettings();
+      });
+      
+      document.getElementById('auto-hide')?.addEventListener('change', (e) => {
+        this.settings.autoHide = e.target.checked;
+        this.saveSettings();
+      });
+      
+      document.getElementById('hide-delay')?.addEventListener('input', (e) => {
+        this.settings.hideDelay = parseInt(e.target.value) * 1000;
+        document.getElementById('delay-value').textContent = `${e.target.value}s`;
+        this.saveSettings();
+      });
+      
+      document.getElementById('max-notifications')?.addEventListener('input', (e) => {
+        this.settings.maxNotifications = parseInt(e.target.value);
+        document.getElementById('max-value').textContent = e.target.value;
+        this.saveSettings();
+      });
+      
+      // Tipos de notificación
+      ['critical', 'warning', 'info', 'success'].forEach(type => {
+        document.getElementById(`type-${type}`)?.addEventListener('change', (e) => {
+          this.settings.enabledTypes[type] = e.target.checked;
+          this.saveSettings();
+        });
+      });
+      
+      // Acciones
+      document.getElementById('test-notification')?.addEventListener('click', () => this.testNotification());
+      document.getElementById('clear-all')?.addEventListener('click', () => this.clearAll());
+      
+      // Cerrar configuración al hacer clic fuera
+      document.addEventListener('click', (e) => {
+        if (!this.settingsPanel?.contains(e.target) && !this.settingsBtn?.contains(e.target)) {
+          this.hideSettings();
+        }
+      });
+    }
+
+    generateNotificationSound() {
+      // Generar sonido de notificación usando Web Audio API
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const duration = 0.3;
+      const sampleRate = audioContext.sampleRate;
+      const buffer = audioContext.createBuffer(1, duration * sampleRate, sampleRate);
+      const data = buffer.getChannelData(0);
+      
+      for (let i = 0; i < buffer.length; i++) {
+        const t = i / sampleRate;
+        data[i] = Math.sin(2 * Math.PI * 800 * t) * Math.exp(-t * 3) * 0.3;
+      }
+      
+      this.audioBuffer = buffer;
+    }
+
+    playNotificationSound() {
+      if (!this.settings.enableSound) return;
+      
+      try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioContext.createBufferSource();
+        source.buffer = this.audioBuffer;
+        source.connect(audioContext.destination);
+        source.start();
+      } catch (error) {
+        console.warn('No se pudo reproducir el sonido de notificación:', error);
+      }
+    }
+
+    show(type, title, message, options = {}) {
+      if (!this.settings.enabledTypes[type]) return;
+      
+      const id = Date.now() + Math.random();
+      const notification = this.createNotificationElement(id, type, title, message, options);
+      
+      // Limitar número de notificaciones
+      if (this.notifications.size >= this.settings.maxNotifications) {
+        const oldest = this.notifications.keys().next().value;
+        this.hide(oldest);
+      }
+      
+      this.notifications.set(id, notification);
+      this.container?.appendChild(notification);
+      
+      // Mostrar con animación
+      requestAnimationFrame(() => {
+        notification.classList.add('show');
+      });
+      
+      // Reproducir sonido
+      this.playNotificationSound();
+      
+      // Auto-hide
+      if (this.settings.autoHide && !options.persistent) {
+        this.scheduleHide(id);
+      }
+      
+      return id;
+    }
+
+    createNotificationElement(id, type, title, message, options) {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.dataset.id = id;
+      
+      const icons = {
+        critical: '🚨',
+        warning: '⚠️',
+        info: 'ℹ️',
+        success: '✅'
+      };
+      
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      notification.innerHTML = `
+        <div class="notification-header">
+          <div class="notification-title">
+            <span class="notification-icon">${icons[type]}</span>
+            <span>${title}</span>
+          </div>
+          <button class="notification-close" onclick="notificationSystem.hide(${id})">
+            ✕
+          </button>
+        </div>
+        <div class="notification-message">${message}</div>
+        <div class="notification-meta">
+          <div class="notification-time">
+            <span>🕐</span>
+            <span>${timeString}</span>
+          </div>
+          ${options.actions ? this.createActions(options.actions) : ''}
+        </div>
+        ${this.settings.autoHide && !options.persistent ? '<div class="notification-progress"></div>' : ''}
+      `;
+      
+      return notification;
+    }
+
+    createActions(actions) {
+      return `
+        <div class="notification-actions">
+          ${actions.map(action => `
+            <button class="notification-action ${action.primary ? 'primary' : ''}" 
+                    onclick="${action.callback}">
+              ${action.label}
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    scheduleHide(id) {
+      const notification = this.notifications.get(id);
+      if (!notification) return;
+      
+      const progressBar = notification.querySelector('.notification-progress');
+      if (progressBar) {
+        progressBar.style.width = '100%';
+        progressBar.style.transitionDuration = `${this.settings.hideDelay}ms`;
+        
+        requestAnimationFrame(() => {
+          progressBar.style.width = '0%';
+        });
+      }
+      
+      setTimeout(() => {
+        this.hide(id);
+      }, this.settings.hideDelay);
+    }
+
+    hide(id) {
+      const notification = this.notifications.get(id);
+      if (!notification) return;
+      
+      notification.classList.add('hide');
+      
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+        this.notifications.delete(id);
+      }, 400);
+    }
+
+    clearAll() {
+      this.notifications.forEach((_, id) => this.hide(id));
+    }
+
+    toggleSettings() {
+      this.settingsPanel?.classList.toggle('show');
+    }
+
+    hideSettings() {
+      this.settingsPanel?.classList.remove('show');
+    }
+
+    testNotification() {
+      const types = ['critical', 'warning', 'info', 'success'];
+      const type = types[Math.floor(Math.random() * types.length)];
+      
+      const messages = {
+        critical: {
+          title: 'Amenaza Crítica Detectada',
+          message: 'Se ha detectado un intento de intrusión desde una IP sospechosa. Acción inmediata requerida.'
+        },
+        warning: {
+          title: 'Advertencia de Seguridad',
+          message: 'Vulnerabilidad de severidad media encontrada en el servidor web principal.'
+        },
+        info: {
+          title: 'Actualización del Sistema',
+          message: 'Las firmas de antivirus se han actualizado correctamente. Sistema protegido.'
+        },
+        success: {
+          title: 'Operación Exitosa',
+          message: 'El escaneo de seguridad se completó sin encontrar amenazas activas.'
+        }
+      };
+      
+      this.show(type, messages[type].title, messages[type].message, {
+        actions: [
+          { label: 'Ver Detalles', callback: 'console.log("Ver detalles")', primary: true },
+          { label: 'Descartar', callback: `notificationSystem.hide(${Date.now()})` }
+        ]
+      });
+    }
+
+    startSimulation() {
+      // Simular notificaciones periódicas para demostración
+      setInterval(() => {
+        if (Math.random() < 0.3) { // 30% de probabilidad cada 10 segundos
+          this.testNotification();
+        }
+      }, 10000);
+    }
+
+    // Métodos públicos para uso externo
+    critical(title, message, options) {
+      return this.show('critical', title, message, options);
+    }
+
+    warning(title, message, options) {
+      return this.show('warning', title, message, options);
+    }
+
+    info(title, message, options) {
+      return this.show('info', title, message, options);
+    }
+
+    success(title, message, options) {
+      return this.show('success', title, message, options);
+    }
+  }
+
+  // Inicializar sistema de notificaciones
+  let notificationSystem;
+  document.addEventListener('DOMContentLoaded', () => {
+    notificationSystem = new NotificationSystem();
+    
+    // Hacer disponible globalmente
+    window.notificationSystem = notificationSystem;
+  });
+</script>

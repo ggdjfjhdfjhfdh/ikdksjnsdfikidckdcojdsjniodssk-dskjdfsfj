@@ -1,0 +1,204 @@
+---
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+  lang?: 'es' | 'en';
+  canonical?: string;
+}
+
+const { title, description = 'Consultoría en ciberseguridad profesional', lang = 'es', canonical } = Astro.props;
+const currentPath = Astro.url.pathname;
+const baseUrl = Astro.site || 'https://sesecpro.com';
+
+// Generar URLs alternativas para hreflang
+const getAlternateUrl = (targetLang: string) => {
+  if (currentPath.startsWith('/en/')) {
+    return targetLang === 'es' 
+      ? currentPath.replace('/en/', '/') 
+      : currentPath;
+  } else {
+    return targetLang === 'en' 
+      ? `/en${currentPath === '/' ? '' : currentPath}`
+      : currentPath;
+  }
+};
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="ciberseguridad, consultoría, auditoría, pentesting, seguridad informática, hardening, respuesta incidentes, ISO 27001, NIST, compliance" />
+    <meta name="author" content="SESEC - Consultoría en Ciberseguridad" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="canonical" href={canonical || `${baseUrl}${currentPath}`} />
+    
+    <!-- hreflang -->
+    <link rel="alternate" hreflang="es" href={`${baseUrl}${getAlternateUrl('es')}`} />
+    <link rel="alternate" hreflang="en" href={`${baseUrl}${getAlternateUrl('en')}`} />
+    <link rel="alternate" hreflang="x-default" href={`${baseUrl}${getAlternateUrl('es')}`} />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={`${baseUrl}${currentPath}`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    
+    <!-- Preload critical fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- Microinteracciones y animaciones -->
+    <link rel="stylesheet" href="/src/styles/animations.css">
+    
+    <!-- Critical CSS -->
+    <link rel="stylesheet" href="/src/styles/tokens.css" />
+    
+    <!-- Performance hints -->
+    <meta name="theme-color" content="#0b0f14" />
+    <meta name="color-scheme" content="dark" />
+    
+    <!-- Accessibility meta tags -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!-- Structured data for better SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SESEC",
+      "description": "Consultoría especializada en ciberseguridad empresarial",
+      "url": "https://sesecpro.com",
+      "logo": "https://sesecpro.com/images/logo.svg",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+34-XXX-XXX-XXX",
+        "contactType": "customer service",
+        "availableLanguage": ["Spanish", "English"]
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "ES"
+      },
+      "sameAs": [
+        "https://linkedin.com/company/sesec",
+        "https://twitter.com/sesecpro"
+      ],
+      "serviceType": [
+        "Auditorías de Ciberseguridad",
+        "Pentesting",
+        "Hardening de Sistemas",
+        "Respuesta a Incidentes",
+        "Consultoría ISO 27001"
+      ]
+    }
+    </script>
+  </head>
+  
+  <body>
+    <a href="#main-content" class="skip-link">
+      {lang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}
+    </a>
+    <div id="app">
+      <Navigation lang={lang} />
+      <main id="main-content" tabindex="-1">
+        <slot />
+      </main>
+      <Footer lang={lang} />
+    </div>
+    
+    <!-- Scripts de microinteracciones -->
+  <script src="/src/scripts/microinteractions.js"></script>
+  
+  <!-- Scripts de optimización de rendimiento -->
+  <script src="/src/scripts/performance.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', async () => {
+          try {
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('Service Worker registered:', registration);
+            
+            // Manejar actualizaciones
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Mostrar notificación de actualización disponible
+                  if (confirm('Nueva versión disponible. ¿Recargar página?')) {
+                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    window.location.reload();
+                  }
+                }
+              });
+            });
+            
+          } catch (error) {
+            console.log('Service Worker registration failed:', error);
+          }
+        });
+        
+        // Escuchar cambios del service worker
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          window.location.reload();
+        });
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  html {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--fg);
+  }
+  
+  #app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Ocultar footer en página de amenazas */
+  body:has([data-page="amenazas"]) footer {
+    display: none;
+  }
+  
+  /* Ajustar main para ocupar toda la pantalla en amenazas */
+  body:has([data-page="amenazas"]) main {
+    flex: 1;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Smooth scrolling with reduced motion support */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+</style>

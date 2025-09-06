@@ -1,0 +1,177 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Section from '../components/Section.astro';
+---
+
+<Layout 
+  title="Términos y Condiciones | SESEC"
+  description="Términos y condiciones de uso de los servicios de SESEC. Condiciones generales de contratación y prestación de servicios de ciberseguridad."
+  lang="es"
+>
+  <Section title="Términos y Condiciones" padding="xl">
+    <div class="legal-content">
+      <div class="legal-section">
+        <h3>1. Objeto y Ámbito de Aplicación</h3>
+        <p>Los presentes términos y condiciones regulan la prestación de servicios de consultoría en ciberseguridad por parte de SESEC y el uso de este sitio web.</p>
+        <p>La contratación de nuestros servicios implica la aceptación expresa de estos términos.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>2. Servicios Ofrecidos</h3>
+        <p>SESEC ofrece los siguientes servicios especializados:</p>
+        <ul>
+          <li>Auditorías de ciberseguridad</li>
+          <li>Pentesting y pruebas de penetración</li>
+          <li>Hardening de sistemas</li>
+          <li>Respuesta a incidentes de seguridad</li>
+          <li>Consultoría en cumplimiento normativo (ISO 27001, ENS, RGPD)</li>
+          <li>Formación en ciberseguridad</li>
+        </ul>
+      </div>
+
+      <div class="legal-section">
+        <h3>3. Condiciones de Contratación</h3>
+        <h4>3.1 Propuesta y Aceptación</h4>
+        <p>Todos los servicios se formalizarán mediante propuesta técnica y económica detallada. El contrato se perfecciona con la aceptación por escrito de ambas partes.</p>
+        
+        <h4>3.2 Duración</h4>
+        <p>La duración de cada servicio se especificará en la propuesta correspondiente. Los servicios de consultoría continuada tendrán la duración acordada con posibilidad de renovación.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>4. Obligaciones de las Partes</h3>
+        <h4>4.1 Obligaciones de SESEC</h4>
+        <ul>
+          <li>Prestar los servicios con la máxima diligencia profesional</li>
+          <li>Mantener la confidencialidad de la información del cliente</li>
+          <li>Cumplir con los plazos acordados</li>
+          <li>Proporcionar informes detallados de los trabajos realizados</li>
+          <li>Mantener las certificaciones y competencias profesionales</li>
+        </ul>
+        
+        <h4>4.2 Obligaciones del Cliente</h4>
+        <ul>
+          <li>Facilitar el acceso necesario a sistemas e información</li>
+          <li>Designar un responsable técnico de contacto</li>
+          <li>Abonar los honorarios en los plazos acordados</li>
+          <li>Implementar las recomendaciones de seguridad</li>
+          <li>Notificar cualquier incidencia relevante</li>
+        </ul>
+      </div>
+
+      <div class="legal-section">
+        <h3>5. Confidencialidad</h3>
+        <p>SESEC se compromete a mantener la más estricta confidencialidad sobre toda la información a la que tenga acceso durante la prestación de servicios.</p>
+        <p>Esta obligación permanecerá vigente incluso después de la finalización de la relación contractual.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>6. Precios y Facturación</h3>
+        <p>Los precios se establecerán en cada propuesta y serán firmes durante la vigencia del contrato, salvo modificaciones acordadas por escrito.</p>
+        <p>La facturación se realizará según los hitos establecidos en cada proyecto. El plazo de pago será de 30 días desde la fecha de factura.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>7. Responsabilidad</h3>
+        <p>SESEC responderá de los daños directos causados por dolo o negligencia grave en la prestación de servicios.</p>
+        <p>La responsabilidad quedará limitada al importe de los honorarios percibidos por el servicio específico que haya causado el daño.</p>
+        <p>SESEC no será responsable de:</p>
+        <ul>
+          <li>Daños derivados del mal uso de las recomendaciones</li>
+          <li>Ataques posteriores a sistemas no auditados</li>
+          <li>Pérdidas de datos por causas ajenas a nuestros servicios</li>
+          <li>Interrupciones del negocio no relacionadas con nuestras actividades</li>
+        </ul>
+      </div>
+
+      <div class="legal-section">
+        <h3>8. Propiedad Intelectual</h3>
+        <p>Los informes, metodologías y herramientas desarrolladas por SESEC mantienen su propiedad intelectual.</p>
+        <p>El cliente tendrá derecho de uso de los entregables para sus fines internos, sin posibilidad de cesión a terceros.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>9. Resolución de Conflictos</h3>
+        <p>Las partes se comprometen a resolver amistosamente cualquier controversia. En caso de no ser posible, será competente la jurisdicción española.</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>10. Modificaciones</h3>
+        <p>SESEC se reserva el derecho a modificar estos términos y condiciones, notificando los cambios con al menos 30 días de antelación.</p>
+        <p><strong>Última actualización:</strong> Enero 2025</p>
+      </div>
+
+      <div class="legal-section">
+        <h3>11. Contacto</h3>
+        <p>Para cualquier consulta sobre estos términos y condiciones:</p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:legal@sesecpro.com">legal@sesecpro.com</a></li>
+          <li><strong>Teléfono:</strong> +34 XXX XXX XXX</li>
+        </ul>
+      </div>
+    </div>
+  </Section>
+</Layout>
+
+<style>
+  .legal-content {
+    max-width: 800px;
+    margin: 0 auto;
+    color: var(--fg-dim);
+    line-height: 1.7;
+  }
+  
+  .legal-section {
+    margin-bottom: var(--space-8);
+  }
+  
+  .legal-section h3 {
+    color: var(--fg);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    margin-bottom: var(--space-4);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: var(--space-2);
+  }
+  
+  .legal-section h4 {
+    color: var(--fg);
+    font-size: var(--fs-lg);
+    font-weight: 500;
+    margin: var(--space-4) 0 var(--space-2) 0;
+  }
+  
+  .legal-section p {
+    margin-bottom: var(--space-3);
+  }
+  
+  .legal-section ul {
+    margin: var(--space-3) 0;
+    padding-left: var(--space-6);
+  }
+  
+  .legal-section li {
+    margin-bottom: var(--space-2);
+  }
+  
+  .legal-section a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+  
+  .legal-section a:hover {
+    color: var(--accent-2);
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .legal-content {
+      padding: 0 var(--space-4);
+    }
+    
+    .legal-section h3 {
+      font-size: var(--fs-lg);
+    }
+  }
+</style>

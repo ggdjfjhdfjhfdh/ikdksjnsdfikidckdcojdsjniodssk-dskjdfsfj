@@ -1,0 +1,329 @@
+---
+export interface Props {
+  variant?: 'service' | 'case' | 'value' | 'testimonial';
+  icon?: string;
+  title: string;
+  description: string;
+  link?: {
+    href: string;
+    text: string;
+  };
+  image?: string;
+  author?: {
+    name: string;
+    role: string;
+    avatar?: string;
+  };
+}
+
+const { 
+  variant = 'service', 
+  icon, 
+  title, 
+  description, 
+  link, 
+  image, 
+  author 
+} = Astro.props;
+---
+
+<div class={`card card-${variant} card-hover micro-hover scroll-reveal`}>
+  {image && (
+    <div class="card-image">
+      <img 
+        src={image} 
+        alt={title} 
+        loading="lazy"
+        decoding="async"
+        width="400"
+        height="250"
+      />
+    </div>
+  )}
+  
+  <div class="card-content">
+    {icon && (
+      <div class="card-icon icon-bounce" aria-hidden="true">
+        <svg class="icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <!-- Icono genérico - se puede personalizar por tipo -->
+          {variant === 'service' && (
+            <>
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </>
+          )}
+          {variant === 'case' && (
+            <>
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10,9 9,9 8,9"/>
+            </>
+          )}
+          {variant === 'value' && (
+            <>
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </>
+          )}
+        </svg>
+      </div>
+    )}
+    
+    <div class="card-body">
+      <h3 class="card-title">{title}</h3>
+      <p class="card-description">{description}</p>
+      
+      {author && (
+        <div class="card-author">
+          {author.avatar && (
+            <img src={author.avatar} alt={author.name} class="author-avatar" />
+          )}
+          <div class="author-info">
+            <div class="author-name">{author.name}</div>
+            <div class="author-role">{author.role}</div>
+          </div>
+        </div>
+      )}
+      
+      {link && (
+        <a href={link.href} class="card-link focus-ring">
+          {link.text}
+          <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17l9.2-9.2M17 17V7H7"/>
+          </svg>
+        </a>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+  .card {
+    position: relative;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    transition: all var(--dur) var(--ease);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 
+      var(--shadow-1),
+      0 0 0 1px var(--accent),
+      0 0 20px rgba(124, 247, 212, 0.1);
+  }
+  
+  .card-image {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--dur) var(--ease);
+  }
+  
+  .card:hover .card-image img {
+    transform: scale(1.05);
+  }
+  
+  .card-content {
+    padding: var(--space-6);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: var(--bg);
+    margin-bottom: var(--space-4);
+    transition: all var(--dur) var(--ease);
+  }
+  
+  .card:hover .card-icon {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(124, 247, 212, 0.3);
+  }
+  
+  .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  
+  .card-title {
+    font-size: var(--fs-h4);
+    font-weight: 600;
+    color: var(--fg);
+    line-height: 1.3;
+    margin: 0;
+  }
+  
+  .card-description {
+    color: var(--fg-dim);
+    line-height: 1.6;
+    flex: 1;
+    margin: 0;
+    font-size: var(--fs-base);
+  }
+  
+  .card-author {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-4);
+  }
+  
+  .author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+  }
+  
+  .author-name {
+    font-weight: 600;
+    color: var(--fg);
+    font-size: var(--fs-sm);
+    margin: 0;
+  }
+  
+  .author-role {
+    font-size: var(--fs-xs);
+    color: var(--fg-dim);
+    margin: 0;
+  }
+  
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--fs-sm);
+    transition: all var(--dur) var(--ease);
+    margin-top: auto;
+    padding: var(--space-2) 0;
+    border-radius: var(--radius-sm);
+  }
+  
+  .card-link:hover {
+    color: var(--accent-2);
+    transform: translateX(2px);
+  }
+  
+  .link-arrow {
+    transition: transform var(--dur) var(--ease);
+  }
+  
+  .card-link:hover .link-arrow {
+    transform: translate(2px, -2px);
+  }
+  
+  /* Variantes específicas */
+  .card-service {
+    /* Estilos específicos para servicios */
+  }
+  
+  .card-case {
+    /* Estilos específicos para casos */
+  }
+  
+  .card-value {
+    /* Estilos específicos para valores */
+  }
+  
+  .card-testimonial {
+    text-align: center;
+  }
+  
+  .card-testimonial .card-description {
+    font-style: italic;
+    font-size: 16px;
+    position: relative;
+  }
+  
+  .card-testimonial .card-description::before {
+    content: '"';
+    font-size: 24px;
+    color: var(--accent);
+    position: absolute;
+    left: -12px;
+    top: -4px;
+  }
+  
+  .card-testimonial .card-description::after {
+    content: '"';
+    font-size: 24px;
+    color: var(--accent);
+    position: absolute;
+    right: -12px;
+    bottom: -8px;
+  }
+  
+  /* Focus states para accesibilidad */
+  .card-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    background: rgba(124, 247, 212, 0.1);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .card-content {
+      padding: var(--space-4);
+    }
+    
+    .card-icon {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .card-icon .icon {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .card-title {
+      font-size: var(--fs-lg);
+    }
+    
+    .card-description {
+      font-size: var(--fs-sm);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .card-content {
+      padding: var(--space-3);
+    }
+    
+    .card-body {
+      gap: var(--space-2);
+    }
+  }
+</style>

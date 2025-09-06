@@ -1,0 +1,829 @@
+---
+// Componente de Mapa Interactivo de Amenazas
+// Visualiza amenazas de ciberseguridad por región geográfica
+
+interface Props {
+  threatData?: any;
+  geoData?: any;
+  height?: string;
+  interactive?: boolean;
+}
+
+const { 
+  threatData = null, 
+  geoData = null, 
+  height = '500px',
+  interactive = true 
+} = Astro.props;
+
+// Procesar datos geográficos
+function processGeoData(data) {
+  if (!data) return [];
+  
+  const regions = [
+    { id: 'na', name: 'América del Norte', x: 150, y: 120, threats: 0, color: '#10b981' },
+    { id: 'sa', name: 'América del Sur', x: 200, y: 280, threats: 0, color: '#10b981' },
+    { id: 'eu', name: 'Europa', x: 400, y: 100, threats: 0, color: '#10b981' },
+    { id: 'af', name: 'África', x: 420, y: 220, threats: 0, color: '#10b981' },
+    { id: 'as', name: 'Asia', x: 550, y: 140, threats: 0, color: '#10b981' },
+    { id: 'oc', name: 'Oceanía', x: 650, y: 300, threats: 0, color: '#10b981' }
+  ];
+
+  // Mapear países a regiones
+  const countryToRegion = {
+    'US': 'na', 'CA': 'na', 'MX': 'na',
+    'BR': 'sa', 'AR': 'sa', 'CL': 'sa', 'CO': 'sa', 'PE': 'sa',
+    'GB': 'eu', 'DE': 'eu', 'FR': 'eu', 'IT': 'eu', 'ES': 'eu', 'NL': 'eu', 'RU': 'eu',
+    'NG': 'af', 'ZA': 'af', 'EG': 'af', 'KE': 'af', 'MA': 'af',
+    'CN': 'as', 'IN': 'as', 'JP': 'as', 'KR': 'as', 'TH': 'as', 'SG': 'as', 'ID': 'as',
+    'AU': 'oc', 'NZ': 'oc'
+  };
+
+  // Procesar datos de Cloudflare
+  if (data.cloudflare?.top_countries) {
+    data.cloudflare.top_countries.forEach(country => {
+      const regionId = countryToRegion[country.country] || 'as';
+      const region = regions.find(r => r.id === regionId);
+      if (region) {
+        region.threats += country.percentage || 0;
+      }
+    });
+  }
+
+  // Procesar datos de URLhaus
+  if (data.urlhaus?.top_countries) {
+    data.urlhaus.top_countries.forEach(country => {
+      const regionId = countryToRegion[country.country] || 'as';
+      const region = regions.find(r => r.id === regionId);
+      if (region) {
+        region.threats += (country.count || 0) / 10; // Normalizar
+      }
+    });
+  }
+
+  // Asignar colores basados en nivel de amenaza
+  regions.forEach(region => {
+    if (region.threats > 50) {
+      region.color = '#ef4444'; // Rojo - Alto riesgo
+    } else if (region.threats > 25) {
+      region.color = '#f59e0b'; // Naranja - Riesgo medio
+    } else if (region.threats > 10) {
+      region.color = '#eab308'; // Amarillo - Riesgo bajo
+    } else {
+      region.color = '#10b981'; // Verde - Riesgo mínimo
+    }
+  });
+
+  return regions;
+}
+
+const regions = processGeoData(threatData);
+const maxThreat = Math.max(...regions.map(r => r.threats));
+---
+
+<div class="threat-map-container" style={`height: ${height}`}>
+  <div class="map-header">
+    <h3>🌍 Mapa Global de Amenazas</h3>
+    <div class="map-controls">
+      <select id="threatFilter" class="threat-filter">
+        <option value="all">Todas las Amenazas</option>
+        <option value="malware">Malware</option>
+        <option value="phishing">Phishing</option>
+        <option value="ransomware">Ransomware</option>
+        <option value="ddos">DDoS</option>
+      </select>
+      <button id="refreshMap" class="refresh-btn">🔄 Actualizar</button>
+    </div>
+    <div class="map-legend">
+      <div class="legend-item">
+        <div class="legend-color" style="background: #ef4444"></div>
+        <span>Alto Riesgo</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #f59e0b"></div>
+        <span>Riesgo Medio</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #eab308"></div>
+        <span>Riesgo Bajo</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color" style="background: #10b981"></div>
+        <span>Riesgo Mínimo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-content">
+    <svg viewBox="0 0 800 400" class="world-map">
+      <!-- Fondo del mapa -->
+      <rect width="800" height="400" fill="#0f172a" rx="8"/>
+      
+      <!-- Continentes simplificados -->
+      <!-- América del Norte -->
+      <path d="M50 80 L250 80 L250 180 L180 200 L120 190 L50 160 Z" 
+            fill="rgba(255,255,255,0.1)" 
+            stroke="rgba(255,255,255,0.2)" 
+            stroke-width="1"/>
+      
+      <!-- América del Sur -->
+      <path d="M150 220 L250 220 L280 320 L200 350 L150 320 Z" 
+            fill="rgba(255,255,255,0.1)" 
+            stroke="rgba(255,255,255,0.2)" 
+            stroke-width="1"/>
+      
+      <!-- Europa -->
+      <path d="M350 60 L480 60 L480 140 L350 140 Z" 
+            fill="rgba(255,255,255,0.1)" 
+            stroke="rgba(255,255,255,0.2)" 
+            stroke-width="1"/>
+      
+      <!-- África -->
+      <path d="M350 150 L480 150 L480 320 L350 320 Z" 
+            fill="rgba(255,255,255,0.1)" 
+            stroke="rgba(255,255,255,0.2)" 
+            stroke-width="1"/>
+      
+      <!-- Asia -->
+      <path d="M490 60 L700 60 L700 240 L490 240 Z" 
+            fill="rgba(255,255,255,0.1)" 
+            stroke="rgba(255,255,255,0.2)" 
+            stroke-width="1"/>
+      
+      <!-- Oceanía -->
+      <path d="M600 280 L720 280 L720 350 L600 350 Z" 
+            fill="rgba(255,255,255,0.1)" 
+            stroke="rgba(255,255,255,0.2)" 
+            stroke-width="1"/>
+      
+      <!-- Puntos de amenaza por región -->
+      {regions.map(region => {
+        const radius = Math.max(8, Math.min(30, (region.threats / maxThreat) * 25));
+        const pulseRadius = radius + 10;
+        
+        return (
+          <g class="threat-point" data-region={region.id}>
+            <!-- Pulso animado -->
+            {region.threats > 0 && (
+              <circle 
+                cx={region.x} 
+                cy={region.y} 
+                r={pulseRadius}
+                fill={region.color}
+                opacity="0.3"
+                class="threat-pulse"
+              />
+            )}
+            
+            <!-- Punto principal -->
+            <circle 
+              cx={region.x} 
+              cy={region.y} 
+              r={radius}
+              fill={region.color}
+              stroke="white"
+              stroke-width="2"
+              class={interactive ? 'threat-marker interactive' : 'threat-marker'}
+              data-threats={region.threats.toFixed(1)}
+              data-name={region.name}
+            />
+            
+            <!-- Etiqueta de región -->
+            <text 
+              x={region.x} 
+              y={region.y + radius + 15}
+              text-anchor="middle"
+              fill="white"
+              font-size="10"
+              font-weight="500"
+              class="region-label"
+            >
+              {region.name}
+            </text>
+            
+            <!-- Contador de amenazas -->
+            {region.threats > 0 && (
+              <text 
+                x={region.x} 
+                y={region.y + 3}
+                text-anchor="middle"
+                fill="white"
+                font-size="8"
+                font-weight="600"
+                class="threat-count"
+              >
+                {region.threats.toFixed(0)}
+              </text>
+            )}
+          </g>
+        );
+      })}
+      
+      <!-- Líneas de conexión para mostrar flujo de amenazas -->
+      {regions.filter(r => r.threats > 20).map(region => {
+        const targetRegions = regions.filter(t => t.id !== region.id && t.threats > 10);
+        return targetRegions.slice(0, 2).map(target => (
+          <line 
+            x1={region.x} 
+            y1={region.y} 
+            x2={target.x} 
+            y2={target.y}
+            stroke="rgba(239, 68, 68, 0.3)"
+            stroke-width="1"
+            stroke-dasharray="5,5"
+            class="threat-connection"
+          />
+        ));
+      })}
+    </svg>
+    
+    <!-- Panel de información -->
+    <div class="map-info-panel" id="mapInfoPanel">
+      <h4>Información de Región</h4>
+      <div class="info-content">
+        <p>Selecciona una región en el mapa para ver detalles de amenazas</p>
+      </div>
+      <div class="threat-breakdown" id="threatBreakdown" style="display: none;">
+        <h5>Desglose por Tipo</h5>
+        <div class="breakdown-item">
+          <span>Malware:</span>
+          <span class="breakdown-value" id="malwareCount">0</span>
+        </div>
+        <div class="breakdown-item">
+          <span>Phishing:</span>
+          <span class="breakdown-value" id="phishingCount">0</span>
+        </div>
+        <div class="breakdown-item">
+          <span>Ransomware:</span>
+          <span class="breakdown-value" id="ransomwareCount">0</span>
+        </div>
+        <div class="breakdown-item">
+          <span>DDoS:</span>
+          <span class="breakdown-value" id="ddosCount">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Estadísticas del mapa -->
+  <div class="map-stats">
+    <div class="stat-item">
+      <span class="stat-label">Total de Regiones:</span>
+      <span class="stat-value">{regions.length}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Regiones en Riesgo:</span>
+      <span class="stat-value">{regions.filter(r => r.threats > 10).length}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Amenaza Máxima:</span>
+      <span class="stat-value">{maxThreat.toFixed(1)}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Última Actualización:</span>
+      <span class="stat-value">{new Date().toLocaleTimeString()}</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .threat-map-container {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .map-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .threat-filter {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.375rem;
+    color: white;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .threat-filter option {
+    background: #1e293b;
+    color: white;
+  }
+
+  .refresh-btn {
+    background: rgba(59, 130, 246, 0.2);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 0.375rem;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .refresh-btn:hover {
+    background: rgba(59, 130, 246, 0.3);
+    border-color: rgba(59, 130, 246, 0.5);
+  }
+
+  .map-header h3 {
+    color: white;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .map-legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    font-size: 0.875rem;
+  }
+
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .map-content {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 1.5rem;
+    flex: 1;
+  }
+
+  .world-map {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .threat-marker {
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+
+  .threat-marker.interactive {
+    cursor: pointer;
+  }
+
+  .threat-marker.interactive:hover {
+    transform: scale(1.2);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  }
+
+  .threat-pulse {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.3;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+  }
+
+  .threat-connection {
+    animation: flow 3s infinite;
+  }
+
+  @keyframes flow {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: 20;
+    }
+  }
+
+  .region-label {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+
+  .threat-point:hover .region-label {
+    opacity: 1;
+  }
+
+  .threat-count {
+    pointer-events: none;
+  }
+
+  .map-info-panel {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    height: fit-content;
+  }
+
+  .threat-breakdown {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .threat-breakdown h5 {
+    color: white;
+    margin: 0 0 0.75rem 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .breakdown-value {
+    font-weight: 600;
+    color: #60a5fa;
+  }
+
+  .map-info-panel h4 {
+    color: white;
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .info-content {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .map-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 0.875rem;
+  }
+
+  .stat-label {
+    opacity: 0.8;
+  }
+
+  .stat-value {
+    font-weight: 600;
+    color: #60a5fa;
+  }
+
+  @media (max-width: 768px) {
+    .map-content {
+      grid-template-columns: 1fr;
+    }
+
+    .map-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .map-legend {
+      justify-content: center;
+      width: 100%;
+    }
+
+    .map-stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .threat-map-container {
+      padding: 1rem;
+    }
+
+    .map-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .legend-item {
+      font-size: 0.75rem;
+    }
+  }
+</style>
+
+{interactive && (
+  <script>
+    // Funcionalidad interactiva del mapa
+    document.addEventListener('DOMContentLoaded', function() {
+      const threatMarkers = document.querySelectorAll('.threat-marker.interactive');
+      const infoPanel = document.getElementById('mapInfoPanel');
+      const infoContent = infoPanel?.querySelector('.info-content');
+
+      threatMarkers.forEach(marker => {
+        marker.addEventListener('click', function() {
+          const regionName = this.getAttribute('data-name');
+          const threatLevel = this.getAttribute('data-threats');
+          const regionId = this.closest('.threat-point').getAttribute('data-region');
+          
+          if (infoContent) {
+            infoContent.innerHTML = `
+              <div class="region-details">
+                <h5>${regionName}</h5>
+                <div class="detail-item">
+                  <span>Nivel de Amenaza:</span>
+                  <span class="threat-level">${threatLevel}</span>
+                </div>
+                <div class="detail-item">
+                  <span>Estado:</span>
+                  <span class="threat-status ${getThreatStatus(parseFloat(threatLevel))}">
+                    ${getThreatStatusText(parseFloat(threatLevel))}
+                  </span>
+                </div>
+                <div class="detail-item">
+                  <span>Última Actualización:</span>
+                  <span>${new Date().toLocaleString()}</span>
+                </div>
+              </div>
+            `;
+          }
+          
+          // Resaltar región seleccionada
+          threatMarkers.forEach(m => m.classList.remove('selected'));
+          this.classList.add('selected');
+        });
+        
+        marker.addEventListener('mouseenter', function() {
+          const regionName = this.getAttribute('data-name');
+          const threatLevel = this.getAttribute('data-threats');
+          
+          // Mostrar tooltip
+          const tooltip = document.createElement('div');
+          tooltip.className = 'map-tooltip';
+          tooltip.innerHTML = `
+            <strong>${regionName}</strong><br>
+            Amenazas: ${threatLevel}
+          `;
+          document.body.appendChild(tooltip);
+          
+          this.addEventListener('mousemove', function(e) {
+            tooltip.style.left = e.pageX + 10 + 'px';
+            tooltip.style.top = e.pageY - 10 + 'px';
+          });
+        });
+        
+        marker.addEventListener('mouseleave', function() {
+          const tooltip = document.querySelector('.map-tooltip');
+          if (tooltip) {
+            tooltip.remove();
+          }
+        });
+      });
+      
+      function getThreatStatus(level) {
+        if (level > 50) return 'critical';
+        if (level > 25) return 'high';
+        if (level > 10) return 'medium';
+        return 'low';
+      }
+      
+      function getThreatStatusText(level) {
+        if (level > 50) return 'Crítico';
+        if (level > 25) return 'Alto';
+        if (level > 10) return 'Medio';
+        return 'Bajo';
+      }
+
+      // Datos simulados por tipo de amenaza
+      const threatTypeData = {
+        'na': {
+          malware: 245,
+          phishing: 189,
+          ransomware: 67,
+          ddos: 34
+        },
+        'eu': {
+          malware: 198,
+          phishing: 156,
+          ransomware: 45,
+          ddos: 28
+        },
+        'as': {
+          malware: 312,
+          phishing: 234,
+          ransomware: 89,
+          ddos: 56
+        },
+        'sa': {
+          malware: 134,
+          phishing: 98,
+          ransomware: 23,
+          ddos: 15
+        },
+        'af': {
+          malware: 87,
+          phishing: 65,
+          ransomware: 12,
+          ddos: 8
+        },
+        'oc': {
+          malware: 45,
+          phishing: 32,
+          ransomware: 8,
+          ddos: 4
+        }
+      };
+
+      // Función para filtrar amenazas
+      function filterThreats(type) {
+        const markers = document.querySelectorAll('.threat-marker');
+        
+        markers.forEach(marker => {
+          const regionId = marker.closest('.threat-point').getAttribute('data-region');
+          const regionData = threatTypeData[regionId];
+          
+          if (type === 'all') {
+            marker.style.display = 'block';
+            const totalThreats = Object.values(regionData).reduce((a, b) => a + b, 0);
+            const threatCountEl = marker.parentNode.querySelector('.threat-count');
+            if (threatCountEl) threatCountEl.textContent = totalThreats;
+          } else {
+            const threatCount = regionData[type] || 0;
+            if (threatCount > 0) {
+              marker.style.display = 'block';
+              const threatCountEl = marker.parentNode.querySelector('.threat-count');
+              if (threatCountEl) threatCountEl.textContent = threatCount;
+            } else {
+              marker.style.display = 'none';
+            }
+          }
+        });
+      }
+
+      // Función para actualizar el desglose de amenazas
+      function updateThreatBreakdown(regionId) {
+        const breakdown = document.getElementById('threatBreakdown');
+        const regionData = threatTypeData[regionId];
+        
+        if (regionData) {
+          document.getElementById('malwareCount').textContent = regionData.malware;
+          document.getElementById('phishingCount').textContent = regionData.phishing;
+          document.getElementById('ransomwareCount').textContent = regionData.ransomware;
+          document.getElementById('ddosCount').textContent = regionData.ddos;
+          breakdown.style.display = 'block';
+        } else {
+          breakdown.style.display = 'none';
+        }
+      }
+
+      // Función para simular actualización de datos
+      function refreshMapData() {
+        const refreshBtn = document.getElementById('refreshMap');
+        refreshBtn.textContent = '🔄 Actualizando...';
+        refreshBtn.disabled = true;
+        
+        setTimeout(() => {
+          // Simular nuevos datos
+          Object.keys(threatTypeData).forEach(region => {
+            Object.keys(threatTypeData[region]).forEach(type => {
+              const variation = Math.floor(Math.random() * 21) - 10; // -10 a +10
+              threatTypeData[region][type] = Math.max(0, threatTypeData[region][type] + variation);
+            });
+          });
+          
+          // Actualizar filtro actual
+          const currentFilter = document.getElementById('threatFilter').value;
+          filterThreats(currentFilter);
+          
+          refreshBtn.textContent = '🔄 Actualizar';
+          refreshBtn.disabled = false;
+        }, 2000);
+      }
+
+      // Event listeners para controles
+      const threatFilter = document.getElementById('threatFilter');
+      const refreshBtn = document.getElementById('refreshMap');
+      
+      if (threatFilter) {
+        threatFilter.addEventListener('change', function() {
+          filterThreats(this.value);
+        });
+      }
+      
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', refreshMapData);
+      }
+
+      // Actualizar desglose cuando se selecciona una región
+      threatMarkers.forEach(marker => {
+        marker.addEventListener('click', function() {
+          const regionId = this.closest('.threat-point').getAttribute('data-region');
+          updateThreatBreakdown(regionId);
+        });
+      });
+    });
+  </script>
+)}
+
+<style is:global>
+  .map-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    pointer-events: none;
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .threat-marker.selected {
+    stroke: #fbbf24 !important;
+    stroke-width: 3 !important;
+  }
+  
+  .region-details h5 {
+    margin: 0 0 0.75rem 0;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .threat-level {
+    font-weight: 600;
+    color: #60a5fa;
+  }
+  
+  .threat-status {
+    font-weight: 600;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+  }
+  
+  .threat-status.critical {
+    background: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+  }
+  
+  .threat-status.high {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+  }
+  
+  .threat-status.medium {
+    background: rgba(234, 179, 8, 0.2);
+    color: #facc15;
+  }
+  
+  .threat-status.low {
+    background: rgba(16, 185, 129, 0.2);
+    color: #86efac;
+  }
+</style>

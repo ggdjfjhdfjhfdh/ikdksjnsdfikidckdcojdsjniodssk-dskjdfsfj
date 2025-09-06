@@ -1,0 +1,210 @@
+---
+export interface Props {
+  id?: string;
+  className?: string;
+  threshold?: number;
+  rootMargin?: string;
+  fallback?: string;
+}
+
+const { 
+  id,
+  className = '',
+  threshold = 0.1,
+  rootMargin = '50px 0px',
+  fallback = 'Cargando contenido...'
+} = Astro.props;
+
+const sectionId = id || `lazy-section-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div 
+  id={sectionId}
+  class={`lazy-section ${className}`}
+  data-lazy="true"
+  data-threshold={threshold}
+  data-root-margin={rootMargin}
+>
+  <!-- Placeholder mientras carga -->
+  <div class="lazy-placeholder">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">{fallback}</p>
+  </div>
+  
+  <!-- Contenido real (se carga cuando es visible) -->
+  <div class="lazy-content" style="display: none;">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .lazy-section {
+    min-height: 200px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .lazy-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 200px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+  }
+  
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .loading-text {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
+  }
+  
+  .lazy-content {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  .lazy-section.loaded .lazy-placeholder {
+    display: none;
+  }
+  
+  .lazy-section.loaded .lazy-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .lazy-placeholder {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+    
+    .loading-text {
+      color: #94a3b8;
+    }
+    
+    .loading-spinner {
+      border-color: #334155;
+      border-top-color: #60a5fa;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .loading-spinner {
+      animation: none;
+    }
+    
+    .lazy-content {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Enhanced lazy loading with intersection observer
+  class LazySection {
+    constructor(element) {
+      this.element = element;
+      this.threshold = parseFloat(element.dataset.threshold) || 0.1;
+      this.rootMargin = element.dataset.rootMargin || '50px 0px';
+      this.loaded = false;
+      this.init();
+    }
+    
+    init() {
+      if ('IntersectionObserver' in window) {
+        this.observer = new IntersectionObserver(
+          this.handleIntersection.bind(this),
+          {
+            threshold: this.threshold,
+            rootMargin: this.rootMargin
+          }
+        );
+        
+        this.observer.observe(this.element);
+      } else {
+        // Fallback para navegadores sin soporte
+        this.loadContent();
+      }
+    }
+    
+    handleIntersection(entries) {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !this.loaded) {
+          this.loadContent();
+          this.observer.unobserve(this.element);
+        }
+      });
+    }
+    
+    async loadContent() {
+      if (this.loaded) return;
+      
+      try {
+        // Simular carga de contenido pesado
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        const content = this.element.querySelector('.lazy-content');
+        if (content) {
+          content.style.display = 'block';
+          
+          // Trigger reflow para animación
+          content.offsetHeight;
+          
+          this.element.classList.add('loaded');
+          this.loaded = true;
+          
+          // Dispatch evento personalizado
+          this.element.dispatchEvent(new CustomEvent('lazy-loaded', {
+            detail: { element: this.element }
+          }));
+        }
+      } catch (error) {
+        console.warn('Error loading lazy section:', error);
+        this.element.classList.add('loaded'); // Mostrar contenido aunque haya error
+      }
+    }
+    
+    destroy() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    }
+  }
+  
+  // Auto-inicializar todas las secciones lazy
+  document.addEventListener('DOMContentLoaded', () => {
+    const lazySections = document.querySelectorAll('[data-lazy="true"]');
+    const instances = [];
+    
+    lazySections.forEach(section => {
+      instances.push(new LazySection(section));
+    });
+    
+    // Cleanup al descargar la página
+    window.addEventListener('beforeunload', () => {
+      instances.forEach(instance => instance.destroy());
+    });
+  });
+</script>

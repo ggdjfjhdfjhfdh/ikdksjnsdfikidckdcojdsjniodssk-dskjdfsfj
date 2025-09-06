@@ -1,0 +1,1481 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import Section from '../../components/Section.astro';
+import Card from '../../components/Card.astro';
+import Timeline from '../../components/Timeline.astro';
+import LogoStrip from '../../components/LogoStrip.astro';
+import BigCTA from '../../components/BigCTA.astro';
+
+// Featured services data
+const featuredServices = [
+  {
+    title: "Security Audits",
+    description: "Comprehensive infrastructure assessment to identify vulnerabilities before attackers do.",
+    link: {
+      href: "/en/services#audits",
+      text: "View details"
+    }
+  },
+  {
+    title: "Advanced Pentesting",
+    description: "Real-world attack simulation to test your systems' resilience in a controlled environment.",
+    link: {
+      href: "/en/services#pentesting",
+      text: "View details"
+    }
+  },
+  {
+    title: "System Hardening",
+    description: "Strengthening and secure configuration of critical servers, networks, and applications.",
+    link: {
+      href: "/en/services#hardening",
+      text: "View details"
+    }
+  },
+  {
+    title: "Incident Response",
+    description: "Rapid response protocol for security breaches with complete forensic analysis.",
+    link: {
+      href: "/en/services#response",
+      text: "View details"
+    }
+  },
+  {
+    title: "GDPR Consulting",
+    description: "Comprehensive advisory for regulatory compliance and personal data protection.",
+    link: {
+      href: "/en/services#gdpr",
+      text: "View details"
+    }
+  },
+  {
+    title: "Specialized Training",
+    description: "Technical training for IT teams in the latest cybersecurity techniques.",
+    link: {
+      href: "/en/services#training",
+      text: "View details"
+    }
+  }
+];
+
+// Use cases by sectors
+const useCases = [
+  {
+    title: "Financial Sector",
+    description: "Transaction protection, PCI-DSS compliance, and fraud prevention for banking entities.",
+    image: "/images/sector-financiero.svg",
+    link: {
+      href: "/en/cases/financial",
+      text: "View case"
+    }
+  },
+  {
+    title: "E-commerce",
+    description: "Online payment security, customer data protection, and business continuity.",
+    image: "/images/sector-ecommerce.svg",
+    link: {
+      href: "/en/cases/ecommerce",
+      text: "View case"
+    }
+  },
+  {
+    title: "Industry 4.0",
+    description: "Industrial cybersecurity, SCADA system protection, and IoT security.",
+    image: "/images/sector-industria.svg",
+    link: {
+      href: "/en/cases/industry",
+      text: "View case"
+    }
+  },
+  {
+    title: "Tech Startups",
+    description: "Security by design, IP protection, and secure scalability for emerging companies.",
+    image: "/images/sector-startups.svg",
+    link: {
+      href: "/en/cases/startups",
+      text: "View case"
+    }
+  }
+];
+
+// Methodology (timeline)
+const methodologySteps = [
+  {
+    title: "Reconnaissance",
+    description: "Comprehensive digital perimeter analysis, asset identification, and attack surface mapping.",
+    duration: "1-2 weeks"
+  },
+  {
+    title: "Pentesting",
+    description: "Controlled penetration testing following OWASP and NIST methodologies.",
+    duration: "2-4 weeks"
+  },
+  {
+    title: "Implementation",
+    description: "Deployment of corrective measures, system hardening, and security control configuration.",
+    duration: "3-6 weeks"
+  },
+  {
+    title: "Maintenance",
+    description: "Continuous monitoring, security updates, and proactive response to new threats.",
+    duration: "Ongoing"
+  }
+];
+
+// Partners/Logos - Updated list with Cloudflare, without AWS and Cisco
+const partners = [
+  {
+    name: "Microsoft",
+    src: "/images/partners/microsoft.svg",
+    alt: "Microsoft Partner",
+    width: 140,
+    height: 60
+  },
+  {
+    name: "Cloudflare",
+    src: "/images/partners/cloudflare.svg",
+    alt: "Cloudflare Security Partner",
+    width: 150,
+    height: 60
+  },
+  {
+    name: "Palo Alto",
+    src: "/images/partners/paloalto.svg",
+    alt: "Palo Alto Networks Partner",
+    width: 150,
+    height: 60
+  },
+  {
+    name: "CrowdStrike",
+    src: "/images/partners/crowdstrike.svg",
+    alt: "CrowdStrike Partner",
+    width: 160,
+    height: 60
+  },
+  {
+    name: "Fortinet",
+    src: "/images/partners/fortinet.svg",
+    alt: "Fortinet Partner",
+    width: 140,
+    height: 60
+  }
+];
+
+// Testimonials
+const testimonials = [
+  {
+    title: "Excellent work",
+    description: "The Sesecpro team identified critical vulnerabilities we had overlooked. Their professional approach and clear recommendations allowed us to significantly improve our security posture.",
+    author: {
+      name: "Carlos Mendoza",
+      role: "CTO, TechCorp",
+      avatar: "/images/testimonials/carlos.jpg"
+    }
+  },
+  {
+    title: "Fast and effective response",
+    description: "When we suffered a security incident, Sesecpro responded immediately. Their response protocol and forensic analysis helped us contain the problem and avoid major damage.",
+    author: {
+      name: "Ana García",
+      role: "CISO, FinanceSecure",
+      avatar: "/images/testimonials/ana.jpg"
+    }
+  },
+  {
+    title: "Guaranteed compliance",
+    description: "Thanks to their GDPR consulting, we achieved certification without complications. Their regulatory knowledge and practical approach were key to our success.",
+    author: {
+      name: "Miguel Torres",
+      role: "Legal Director, DataFlow",
+      avatar: "/images/testimonials/miguel.jpg"
+    }
+  }
+];
+---
+
+<Layout 
+  title="Real Cybersecurity, Tailored to Your Business - Sesecpro"
+  description="Audits, hardening and agile response—no buzzwords. We protect your business with cybersecurity solutions that scale with you."
+  lang="en"
+>
+  <!-- Hero Section -->
+  <Hero 
+    title="Stop Cyberattacks Before They Happen"
+    subtitle="24/7 enterprise protection with military-grade methodologies and elite technology"
+    description="Prevent million-dollar losses from security breaches. Our certified experts have protected 500+ companies with 99.8% threat detection effectiveness."
+    ctaPrimary={{
+      text: "Free Analysis in 48h",
+      href: "/en/contact"
+    }}
+    ctaSecondary={{
+      text: "View Success Stories",
+      href: "/en/services"
+    }}
+  />
+  
+  <!-- Featured Services -->
+  <Section 
+    title="Security that protects today and scales tomorrow"
+    subtitle="Specialized services designed for companies that understand cybersecurity is an investment, not an expense."
+    background="soft"
+    spacing="large"
+  >
+    <div class="services-grid">
+      {featuredServices.map((service) => (
+        <Card 
+          variant="service"
+          title={service.title}
+          description={service.description}
+          link={service.link}
+          icon="service"
+        />
+      ))}
+    </div>
+  </Section>
+  
+  <!-- Real-time Cybersecurity Dashboard -->
+  <Section 
+    title="Real-time Threats"
+    subtitle="Live data from global cybersecurity monitoring systems"
+    background="gradient"
+    spacing="large"
+  >
+    <div class="realtime-cyber-dashboard">
+
+      
+
+
+      <div class="cyber-cards-grid">
+        <!-- Card 1: Malicious URLs -->
+        <div class="cyber-card malicious-urls glass-card">
+          <div class="card-header">
+            <div class="time-badge">24h</div>
+          </div>
+          <div class="card-content">
+            <div class="main-number">
+              <span class="counter">---</span>
+            </div>
+            <div class="card-title">DANGEROUS WEBSITES</div>
+            <div class="card-subtitle">Malicious pages and phishing links detected in 24h</div>
+            <div class="metric-description">Includes phishing sites, malware and virus distribution</div>
+          </div>
+          <div class="sparkline-container">
+            <div class="no-data">No data</div>
+          </div>
+          <div class="data-source">URLhaus (Requires API key)</div>
+        </div>
+
+        <!-- Card 2: L7 Attacks Spain -->
+        <div class="cyber-card spain-attacks glass-card">
+          <div class="card-header">
+            <div class="time-badge">24h</div>
+          </div>
+          <div class="card-content">
+            <div class="main-number">
+              <span class="counter">---</span>
+              <span class="unit">%</span>
+            </div>
+            <div class="card-title">DDOS ATTACKS ON SPAIN</div>
+            <div class="card-subtitle">Percentage of attack traffic targeting Spain</div>
+            <div class="metric-description">Layer 7 Distributed Denial of Service attacks detected</div>
+          </div>
+          <div class="sparkline-container">
+            <div class="no-data">No data</div>
+          </div>
+          <div class="data-source">Cloudflare Radar (Requires API key)</div>
+        </div>
+
+        <!-- Card 3: Scanned Ports -->
+        <div class="cyber-card scanned-ports glass-card">
+          <div class="card-header">
+            <div class="time-badge">Today</div>
+          </div>
+          <div class="card-content">
+            <div class="ports-list">
+              <div class="port-item">
+                <span class="port-number">---</span>
+                <span class="port-count">No data</span>
+              </div>
+              <div class="port-item">
+                <span class="port-number">---</span>
+                <span class="port-count">No data</span>
+              </div>
+              <div class="port-item">
+                <span class="port-number">---</span>
+                <span class="port-count">No data</span>
+              </div>
+            </div>
+            <div class="card-title">PORTS UNDER ATTACK</div>
+            <div class="card-subtitle">Most attacked network ports globally</div>
+            <div class="metric-description">Malicious connection attempts detected by SANS ISC</div>
+          </div>
+          <div class="sparkline-container">
+            <div class="no-data">No data</div>
+          </div>
+          <div class="data-source">SANS ISC (Public API available)</div>
+        </div>
+
+        <!-- Card 4: Ransomware Victims -->
+        <div class="cyber-card ransomware-victims glass-card">
+          <div class="card-header">
+            <div class="time-badge">24h</div>
+          </div>
+          <div class="card-content">
+            <div class="main-number">
+              <span class="counter">---</span>
+            </div>
+            <div class="card-title">RANSOMWARE ATTACKS</div>
+            <div class="card-subtitle">New victims reported in the last 24 hours</div>
+            <div class="metric-description">Companies affected by known ransomware groups</div>
+          </div>
+          <div class="sparkline-container">
+            <div class="no-data">No data</div>
+          </div>
+          <div class="data-source">RansomWatch (Public API available)</div>
+        </div>
+       </div>
+
+       <!-- Link to threats page -->
+       <div class="threats-link-container">
+         <a href="/en/amenazas" class="threats-link-button">
+           <div class="button-content">
+             <span class="button-icon">🔍</span>
+             <div class="button-text">
+               <span class="button-title">Explore Threats</span>
+               <span class="button-subtitle">Detailed analysis and trends</span>
+             </div>
+             <span class="button-arrow">→</span>
+           </div>
+         </a>
+       </div>
+
+
+    </div>
+  </Section>
+  
+  <!-- Methodology -->
+  <Section 
+    title="Our proven methodology"
+    subtitle="A systematic approach that guarantees measurable and lasting results."
+    background="soft"
+    spacing="large"
+  >
+    <Timeline steps={methodologySteps} />
+  </Section>
+  
+  <!-- Partners -->
+  <Section 
+    title="Technology partners"
+    subtitle="We work with the best tools and platforms in the market."
+    spacing="normal"
+  >
+    <LogoStrip 
+      logos={partners}
+      speed="normal"
+      pauseOnHover={true}
+    />
+  </Section>
+  
+  <!-- Testimonials -->
+  <Section 
+    title="What our clients say"
+    subtitle="Real results from companies that have transformed their cybersecurity with us."
+    background="soft"
+    spacing="large"
+  >
+    <div class="testimonials-grid">
+      {testimonials.map((testimonial) => (
+        <Card 
+          variant="testimonial"
+          title={testimonial.title}
+          description={testimonial.description}
+          author={testimonial.author}
+        />
+      ))}
+    </div>
+  </Section>
+  
+
+  </Section>
+  
+  <!-- Final CTA -->
+  <BigCTA 
+    title="Ready to protect your business?"
+    subtitle="Start with a free audit and discover how to improve your cybersecurity posture."
+    primaryButton={{
+      text: "Request free audit",
+      href: "/en/contact",
+      variant: "primary"
+    }}
+    secondaryButton={{
+      text: "Talk to an expert",
+      href: "/en/contact?type=consultation",
+      variant: "outline"
+    }}
+    background="gradient"
+    size="large"
+  />
+</Layout>
+
+<style>
+  /* Responsive grids */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+  
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+  
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+
+  /* Real-time Cybersecurity Dashboard Styles */
+  .realtime-cyber-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    position: relative;
+  }
+
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dashboard-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.025em;
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .status-dot {
+    width: 12px;
+    height: 12px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: statusPulse 2s infinite;
+  }
+
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  .status-text {
+    color: #10b981;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  /* Cyber Cards Grid - Horizontal Layout */
+  .cyber-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 1200px) {
+    .cyber-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cyber-cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Glass Card Design */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    background: rgba(255, 255, 255, 0.98);
+  }
+
+  .cyber-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .cyber-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cyber-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .cyber-card:hover::before {
+    opacity: 1;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+
+
+  .time-badge {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+  }
+
+  .card-content {
+    margin-bottom: 1rem;
+  }
+
+  .main-number {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .main-number .counter {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .unit {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+  }
+
+  .card-title {
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+    opacity: 0.9;
+  }
+
+  .card-subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  .metric-description {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.7rem;
+    line-height: 1.3;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .ports-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .port-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .port-number {
+    color: white;
+    font-weight: 700;
+    font-family: 'Monaco', 'Menlo', monospace;
+  }
+
+  .port-count {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+  }
+
+  .sparkline-container {
+    height: 20px;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+
+  .sparkline {
+    width: 100%;
+    height: 100%;
+  }
+
+  .no-data {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+    font-style: italic;
+  }
+
+  .data-source {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.7rem;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  /* CTA Section */
+  .cyber-cta {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin-bottom: 2rem;
+  }
+
+  .cyber-cta h3 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+  }
+
+  .cyber-cta p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.4);
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+  }
+
+  .cta-button svg {
+    transition: transform 0.2s ease;
+  }
+
+  .cta-button:hover svg {
+    transform: translateX(2px);
+  }
+
+  /* Data Attribution */
+  .data-attribution {
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .data-attribution p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* Dashboard Info Styles */
+  .dashboard-info {
+    margin-bottom: 2rem;
+  }
+
+  .info-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .info-card h4 {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .info-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .info-card li {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .info-card li::before {
+    content: '•';
+    color: #3b82f6;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+
+  .info-card strong {
+     color: white;
+     font-weight: 600;
+   }
+
+   .card-icon-modern {
+     font-size: 2.5rem;
+     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+     transition: transform 0.3s ease;
+   }
+
+   .glass-card:hover .card-icon-modern {
+     transform: scale(1.1) rotate(5deg);
+   }
+
+   /* Large Metric Value */
+   .metric-value-large {
+     font-size: 4rem;
+     font-weight: 900;
+     color: #1e293b;
+     margin: 1rem 0 0.5rem 0;
+     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     line-height: 1;
+     background: linear-gradient(135deg, #1e293b, #3b82f6);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+     background-clip: text;
+     display: flex;
+     align-items: baseline;
+     justify-content: center;
+     gap: 0.25rem;
+   }
+
+   .card-title-modern {
+     color: #1e293b;
+     font-size: 1.1rem;
+     font-weight: 700;
+     margin-bottom: 0.25rem;
+     letter-spacing: -0.025em;
+   }
+
+   .card-subtitle-modern {
+     font-size: 0.8rem;
+     color: #64748b;
+     font-weight: 500;
+     margin-bottom: 1rem;
+   }
+
+   /* Analysis Button */
+   .analysis-button-container {
+     display: flex;
+     justify-content: center;
+     margin-top: 3rem;
+     margin-bottom: 2rem;
+   }
+
+   .analysis-button {
+     background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+     color: white;
+     border: none;
+     padding: 1rem 2.5rem;
+     border-radius: 50px;
+     font-size: 1.1rem;
+     font-weight: 600;
+     cursor: pointer;
+     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+     display: flex;
+     align-items: center;
+     gap: 0.75rem;
+     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+     position: relative;
+     overflow: hidden;
+   }
+
+   .analysis-button::before {
+     content: '';
+     position: absolute;
+     top: 0;
+     left: -100%;
+     width: 100%;
+     height: 100%;
+     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+     transition: left 0.5s ease;
+   }
+
+   .analysis-button:hover {
+     transform: translateY(-3px) scale(1.05);
+     box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+   }
+
+   .analysis-button:hover::before {
+     left: 100%;
+   }
+
+   .button-icon {
+     font-size: 1.2rem;
+   }
+
+   .button-arrow {
+     font-size: 1.2rem;
+     transition: transform 0.3s ease;
+   }
+
+   .analysis-button:hover .button-arrow {
+     transform: translateX(4px);
+   }
+
+    }
+  
+  /* API Status Styles */
+  .api-status {
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .api-status[data-status="loading"] {
+    color: #fbbf24;
+    background-color: rgba(251, 191, 36, 0.1);
+    animation: pulse 2s infinite;
+  }
+
+  .api-status[data-status="active"] {
+    color: #10b981;
+    background-color: rgba(16, 185, 129, 0.1);
+  }
+
+  .api-status[data-status="fallback"] {
+    color: #f59e0b;
+    background-color: rgba(245, 158, 11, 0.1);
+  }
+
+  .api-status[data-status="requires_token"] {
+    color: #8b5cf6;
+    background-color: rgba(139, 92, 246, 0.1);
+  }
+
+  .api-status[data-status="error"] {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+
+  /* Estilos para el botón de amenazas */
+  .threats-link-container {
+    display: flex;
+    justify-content: center;
+    margin: 3rem 0;
+  }
+
+  .threats-link-button {
+    display: inline-block;
+    text-decoration: none;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .threats-link-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  }
+
+  .button-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+  }
+
+  .button-icon {
+    font-size: 1.5rem;
+    opacity: 0.9;
+  }
+
+  .button-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .button-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .button-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  .button-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+  }
+
+  .threats-link-button:hover .button-arrow {
+    transform: translateX(4px);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .threats-link-button {
+      padding: 1.25rem 1.5rem;
+    }
+    
+    .button-content {
+      gap: 0.75rem;
+    }
+    
+    .button-title {
+      font-size: 1rem;
+    }
+    
+    .button-subtitle {
+      font-size: 0.85rem;
+    }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .cases-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .testimonials-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .realtime-metrics {
+      grid-template-columns: 1fr;
+    }
+    
+    .cyber-threat-dashboard {
+      padding: 1.5rem;
+    }
+    
+    .critical-alert {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 1rem;
+    }
+    
+    .cta-actions {
+      flex-direction: column;
+    }
+    
+    .emergency-cta, .secondary-cta {
+      width: 100%;
+      text-align: center;
+    }
+
+    .cyber-cards-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .main-number .counter {
+      font-size: 2rem;
+    }
+
+    .cyber-cta {
+      padding: 1.5rem;
+    }
+
+    .cyber-cta h3 {
+      font-size: 1.25rem;
+    }
+
+    .cta-button {
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .cases-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .testimonials-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
+
+<script>
+  // Cybersecurity Dashboard API Integration
+  class CyberDashboard {
+    constructor() {
+      this.apiEndpoint = '/api/cybersecurity.json';
+      this.refreshInterval = 15 * 60 * 1000; // 15 minutes
+      this.retryAttempts = 3;
+      this.retryDelay = 5000;
+    }
+
+    // Enhanced counter animation with easing
+    animateCounter(element, target, duration = 2000) {
+      const start = parseInt(element.textContent.replace(/[^0-9]/g, '')) || 0;
+      const startTime = performance.now();
+      
+      function easeOutQuart(t) {
+        return 1 - Math.pow(1 - t, 4);
+      }
+      
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = easeOutQuart(progress);
+        const current = Math.floor(start + (target - start) * easedProgress);
+        
+        element.textContent = current.toLocaleString();
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        }
+      }
+      
+      requestAnimationFrame(update);
+    }
+
+    // Sparkline drawing and animation
+    drawSparkline(canvas, data) {
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const padding = 2;
+      
+      ctx.clearRect(0, 0, width, height);
+      
+      if (!data || data.length === 0) return;
+      
+      const max = Math.max(...data);
+      const min = Math.min(...data);
+      const range = max - min || 1;
+      
+      // Create gradient
+      const gradient = ctx.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
+      gradient.addColorStop(1, 'rgba(59, 130, 246, 0.2)');
+      
+      // Draw area
+      ctx.beginPath();
+      ctx.moveTo(padding, height - padding);
+      
+      data.forEach((value, index) => {
+        const x = padding + (index / (data.length - 1)) * (width - 2 * padding);
+        const y = height - padding - ((value - min) / range) * (height - 2 * padding);
+        
+        if (index === 0) {
+          ctx.lineTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      
+      ctx.lineTo(width - padding, height - padding);
+      ctx.closePath();
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      
+      // Draw line
+      ctx.beginPath();
+      data.forEach((value, index) => {
+        const x = padding + (index / (data.length - 1)) * (width - 2 * padding);
+        const y = height - padding - ((value - min) / range) * (height - 2 * padding);
+        
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      
+      ctx.strokeStyle = 'rgba(59, 130, 246, 1)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    // Update API status indicators
+    updateAPIStatus(apiName, status, type = 'free') {
+       const card = document.querySelector(`[data-api="${apiName}"]`);
+       if (!card) return;
+       
+       const statusIndicator = card.querySelector('.status-indicator');
+       const apiStatus = card.querySelector('.api-status');
+       
+       if (statusIndicator) statusIndicator.setAttribute('data-status', status);
+       if (apiStatus) {
+         apiStatus.setAttribute('data-status', status);
+         
+         let statusText = '';
+         switch(status) {
+           case 'ok':
+             statusText = '🟢 Online';
+             break;
+           case 'fallback':
+             statusText = '🟡 Simulated data';
+             break;
+           case 'requires_token':
+             statusText = '🔑 Requires token';
+             break;
+           case 'error':
+             statusText = '🔴 Error';
+             break;
+           default:
+             statusText = '🟡 Loading...';
+         }
+         
+         apiStatus.textContent = statusText;
+       }
+     }
+
+    // Hide loading skeletons
+    hideLoadingStates(card) {
+      const skeletons = card.querySelectorAll('.loading-skeleton, .sparkline-loading, .port-loading');
+      skeletons.forEach(skeleton => {
+        skeleton.style.opacity = '0';
+        setTimeout(() => skeleton.style.display = 'none', 300);
+      });
+    }
+
+    // Update card data
+    updateCardData(apiName, data) {
+      const card = document.querySelector(`[data-api="${apiName}"]`);
+      if (!card) return;
+
+      this.hideLoadingStates(card);
+
+      if (data.error) {
+        this.updateAPIStatus(apiName, 'error');
+        const subtitle = card.querySelector('.card-subtitle');
+        if (subtitle) subtitle.textContent = `Error: ${data.error}`;
+        return;
+      }
+
+      this.updateAPIStatus(apiName, 'ok');
+
+      // Update based on API type
+      switch (apiName) {
+        case 'urlhaus':
+          this.updateURLhausCard(card, data);
+          break;
+        case 'cloudflare':
+          this.updateCloudflareCard(card, data);
+          break;
+        case 'sansISC':
+          this.updateSANSISCCard(card, data);
+          break;
+        case 'ransomwatch':
+          this.updateRansomwatchCard(card, data);
+          break;
+      }
+    }
+
+    updateURLhausCard(card, data) {
+      const counter = card.querySelector('.counter');
+      const subtitle = card.querySelector('.card-subtitle');
+      const sparkline = card.querySelector('.sparkline');
+      
+      if (counter && data.count !== undefined) {
+        this.animateCounter(counter, data.count);
+      }
+      if (subtitle) subtitle.textContent = `Detected last 24h`;
+      if (sparkline && data.trend) {
+        this.drawSparkline(sparkline, data.trend);
+      }
+    }
+
+    updateCloudflareCard(card, data) {
+      const counter = card.querySelector('.counter');
+      const subtitle = card.querySelector('.card-subtitle');
+      const sparkline = card.querySelector('.sparkline');
+      
+      if (counter && data.percentage !== undefined) {
+        this.animateCounter(counter, data.percentage);
+      }
+      if (subtitle) subtitle.textContent = `Top technique: ${data.topTechnique || 'DDoS'}`;
+      if (sparkline && data.trend) {
+        this.drawSparkline(sparkline, data.trend);
+      }
+    }
+
+    updateSANSISCCard(card, data) {
+      const portItems = card.querySelectorAll('.port-item');
+      const sparkline = card.querySelector('.sparkline');
+      
+      if (data.ports && portItems.length >= 3) {
+        data.ports.slice(0, 3).forEach((port, index) => {
+          if (portItems[index]) {
+            const portNumber = portItems[index].querySelector('.port-number');
+            const portCount = portItems[index].querySelector('.port-count');
+            
+            if (portNumber) portNumber.textContent = port.port;
+            if (portCount) portCount.textContent = `(${this.formatNumber(port.count)})`;
+          }
+        });
+      }
+      
+      if (sparkline && data.trend) {
+        this.drawSparkline(sparkline, data.trend);
+      }
+    }
+
+    updateRansomwatchCard(card, data) {
+      const counter = card.querySelector('.counter');
+      const subtitle = card.querySelector('.card-subtitle');
+      const sparkline = card.querySelector('.sparkline');
+      
+      if (counter && data.count !== undefined) {
+        this.animateCounter(counter, data.count);
+      }
+      if (subtitle) subtitle.textContent = `Published last 24h`;
+      if (sparkline && data.trend) {
+        this.drawSparkline(sparkline, data.trend);
+      }
+    }
+
+    // Format numbers for display
+    formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    // Fetch data from API
+    async fetchData(attempt = 1) {
+      try {
+        const response = await fetch(this.apiEndpoint, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          // Update API status for each service
+          if (result.apis) {
+            Object.entries(result.apis).forEach(([apiName, apiInfo]) => {
+              this.updateAPIStatus(apiName, apiInfo.status, apiInfo.type);
+            });
+          }
+          
+          // Update dashboard data
+          this.updateDashboard(result.data);
+        } else {
+          throw new Error(result.error || 'Invalid API response');
+        }
+        
+      } catch (error) {
+        console.error(`API fetch attempt ${attempt} failed:`, error);
+        
+        if (attempt < this.retryAttempts) {
+          setTimeout(() => {
+            this.fetchData(attempt + 1);
+          }, this.retryDelay * attempt);
+        } else {
+          this.handleAPIError(error);
+        }
+      }
+    }
+
+    // Update dashboard with API data
+    updateDashboard(data) {
+      // Update API status for each service
+      if (data.apis) {
+        Object.entries(data.apis).forEach(([apiName, apiInfo]) => {
+          this.updateAPIStatus(apiName, apiInfo.status, apiInfo.type);
+        });
+      }
+      
+      // Update card data
+      Object.keys(data).forEach(apiName => {
+        if (data[apiName] && apiName !== 'apis') {
+          this.updateCardData(apiName, data[apiName]);
+        }
+      });
+    }
+
+    // Handle API errors
+    handleAPIError(error) {
+      console.error('Dashboard API Error:', error);
+      
+      // Update all cards to show error state
+      const cards = document.querySelectorAll('.cyber-card');
+      cards.forEach(card => {
+        const apiName = card.getAttribute('data-api');
+        if (apiName) {
+          this.updateAPIStatus(apiName, 'error');
+          this.hideLoadingStates(card);
+          
+          const subtitle = card.querySelector('.card-subtitle');
+          if (subtitle) subtitle.textContent = 'Connection error - Retrying...';
+        }
+      });
+    }
+
+    // Card entrance animations
+    animateCards() {
+      const cards = document.querySelectorAll('.cyber-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+          card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, index * 150);
+      });
+    }
+
+    // Initialize dashboard
+    init() {
+      // Animate cards entrance
+      this.animateCards();
+      
+      // Start fetching data
+      setTimeout(() => {
+        this.fetchData();
+      }, 1000);
+      
+      // Set up refresh interval
+      setInterval(() => {
+        this.fetchData();
+      }, this.refreshInterval);
+    }
+  }
+
+  // Initialize dashboard when DOM is ready
+  document.addEventListener('DOMContentLoaded', function() {
+    const dashboard = new CyberDashboard();
+    dashboard.init();
+  });
+</script>

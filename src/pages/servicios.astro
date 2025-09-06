@@ -1,0 +1,591 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Section from '../components/Section.astro';
+import Card from '../components/Card.astro';
+import BigCTA from '../components/BigCTA.astro';
+import Button from '../components/Button.astro';
+import SEO from '../components/SEO.astro';
+
+// Servicios principales con detalles completos
+const mainServices = [
+  {
+    id: "auditorias",
+    title: "Auditorías de Seguridad",
+    subtitle: "Evaluación integral de infraestructura y activos críticos",
+    description: "Identificamos vulnerabilidades antes que los atacantes utilizando OWASP ZAP, Nessus y herramientas de última generación con IA.",
+    problem: "Las brechas de seguridad cuestan en promedio 4.87M€ por incidente en 2024. El 89% se originan por vulnerabilidades conocidas no parcheadas.",
+    solution: "Nuestras auditorías siguen estándares OWASP ASVS 4.0, NIST 800-53 Rev.5 e ISO 27001:2022, proporcionando un mapa de riesgos con priorización basada en CVSS v4.0.",
+    benefits: [
+      "Reducción del 92% en tiempo de detección de amenazas con IA",
+      "Cumplimiento normativo garantizado (GDPR, PCI-DSS, NIS2)",
+      "ROI promedio del 450% en el primer año",
+      "Informes ejecutivos y técnicos con dashboards en tiempo real"
+    ],
+    features: [
+      "Análisis de vulnerabilidades con IA y ML",
+      "Revisión manual de código con SonarQube Enterprise",
+      "Pruebas de configuración cloud-native y K8s",
+      "Evaluación Zero Trust y DevSecOps",
+      "Simulación de APTs y ransomware"
+    ],
+
+  },
+  {
+    id: "pentesting",
+    title: "Pentesting Avanzado",
+    subtitle: "Simulación avanzada de ciberataques",
+    description: "Evaluamos la resistencia de tus sistemas mediante técnicas avanzadas de Red Team y simulación de APTs usando IA predictiva.",
+    problem: "El 76% de las organizaciones sufren brechas por técnicas de ataque emergentes en 2024. El tiempo medio de detección supera los 200 días.",
+    solution: "Ejecutamos pruebas de penetración siguiendo PTES y MITRE ATT&CK v13, utilizando herramientas de IA para simular amenazas persistentes avanzadas.",
+    benefits: [
+      "Validación proactiva contra amenazas emergentes",
+      "Detección de vulnerabilidades zero-day con IA",
+      "Reducción del 85% en falsos positivos",
+      "Certificación de resistencia ante APTs"
+    ],
+    features: [
+      "Pentesting de apps cloud-native y contenedores",
+      "Pruebas de infraestructura Zero Trust",
+      "Ingeniería social con deepfakes controlados",
+      "Análisis de seguridad IoT y OT",
+      "Red Team con emulación de APTs"
+    ],
+
+  },
+  {
+    id: "hardening",
+    title: "Hardening de Sistemas",
+    subtitle: "Blindaje y optimización de sistemas",
+    description: "Implementamos configuraciones Zero Trust y políticas de seguridad adaptativas para entornos híbridos y cloud-native.",
+    problem: "El 97% de los ataques en 2024 explotan configuraciones débiles. Las soluciones tradicionales no protegen contra amenazas modernas.",
+    solution: "Aplicamos benchmarks CIS v8, DISA STIG 2024 y estándares Zero Trust, con automatización mediante IaC y políticas adaptativas.",
+    benefits: [
+      "Reducción del 95% en superficie de ataque",
+      "Automatización de compliance mediante IaC",
+      "Optimización del rendimiento cloud",
+      "Adaptación dinámica ante amenazas"
+    ],
+    features: [
+      "Hardening de contenedores y Kubernetes",
+      "Configuración Zero Trust para bases de datos",
+      "Securización de infraestructura multicloud",
+      "Protección de microservicios y APIs",
+      "Implementación de políticas adaptativas"
+    ],
+
+  },
+  {
+    id: "respuesta",
+    title: "Respuesta a Incidentes",
+    subtitle: "Respuesta automatizada 24/7",
+    description: "Detección y respuesta inmediata ante incidentes mediante SOAR (Security Orchestration and Automated Response) e IA.",
+    problem: "En 2024, el coste medio por brecha alcanza los 4.9M€, con un tiempo promedio de detección de 277 días y 75K€ por día de exposición.",
+    solution: "SOC 24/7 con respuesta automatizada en <15min, utilizando SOAR, threat intelligence y metodología NIST CSF 2.0 para contención y recuperación.",
+    benefits: [
+      "Contención automatizada en <15 minutos",
+      "Preservación forense certificada ISO 27037",
+      "Reducción del 95% en tiempo de inactividad",
+      "Gestión integral de crisis y comunicación"
+    ],
+    features: [
+      "SOAR con playbooks automatizados",
+      "Threat Hunting con IA predictiva",
+      "Recuperación orquestada multicloud",
+      "War Room virtual 24/7",
+      "Análisis post-mortem avanzado"
+    ],
+
+  },
+  {
+    id: "gdpr",
+    title: "Consultoría GDPR y Privacidad",
+    subtitle: "Compliance automatizado y Privacy by Design",
+    description: "Automatización del cumplimiento normativo mediante Privacy Enhancing Technologies (PETs) e IA para GDPR, LOPD-GDD y NIS2.",
+    problem: "Las multas por GDPR alcanzaron récord de 2.900M€ en 2023. El 82% de las empresas fallan en demostrar accountability continua.",
+    solution: "Implementamos Privacy by Design automatizado con tecnologías blockchain, tokenización y cifrado homomórfico para garantizar cumplimiento continuo.",
+    benefits: [
+      "Compliance continuo verificable",
+      "Reducción del 95% en riesgo de sanciones",
+      "Certificación de Privacy by Design",
+      "Ventaja en mercados regulados UE/UK"
+    ],
+    features: [
+      "DPIA automatizado con IA",
+      "Gestión de consentimiento blockchain",
+      "Sistema de breach detection 24/7",
+      "Formación inmersiva con VR",
+      "Auditorías continuas automatizadas"
+    ],
+
+  },
+  {
+    id: "formacion",
+    title: "Formación Especializada",
+    subtitle: "Capacitación inmersiva y certificada",
+    description: "Programas de formación avanzada con tecnologías inmersivas (VR/AR) y laboratorios cloud para ciberseguridad moderna.",
+    problem: "El 92% de las brechas en 2024 involucran error humano. La complejidad de las amenazas requiere formación continua y práctica real.",
+    solution: "Programas inmersivos con VR/AR, labs cloud personalizados, certificaciones oficiales y mentoring 1:1 con expertos del sector.",
+    benefits: [
+      "Reducción del 85% en incidentes por error humano",
+      "Certificaciones OSCP, CISSP, CEH y cloud",
+      "Tiempo de respuesta reducido en un 60%",
+      "ROI del 400% en habilidades técnicas"
+    ],
+    features: [
+      "Hacking ético en entornos VR",
+      "Forense digital y threat hunting",
+      "DevSecOps y secure coding avanzado",
+      "Seguridad multicloud y Zero Trust",
+      "Threat Intelligence con MITRE ATT&CK"
+    ],
+
+  }
+];
+---
+
+<Layout 
+  title="Servicios de Ciberseguridad - Soluciones Integrales | Sesecpro"
+  description="Servicios especializados de ciberseguridad: auditorías, pentesting, hardening, respuesta a incidentes, consultoría GDPR y formación técnica."
+  lang="es"
+>
+  <SEO 
+    slot="head"
+    title="Servicios de Ciberseguridad Empresarial | SESEC"
+    description="Servicios especializados en ciberseguridad: auditorías de seguridad, pentesting ético, hardening de sistemas y respuesta a incidentes. Protección empresarial 24/7 con metodologías militares y tecnología de élite."
+    type="service"
+    image="/images/services-og.jpg"
+    imageAlt="Servicios de ciberseguridad SESEC - Auditorías, Pentesting, Hardening"
+    structuredData={{
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      'name': 'Servicios de Ciberseguridad Empresarial',
+      'description': 'Servicios especializados en ciberseguridad empresarial incluyendo auditorías, pentesting, hardening y respuesta a incidentes',
+      'provider': {
+        '@type': 'Organization',
+        'name': 'SESEC',
+        'url': 'https://sesecpro.com'
+      },
+      'serviceType': [
+        'Auditorías de Ciberseguridad',
+        'Pentesting Ético',
+        'Hardening de Sistemas',
+        'Respuesta a Incidentes',
+        'Consultoría ISO 27001'
+      ],
+      'areaServed': {
+        '@type': 'Country',
+        'name': 'Spain'
+      },
+      'hasOfferCatalog': {
+        '@type': 'OfferCatalog',
+        'name': 'Servicios de Ciberseguridad',
+        'itemListElement': [
+          {
+            '@type': 'Offer',
+            'itemOffered': {
+              '@type': 'Service',
+              'name': 'Auditorías de Ciberseguridad',
+              'description': 'Evaluación completa de la postura de seguridad organizacional'
+            }
+          },
+          {
+            '@type': 'Offer',
+            'itemOffered': {
+              '@type': 'Service',
+              'name': 'Pentesting Ético',
+              'description': 'Pruebas de penetración controladas para identificar vulnerabilidades'
+            }
+          },
+          {
+            '@type': 'Offer',
+            'itemOffered': {
+              '@type': 'Service',
+              'name': 'Hardening de Sistemas',
+              'description': 'Fortalecimiento y configuración segura de sistemas e infraestructura'
+            }
+          },
+          {
+            '@type': 'Offer',
+            'itemOffered': {
+              '@type': 'Service',
+              'name': 'Respuesta a Incidentes',
+              'description': 'Gestión y contención de incidentes de ciberseguridad 24/7'
+            }
+          }
+        ]
+      }
+    }}
+  />
+  <!-- Hero Section -->
+  <Section 
+    title="Servicios de Ciberseguridad"
+    subtitle="Soluciones especializadas que protegen hoy y escalan mañana"
+    background="gradient"
+    spacing="large"
+    alignment="center"
+  >
+    <div class="hero-content">
+      <p class="hero-description">
+        Cada servicio está diseñado para empresas que entienden que la ciberseguridad 
+        es inversión, no gasto. Metodologías probadas, herramientas de última generación 
+        y un enfoque práctico que genera resultados medibles.
+      </p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Auditorías completadas</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">99.8%</div>
+          <div class="stat-label">Uptime garantizado</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Respuesta a incidentes</div>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Servicios Principales -->
+  {mainServices.map((service, index) => (
+    <Section 
+      id={service.id}
+      background={index % 2 === 0 ? 'default' : 'soft'}
+      spacing="large"
+    >
+      <div class="service-layout">
+        <div class="service-header">
+          <h2 class="service-title">{service.title}</h2>
+          <p class="service-subtitle">{service.subtitle}</p>
+          <p class="service-description">{service.description}</p>
+        </div>
+        
+        <div class="service-content">
+          <!-- Problema -->
+          <div class="service-block problem-block">
+            <h3 class="block-title">
+              <svg class="block-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              El Problema
+            </h3>
+            <p class="block-content">{service.problem}</p>
+          </div>
+          
+          <!-- Solución -->
+          <div class="service-block solution-block">
+            <h3 class="block-title">
+              <svg class="block-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22,4 12,14.01 9,11.01"/>
+              </svg>
+              Nuestra Solución
+            </h3>
+            <p class="block-content">{service.solution}</p>
+          </div>
+          
+          <!-- Beneficios -->
+          <div class="service-block benefits-block">
+            <h3 class="block-title">
+              <svg class="block-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+              </svg>
+              Beneficios Clave
+            </h3>
+            <ul class="benefits-list">
+              {service.benefits.map((benefit) => (
+                <li class="benefit-item">{benefit}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        
+        <div class="service-details">
+          <div class="details-grid">
+            <!-- Características -->
+            <div class="detail-card">
+              <h4 class="detail-title">¿Qué incluye?</h4>
+              <ul class="detail-list">
+                {service.features.map((feature) => (
+                  <li class="detail-item">{feature}</li>
+                ))}
+              </ul>
+            </div>
+            
+
+          </div>
+          
+          <div class="service-cta">
+            <Button 
+              href={`/contacto?servicio=${service.id}`}
+              variant="primary"
+              size="large"
+              icon="arrow-up-right"
+              iconPosition="right"
+              className="focus-ring"
+              ariaLabel={`Solicitar ${service.title}`}>
+              Solicitar {service.title}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Section>
+  ))}
+
+  <!-- CTA Final -->
+  <BigCTA 
+    title="¿No encuentras lo que buscas?"
+    subtitle="Cada empresa tiene necesidades únicas. Hablemos sobre cómo podemos adaptar nuestros servicios a tu situación específica."
+    primaryButton={{
+      text: "Consulta personalizada",
+      href: "/contacto?tipo=consulta",
+      variant: "primary"
+    }}
+    secondaryButton={{
+      text: "Ver metodología",
+      href: "/metodologia",
+      variant: "outline"
+    }}
+    background="gradient"
+    size="large"
+  />
+</Layout>
+
+<style>
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .hero-description {
+    font-size: var(--fs-body);
+    color: var(--fg-dim);
+    line-height: 1.7;
+    margin-bottom: var(--sp-8);
+  }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+  
+  .stat {
+    text-align: center;
+  }
+  
+  .stat-number {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: var(--sp-2);
+  }
+  
+  .stat-label {
+    font-size: 14px;
+    color: var(--fg-dim);
+    font-weight: 500;
+  }
+  
+  /* Service Layout */
+  .service-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .service-header {
+    text-align: center;
+    margin-bottom: var(--sp-12);
+  }
+  
+  .service-title {
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: var(--sp-3);
+    line-height: 1.2;
+  }
+  
+  .service-subtitle {
+    font-size: var(--fs-h3);
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: var(--sp-4);
+  }
+  
+  .service-description {
+    font-size: var(--fs-body);
+    color: var(--fg-dim);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .service-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-bottom: var(--sp-12);
+  }
+  
+  .service-block {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    backdrop-filter: blur(10px);
+  }
+  
+  .problem-block {
+    border-left: 4px solid #ff6b6b;
+  }
+  
+  .solution-block {
+    border-left: 4px solid var(--accent);
+  }
+  
+  .benefits-block {
+    border-left: 4px solid var(--accent-2);
+  }
+  
+  .block-title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: var(--sp-4);
+  }
+  
+  .block-icon {
+    color: var(--accent);
+  }
+  
+  .problem-block .block-icon {
+    color: #ff6b6b;
+  }
+  
+  .benefits-block .block-icon {
+    color: var(--accent-2);
+  }
+  
+  .block-content {
+    color: var(--fg-dim);
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-3);
+    color: var(--fg-dim);
+    line-height: 1.5;
+  }
+  
+  .benefit-item::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .service-details {
+    margin-top: var(--sp-12);
+  }
+  
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--sp-6);
+    margin-bottom: var(--sp-8);
+  }
+  
+  .detail-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    backdrop-filter: blur(10px);
+  }
+  
+  .detail-title {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: var(--sp-4);
+  }
+  
+  .detail-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-3);
+    color: var(--fg-dim);
+    line-height: 1.5;
+    font-size: 15px;
+  }
+  
+  .detail-item::before {
+    content: '•';
+    color: var(--accent);
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .service-cta {
+    text-align: center;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-stats {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .service-content {
+      gap: var(--sp-6);
+    }
+    
+    .service-block {
+      padding: var(--sp-4);
+    }
+    
+    .details-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .detail-card {
+      padding: var(--sp-4);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .service-content {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

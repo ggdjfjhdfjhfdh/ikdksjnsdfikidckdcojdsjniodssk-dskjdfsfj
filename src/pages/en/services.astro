@@ -1,0 +1,566 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Section from '../../components/Section.astro';
+
+import BigCTA from '../../components/BigCTA.astro';
+import Button from '../../components/Button.astro';
+
+// Main services with complete details
+const mainServices = [
+  {
+    id: "audits",
+    title: "Security Audits",
+    subtitle: "Comprehensive infrastructure assessment",
+    description: "We identify vulnerabilities before attackers do using proven methodologies and cutting-edge tools.",
+    problem: "Security breaches cost an average of €4.45M per incident. Most originate from known but unpatched vulnerabilities.",
+    solution: "Our audits follow OWASP, NIST, and ISO 27001 standards, providing a complete risk map with clear prioritization.",
+    benefits: [
+      "85% reduction in threat detection time",
+      "Guaranteed regulatory compliance (GDPR, PCI-DSS)",
+      "Average ROI of 300% in the first year",
+      "Detailed executive and technical reports"
+    ],
+    features: [
+      "Automated vulnerability analysis",
+      "Manual critical code review",
+      "Security configuration testing",
+      "Policy and procedure evaluation",
+      "Targeted attack simulation"
+    ],
+    deliverables: [
+      "Executive report with risk summary",
+      "Detailed technical documentation",
+      "Prioritized remediation plan",
+      "Stakeholder presentation",
+      "Post-implementation follow-up"
+    ]
+  },
+  {
+    id: "pentesting",
+    title: "Advanced Pentesting",
+    subtitle: "Real-world attack simulation",
+    description: "We test your systems' resilience through controlled attacks that replicate real cybercriminal techniques.",
+    problem: "68% of organizations discover breaches months after the initial attack. Systems appear secure until they're compromised.",
+    solution: "We execute ethical attacks following PTES methodology, simulating everything from script kiddies to advanced APTs.",
+    benefits: [
+      "Real validation of security controls",
+      "Identification of complex attack vectors",
+      "Improved response protocols",
+      "Resistance certification for audits"
+    ],
+    features: [
+      "Web and mobile application pentesting",
+      "Network infrastructure testing",
+      "Controlled social engineering",
+      "Physical security analysis",
+      "Red team exercises"
+    ],
+    deliverables: [
+      "Detailed penetration report",
+      "Exploitation evidence (PoC)",
+      "CVSS risk matrix",
+      "Hardening recommendations",
+      "Free post-fix retesting"
+    ]
+  },
+  {
+    id: "hardening",
+    title: "System Hardening",
+    subtitle: "Strengthening and secure configuration",
+    description: "We configure and strengthen servers, networks, and applications following security best practices.",
+    problem: "Default configurations are insecure. 95% of successful attacks exploit weak or incorrect configurations.",
+    solution: "We apply CIS security baselines, DISA STIG, and technology and sector-specific benchmarks.",
+    benefits: [
+      "90% reduction in attack surface",
+      "Automatic standards compliance",
+      "Improved system response times",
+      "Complete change documentation"
+    ],
+    features: [
+      "Linux/Windows server hardening",
+      "Secure database configuration",
+      "Cloud infrastructure strengthening",
+      "Web application securization",
+      "Access control implementation"
+    ],
+    deliverables: [
+      "Automated configuration scripts",
+      "Applied baseline documentation",
+      "Continuous verification checklist",
+      "Maintenance policies",
+      "Technical team training"
+    ]
+  },
+  {
+    id: "response",
+    title: "Incident Response",
+    subtitle: "Rapid response protocol",
+    description: "Immediate response to security breaches with complete forensic analysis and effective containment.",
+    problem: "Average containment time is 287 days. Each additional day increases cost by €30K and reputational damage.",
+    solution: "24/7 protocol with <2h response, following NIST methodology for containment, eradication, and recovery.",
+    benefits: [
+      "Containment in less than 2 hours",
+      "Legal evidence preservation",
+      "Minimized downtime",
+      "Transparent stakeholder communication"
+    ],
+    features: [
+      "Digital forensic analysis",
+      "Containment and eradication",
+      "System recovery",
+      "Crisis communication",
+      "Lessons learned"
+    ],
+    deliverables: [
+      "Complete forensic report",
+      "Detailed incident timeline",
+      "Legally preserved evidence",
+      "Post-incident improvement plan",
+      "Insurance/legal documentation"
+    ]
+  },
+  {
+    id: "gdpr",
+    title: "GDPR Consulting",
+    subtitle: "Comprehensive regulatory compliance",
+    description: "Complete advisory for GDPR compliance and other data protection regulations.",
+    problem: "GDPR fines can reach 4% of annual turnover. 73% of companies still don't fully comply.",
+    solution: "We implement a comprehensive compliance program with impact assessments, policies, and procedures.",
+    benefits: [
+      "Guaranteed regulatory compliance",
+      "Reduced sanction risk",
+      "Improved customer trust",
+      "Competitive advantage in tenders"
+    ],
+    features: [
+      "Data Protection Impact Assessment (DPIA)",
+      "Privacy policies",
+      "Breach notification procedures",
+      "Team training",
+      "Compliance audits"
+    ],
+    deliverables: [
+      "Processing activities record",
+      "GDPR policies and procedures",
+      "Consent templates",
+      "Personalized training plan",
+      "Compliance certificate"
+    ]
+  },
+  {
+    id: "training",
+    title: "Specialized Training",
+    subtitle: "Advanced technical training",
+    description: "Technical training programs for IT teams in the latest cybersecurity techniques and tools.",
+    problem: "95% of incidents originate from human error. Teams need continuous training on emerging threats.",
+    solution: "Hands-on programs with real labs, recognized certifications, and personalized progress tracking.",
+    benefits: [
+      "70% reduction in human error incidents",
+      "Internationally recognized certifications",
+      "Improved team response time",
+      "Measurable ROI in technical skills"
+    ],
+    features: [
+      "Ethical hacking and pentesting",
+      "Digital forensic analysis",
+      "Secure coding practices",
+      "Cloud security (AWS, Azure, GCP)",
+      "Incident response and threat hunting"
+    ],
+    deliverables: [
+      "Completion certificates",
+      "Permanent practice labs",
+      "Updated reference material",
+      "Skills assessments",
+      "Cybersecurity career plan"
+    ]
+  }
+];
+---
+
+<Layout 
+  title="Cybersecurity Services - Comprehensive Solutions | Sesecpro"
+  description="Specialized cybersecurity services: audits, pentesting, hardening, incident response, GDPR consulting, and technical training."
+  lang="en"
+>
+  <!-- Hero Section -->
+  <Section 
+    title="Cybersecurity Services"
+    subtitle="Specialized solutions that protect today and scale tomorrow"
+    background="gradient"
+    padding="xl"
+    centered={true}
+  >
+    <div class="hero-content">
+      <p class="hero-description">
+        Each service is designed for companies that understand cybersecurity 
+        is an investment, not an expense. Proven methodologies, cutting-edge tools, 
+        and a practical approach that delivers measurable results.
+      </p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Completed audits</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">99.8%</div>
+          <div class="stat-label">Guaranteed uptime</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Incident response</div>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Main Services -->
+  {mainServices.map((service, index) => (
+    <Section 
+      id={service.id}
+      background={index % 2 === 0 ? 'default' : 'soft'}
+      padding="xl"
+    >
+      <div class="service-layout">
+        <div class="service-header">
+          <h2 class="service-title">{service.title}</h2>
+          <p class="service-subtitle">{service.subtitle}</p>
+          <p class="service-description">{service.description}</p>
+        </div>
+        
+        <div class="service-content">
+          <!-- Problem -->
+          <div class="service-block problem-block">
+            <h3 class="block-title">
+              <svg class="block-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              The Problem
+            </h3>
+            <p class="block-content">{service.problem}</p>
+          </div>
+          
+          <!-- Solution -->
+          <div class="service-block solution-block">
+            <h3 class="block-title">
+              <svg class="block-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22,4 12,14.01 9,11.01"/>
+              </svg>
+              Our Solution
+            </h3>
+            <p class="block-content">{service.solution}</p>
+          </div>
+          
+          <!-- Benefits -->
+          <div class="service-block benefits-block">
+            <h3 class="block-title">
+              <svg class="block-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/>
+              </svg>
+              Key Benefits
+            </h3>
+            <ul class="benefits-list">
+              {service.benefits.map((benefit) => (
+                <li class="benefit-item">{benefit}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        
+        <div class="service-details">
+          <div class="details-grid">
+            <!-- Features -->
+            <div class="detail-card">
+              <h4 class="detail-title">What's included?</h4>
+              <ul class="detail-list">
+                {service.features.map((feature) => (
+                  <li class="detail-item">{feature}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <!-- Deliverables -->
+            <div class="detail-card">
+              <h4 class="detail-title">Deliverables</h4>
+              <ul class="detail-list">
+                {service.deliverables.map((deliverable) => (
+                  <li class="detail-item">{deliverable}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          
+          <div class="service-cta">
+            <Button 
+              href={`/en/contact?service=${service.id}`}
+              variant="primary"
+              size="lg"
+              icon="arrow-up-right"
+              iconPosition="right"
+              className="focus-ring"
+              ariaLabel={`Request ${service.title}`}>
+              Request {service.title}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Section>
+  ))}
+
+  <!-- Final CTA -->
+  <BigCTA 
+    title="Can't find what you're looking for?"
+    subtitle="Every company has unique needs. Let's talk about how we can adapt our services to your specific situation."
+    primaryButton={{
+      text: "Custom consultation",
+      href: "/en/contact?type=consultation",
+      variant: "primary"
+    }}
+    secondaryButton={{
+      text: "View methodology",
+      href: "/en/methodology",
+      variant: "outline"
+    }}
+    background="gradient"
+    size="large"
+  />
+</Layout>
+
+<style>
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .hero-description {
+    font-size: var(--fs-body);
+    color: var(--fg-dim);
+    line-height: 1.7;
+    margin-bottom: var(--sp-8);
+  }
+  
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+  
+  .stat {
+    text-align: center;
+  }
+  
+  .stat-number {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: var(--sp-2);
+  }
+  
+  .stat-label {
+    font-size: 14px;
+    color: var(--fg-dim);
+    font-weight: 500;
+  }
+  
+  /* Service Layout */
+  .service-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .service-header {
+    text-align: center;
+    margin-bottom: var(--sp-12);
+  }
+  
+  .service-title {
+    font-size: var(--fs-h1);
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: var(--sp-3);
+    line-height: 1.2;
+  }
+  
+  .service-subtitle {
+    font-size: var(--fs-h3);
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: var(--sp-4);
+  }
+  
+  .service-description {
+    font-size: var(--fs-body);
+    color: var(--fg-dim);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .service-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+    margin-bottom: var(--sp-12);
+  }
+  
+  .service-block {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    backdrop-filter: blur(10px);
+  }
+  
+  .problem-block {
+    border-left: 4px solid #ff6b6b;
+  }
+  
+  .solution-block {
+    border-left: 4px solid var(--accent);
+  }
+  
+  .benefits-block {
+    border-left: 4px solid var(--accent-2);
+  }
+  
+  .block-title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: var(--sp-4);
+  }
+  
+  .block-icon {
+    color: var(--accent);
+  }
+  
+  .problem-block .block-icon {
+    color: #ff6b6b;
+  }
+  
+  .benefits-block .block-icon {
+    color: var(--accent-2);
+  }
+  
+  .block-content {
+    color: var(--fg-dim);
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-3);
+    color: var(--fg-dim);
+    line-height: 1.5;
+  }
+  
+  .benefit-item::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: bold;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .service-details {
+    margin-top: var(--sp-12);
+  }
+  
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--sp-6);
+    margin-bottom: var(--sp-8);
+  }
+  
+  .detail-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    backdrop-filter: blur(10px);
+  }
+  
+  .detail-title {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: var(--sp-4);
+  }
+  
+  .detail-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-3);
+    color: var(--fg-dim);
+    line-height: 1.5;
+    font-size: 15px;
+  }
+  
+  .detail-item::before {
+    content: '•';
+    color: var(--accent);
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .service-cta {
+    text-align: center;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-stats {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .service-content {
+      gap: var(--sp-6);
+    }
+    
+    .service-block {
+      padding: var(--sp-4);
+    }
+    
+    .details-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .detail-card {
+      padding: var(--sp-4);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .service-content {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

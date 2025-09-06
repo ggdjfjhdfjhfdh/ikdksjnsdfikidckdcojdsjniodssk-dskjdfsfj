@@ -1,0 +1,478 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Section from '../components/Section.astro';
+import Timeline from '../components/Timeline.astro';
+import Card from '../components/Card.astro';
+import BigCTA from '../components/BigCTA.astro';
+
+// Methodology steps for timeline
+const methodologySteps = [
+  {
+    title: "Reconocimiento",
+    subtitle: "Análisis inicial y mapeo",
+    description: "Identificamos todos los activos, servicios y posibles vectores de ataque. Recopilamos información pública y realizamos un análisis exhaustivo de la superficie de ataque.",
+    duration: "1-2 semanas",
+    deliverables: [
+      "Inventario completo de activos",
+      "Mapa de superficie de ataque",
+      "Análisis de inteligencia de amenazas",
+      "Identificación de tecnologías"
+    ]
+  },
+  {
+    title: "Pentesting",
+    subtitle: "Pruebas de penetración controladas",
+    description: "Ejecutamos ataques éticos siguiendo metodologías OWASP y PTES. Simulamos desde ataques automatizados hasta técnicas avanzadas de APT.",
+    duration: "2-4 semanas",
+    deliverables: [
+      "Explotación de vulnerabilidades",
+      "Pruebas de escalada de privilegios",
+      "Análisis de movimiento lateral",
+      "Evidencias de compromiso (PoC)"
+    ]
+  },
+  {
+    title: "Implementación",
+    subtitle: "Hardening y securización",
+    description: "Aplicamos las correcciones identificadas siguiendo estándares CIS y NIST. Configuramos controles de seguridad y establecemos políticas robustas.",
+    duration: "2-6 semanas",
+    deliverables: [
+      "Scripts de configuración automatizada",
+      "Políticas de seguridad actualizadas",
+      "Controles de acceso implementados",
+      "Documentación de cambios"
+    ]
+  },
+  {
+    title: "Mantenimiento",
+    subtitle: "Monitoreo y mejora continua",
+    description: "Establecemos un programa de monitoreo continuo con revisiones periódicas, actualizaciones de seguridad y respuesta a nuevas amenazas.",
+    duration: "Continuo",
+    deliverables: [
+      "Dashboard de monitoreo 24/7",
+      "Informes mensuales de estado",
+      "Actualizaciones de políticas",
+      "Respuesta a incidentes"
+    ]
+  }
+];
+
+// Core values
+const coreValues = [
+  {
+    title: "Transparencia Total",
+    description: "Cada proceso, hallazgo y recomendación está completamente documentado. Sin jerga técnica innecesaria, sin resultados inflados.",
+    icon: "transparency"
+  },
+  {
+    title: "Enfoque Práctico",
+    description: "Priorizamos vulnerabilidades por impacto real en el negocio. Soluciones implementables, no teóricas.",
+    icon: "practical"
+  },
+  {
+    title: "Mejora Continua",
+    description: "La ciberseguridad no es un proyecto, es un proceso. Establecemos ciclos de mejora que evolucionan con las amenazas.",
+    icon: "continuous"
+  },
+  {
+    title: "Conocimiento Transferido",
+    description: "Tu equipo aprende en cada proyecto. Formación práctica que reduce la dependencia externa a largo plazo.",
+    icon: "knowledge"
+  }
+];
+
+// Certifications and standards
+const certifications = [
+  {
+    name: "ISO 27001",
+    description: "Gestión de seguridad de la información",
+    logo: "iso27001"
+  },
+  {
+    name: "OWASP",
+    description: "Metodologías de testing de aplicaciones",
+    logo: "owasp"
+  },
+  {
+    name: "NIST",
+    description: "Framework de ciberseguridad",
+    logo: "nist"
+  },
+  {
+    name: "CIS Controls",
+    description: "Controles críticos de seguridad",
+    logo: "cis"
+  },
+  {
+    name: "PTES",
+    description: "Estándar de testing de penetración",
+    logo: "ptes"
+  },
+  {
+    name: "GDPR",
+    description: "Cumplimiento normativo europeo",
+    logo: "gdpr"
+  }
+];
+---
+
+<Layout 
+  title="Metodología de Trabajo - Proceso Estructurado | Sesecpro"
+  description="Conoce nuestra metodología de ciberseguridad: desde reconocimiento hasta mantenimiento continuo. Proceso transparente y resultados medibles."
+  lang="es"
+>
+  <!-- Hero Section -->
+  <Section 
+    title="Nuestra Metodología"
+    subtitle="Un proceso estructurado que garantiza resultados medibles"
+    background="gradient"
+    spacing="large"
+    alignment="center"
+  >
+    <div class="hero-content">
+      <p class="hero-description">
+        No improvisamos. Cada proyecto sigue una metodología probada que combina 
+        estándares internacionales con nuestra experiencia práctica. Transparencia 
+        total, plazos realistas y resultados que puedes medir.
+      </p>
+      <div class="hero-metrics">
+        <div class="metric">
+          <div class="metric-number">4</div>
+          <div class="metric-label">Fases estructuradas</div>
+        </div>
+        <div class="metric">
+          <div class="metric-number">100%</div>
+          <div class="metric-label">Trazabilidad</div>
+        </div>
+        <div class="metric">
+          <div class="metric-number">24h</div>
+          <div class="metric-label">Tiempo de respuesta</div>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Timeline Section -->
+  <Section 
+    title="Proceso de Trabajo"
+    subtitle="Cuatro fases que transforman tu postura de seguridad"
+    background="default"
+    spacing="large"
+  >
+    <Timeline steps={methodologySteps} />
+  </Section>
+
+  <!-- Core Values -->
+  <Section 
+    title="Nuestros Principios"
+    subtitle="Los valores que guían cada proyecto"
+    background="soft"
+    spacing="large"
+  >
+    <div class="values-grid">
+      {coreValues.map((value) => (
+        <Card 
+          variant="value"
+          title={value.title}
+          description={value.description}
+          icon={value.icon}
+        />
+      ))}
+    </div>
+  </Section>
+
+  <!-- Standards and Certifications -->
+  <Section 
+    title="Estándares y Certificaciones"
+    subtitle="Metodologías reconocidas internacionalmente"
+    background="default"
+    spacing="large"
+  >
+    <div class="standards-intro">
+      <p>
+        Nuestro trabajo se basa en los estándares más rigurosos de la industria. 
+        No reinventamos la rueda: aplicamos metodologías probadas y las adaptamos 
+        a las necesidades específicas de cada cliente.
+      </p>
+    </div>
+    
+    <div class="certifications-grid">
+      {certifications.map((cert) => (
+        <div class="certification-card">
+          <div class="cert-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M9 12l2 2 4-4"/>
+              <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+              <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+              <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
+              <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
+            </svg>
+          </div>
+          <h3 class="cert-name">{cert.name}</h3>
+          <p class="cert-description">{cert.description}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <!-- Quality Assurance -->
+  <Section 
+    title="Nuestro Compromiso"
+    subtitle="Calidad y transparencia en cada proyecto"
+    background="soft"
+    spacing="large"
+  >
+    <div class="quality-grid">
+      <div class="quality-card">
+        <div class="quality-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12,6 12,12 16,14"/>
+          </svg>
+        </div>
+        <h3>Plazos Realistas</h3>
+        <p>Estimaciones basadas en proyectos reales. Comunicación proactiva si surgen imprevistos.</p>
+      </div>
+      
+      <div class="quality-card">
+        <div class="quality-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 12l2 2 4-4"/>
+            <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
+            <path d="M3 12c1 0 3-1 3-3s-2-3-3-3-3 1-3 3 2 3 3 3"/>
+            <path d="M12 3c0 1-1 3-3 3s-3-2-3-3 1-3 3-3 3 2 3 3"/>
+            <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
+          </svg>
+        </div>
+        <h3>Metodología Probada</h3>
+        <p>Procesos basados en estándares internacionales y experiencia práctica en cientos de proyectos.</p>
+      </div>
+      
+      <div class="quality-card">
+        <div class="quality-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 9V5a3 3 0 0 0-6 0v4"/>
+            <rect x="2" y="9" width="20" height="11" rx="2" ry="2"/>
+          </svg>
+        </div>
+        <h3>Confidencialidad Total</h3>
+        <p>NDA firmado antes del primer contacto. Tus datos nunca salen de nuestros sistemas certificados.</p>
+      </div>
+      
+      <div class="quality-card">
+        <div class="quality-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="8.5" cy="7" r="4"/>
+            <path d="M20 8v6"/>
+            <path d="M23 11h-6"/>
+          </svg>
+        </div>
+        <h3>Soporte Continuo</h3>
+        <p>30 días de soporte post-implementación incluidos. Respuesta garantizada en menos de 24h.</p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Final CTA -->
+  <BigCTA 
+    title="¿Listo para empezar?"
+    subtitle="Hablemos de tu proyecto. Primera consultoría sin compromiso para evaluar tu situación actual."
+    primaryButton={{
+      text: "Solicitar consultoría",
+      href: "/contacto?type=consultation",
+      variant: "primary"
+    }}
+    secondaryButton={{
+      text: "Ver servicios",
+      href: "/servicios",
+      variant: "outline"
+    }}
+    background="gradient"
+    size="large"
+  />
+</Layout>
+
+<style>
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .hero-description {
+    font-size: var(--fs-body);
+    color: var(--fg-dim);
+    line-height: 1.7;
+    margin-bottom: var(--sp-8);
+  }
+  
+  .hero-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+  
+  .metric {
+    text-align: center;
+  }
+  
+  .metric-number {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: var(--sp-2);
+  }
+  
+  .metric-label {
+    font-size: 14px;
+    color: var(--fg-dim);
+    font-weight: 500;
+  }
+  
+  /* Values Grid */
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--sp-6);
+    margin-top: var(--sp-8);
+  }
+  
+  /* Standards Section */
+  .standards-intro {
+    max-width: 700px;
+    margin: 0 auto var(--sp-10) auto;
+    text-align: center;
+  }
+  
+  .standards-intro p {
+    font-size: var(--fs-body);
+    color: var(--fg-dim);
+    line-height: 1.6;
+  }
+  
+  .certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--sp-6);
+  }
+  
+  .certification-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: all var(--dur) var(--ease);
+  }
+  
+  .certification-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-1), 0 0 20px rgba(124, 247, 212, 0.1);
+    border-color: var(--accent);
+  }
+  
+  .cert-icon {
+    color: var(--accent);
+    margin-bottom: var(--sp-4);
+  }
+  
+  .cert-name {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: var(--sp-2);
+  }
+  
+  .cert-description {
+    font-size: 14px;
+    color: var(--fg-dim);
+    line-height: 1.5;
+    margin: 0;
+  }
+  
+  /* Quality Assurance */
+  .quality-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--sp-6);
+  }
+  
+  .quality-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    backdrop-filter: blur(10px);
+    transition: all var(--dur) var(--ease);
+  }
+  
+  .quality-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-1);
+    border-color: var(--accent);
+  }
+  
+  .quality-icon {
+    color: var(--accent);
+    margin-bottom: var(--sp-4);
+  }
+  
+  .quality-card h3 {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: var(--sp-3);
+    line-height: 1.3;
+  }
+  
+  .quality-card p {
+    color: var(--fg-dim);
+    line-height: 1.5;
+    margin: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-metrics {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .values-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .certifications-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--sp-4);
+    }
+    
+    .certification-card {
+      padding: var(--sp-4);
+    }
+    
+    .quality-grid {
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    
+    .quality-card {
+      padding: var(--sp-4);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .certifications-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .quality-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

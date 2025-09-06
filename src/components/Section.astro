@@ -1,0 +1,138 @@
+---
+export interface Props {
+  title?: string;
+  subtitle?: string;
+  background?: 'default' | 'soft' | 'gradient';
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  centered?: boolean;
+  id?: string;
+}
+
+const { 
+  title, 
+  subtitle, 
+  background = 'default', 
+  padding = 'lg', 
+  centered = false,
+  id 
+} = Astro.props;
+
+const paddingClasses = {
+  sm: 'section-padding-sm',
+  md: 'section-padding-md', 
+  lg: 'section-padding-lg',
+  xl: 'section-padding-xl'
+};
+
+const backgroundClasses = {
+  default: 'bg-transparent',
+  soft: 'bg-soft',
+  gradient: 'bg-gradient'
+};
+---
+
+<section 
+  class={`section ${backgroundClasses[background]} ${paddingClasses[padding]} scroll-reveal`}
+  id={id}
+>
+  <div class="container">
+    {(title || subtitle) && (
+      <div class={`section-header stagger-children ${centered ? 'text-center' : ''}`}>
+        {title && (
+          <h2 class="section-title animate-fade-in">{title}</h2>
+        )}
+        {subtitle && (
+          <p class="section-subtitle animate-fade-in delay-100">{subtitle}</p>
+        )}
+      </div>
+    )}
+    
+    <div class="section-content stagger-children">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    position: relative;
+  }
+  
+  .bg-soft {
+    background-color: var(--bg-soft);
+  }
+  
+  .bg-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--bg) 0%,
+      var(--bg-soft) 50%,
+      var(--bg) 100%
+    );
+  }
+  
+  /* Padding classes */
+  .section-padding-sm { padding: var(--space-12) 0; }
+  .section-padding-md { padding: var(--space-16) 0; }
+  .section-padding-lg { padding: var(--space-20) 0; }
+  .section-padding-xl { padding: var(--space-24) 0; }
+  
+  .section-header {
+    margin-bottom: var(--space-16);
+  }
+  
+  .section-title {
+    margin-bottom: var(--space-4);
+    color: var(--fg);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  
+  .section-subtitle {
+    color: var(--fg-dim);
+    font-size: var(--fs-lg);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0;
+  }
+  
+  .text-center .section-subtitle {
+    margin: 0 auto;
+  }
+  
+  .section-content {
+    position: relative;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .section-padding-sm { padding: var(--space-8) 0; }
+    .section-padding-md { padding: var(--space-10) 0; }
+    .section-padding-lg { padding: var(--space-12) 0; }
+    .section-padding-xl { padding: var(--space-16) 0; }
+    
+    .section-header {
+      margin-bottom: var(--space-10);
+    }
+    
+    .section-title {
+      font-size: var(--fs-h3);
+    }
+    
+    .section-subtitle {
+      font-size: var(--fs-base);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .section-padding-sm { padding: var(--space-6) 0; }
+    .section-padding-md { padding: var(--space-8) 0; }
+    .section-padding-lg { padding: var(--space-10) 0; }
+    .section-padding-xl { padding: var(--space-12) 0; }
+    
+    .section-header {
+      margin-bottom: var(--space-8);
+    }
+  }
+</style>

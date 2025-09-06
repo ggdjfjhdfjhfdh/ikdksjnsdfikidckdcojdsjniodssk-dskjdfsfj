@@ -1,0 +1,454 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import Section from '../../components/Section.astro';
+import Card from '../../components/Card.astro';
+import BigCTA from '../../components/BigCTA.astro';
+
+const threats = [
+  {
+    title: "Ransomware",
+    description: "Attacks that encrypt critical data and demand ransom. 71% of organizations were attacked in 2023.",
+    icon: "🔒",
+    stats: "Average cost: $4.54M",
+    solutions: [
+      "Immutable and isolated backup",
+      "Advanced network segmentation",
+      "Behavioral EDR detection",
+      "Incident response plan"
+    ],
+    trend: "↗️ +41% in 2023"
+  },
+  {
+    title: "Advanced Phishing",
+    description: "Increasingly sophisticated social engineering attacks. 83% of organizations experienced phishing.",
+    icon: "🎣",
+    stats: "1 in 99 emails is malicious",
+    solutions: [
+      "Advanced email filtering",
+      "Phishing simulations",
+      "Multi-factor authentication",
+      "Continuous staff training"
+    ],
+    trend: "↗️ +61% BEC attacks"
+  },
+  {
+    title: "APT (Advanced Persistent Threats)",
+    description: "Targeted and persistent attacks by state actors and organized criminal groups.",
+    icon: "🎯",
+    stats: "Average detection time: 287 days",
+    solutions: [
+      "Proactive threat hunting",
+      "Advanced SIEM/SOAR",
+      "Threat intelligence",
+      "24/7 monitoring"
+    ],
+    trend: "↗️ +25% in critical sectors"
+  },
+  {
+    title: "Supply Chain Attacks",
+    description: "Software supply chain compromise. Cases like SolarWinds have marked a turning point.",
+    icon: "🔗",
+    stats: "742% increase in 2023",
+    solutions: [
+      "Vendor auditing",
+      "Integrity verification",
+      "Zero Trust Architecture",
+      "Dependency monitoring"
+    ],
+    trend: "↗️ New critical priority"
+  },
+  {
+    title: "Cloud Security Threats",
+    description: "Misconfigurations and vulnerabilities in cloud environments. 95% of failures are due to human error.",
+    icon: "☁️",
+    stats: "82% of breaches involve cloud",
+    solutions: [
+      "Cloud Security Posture Management",
+      "Automated configuration",
+      "Continuous monitoring",
+      "Granular access policies"
+    ],
+    trend: "↗️ +28% cloud incidents"
+  },
+  {
+    title: "AI-Powered Attacks",
+    description: "Use of artificial intelligence to create more sophisticated and automated attacks.",
+    icon: "🤖",
+    stats: "Emerging but critical",
+    solutions: [
+      "AI-based detection",
+      "Behavioral analysis",
+      "Automated response",
+      "Advanced threat intelligence"
+    ],
+    trend: "↗️ Emerging threat"
+  }
+];
+
+const industryStats = [
+  {
+    metric: "$4.45M",
+    description: "Average cost of a data breach in 2023",
+    change: "+15.3%"
+  },
+  {
+    metric: "277 days",
+    description: "Average time to identify and contain a breach",
+    change: "-16 days"
+  },
+  {
+    metric: "51%",
+    description: "Of organizations plan to increase security investment",
+    change: "+12%"
+  },
+  {
+    metric: "3.5M",
+    description: "Unfilled cybersecurity positions globally",
+    change: "+26%"
+  }
+];
+
+const expertInsights = [
+  {
+    title: "2024-2025 Trends",
+    content: "The convergence of AI, quantum computing, and 5G is redefining the threat landscape. Organizations must adopt a proactive and adaptive approach.",
+    author: {
+      name: "SESEC Team",
+      role: "Cybersecurity Experts"
+    }
+  },
+  {
+    title: "Zero Trust Evolution",
+    content: "The Zero Trust model evolves towards more granular and contextual architectures, integrating identity, devices, and data in real-time.",
+    author: {
+      name: "SESEC Analysis",
+      role: "Security Analysts"
+    }
+  },
+  {
+    title: "Quantum-Safe Security",
+    content: "The quantum threat requires immediate preparation. Organizations must begin the transition to post-quantum cryptography now.",
+    author: {
+      name: "SESEC Research",
+      role: "Research Team"
+    }
+  }
+];
+---
+
+<Layout title="Current Threats and Solutions | SESEC">
+  <Hero
+    title="Current Cybersecurity Threats"
+    subtitle="Expert analysis of the most critical threats and advanced solutions to protect your organization"
+    ctaPrimary={{
+      text: "Free Consultation",
+      href: "/en/contacto"
+    }}
+    ctaSecondary={{
+      text: "View Services",
+      href: "/en/servicios"
+    }}
+  />
+
+  <!-- Industry Statistics -->
+  <Section
+    title="Current Cybersecurity Landscape"
+    subtitle="Key data defining the current state of digital security"
+    background="soft"
+    padding="xl"
+  >
+    <div class="stats-grid">
+      {industryStats.map((stat) => (
+        <div class="stat-card">
+          <div class="stat-metric">{stat.metric}</div>
+          <div class="stat-description">{stat.description}</div>
+          <div class="stat-change">{stat.change}</div>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <!-- Main Threats -->
+  <Section
+    title="Critical Threats 2024"
+    subtitle="Detailed analysis of the most dangerous threats and how to defend against them"
+    background="default"
+    padding="xl"
+  >
+    <div class="threats-grid">
+      {threats.map((threat) => (
+        <div class="threat-card">
+          <div class="threat-header">
+            <span class="threat-icon">{threat.icon}</span>
+            <div class="threat-title-group">
+              <h3 class="threat-title">{threat.title}</h3>
+              <span class="threat-trend">{threat.trend}</span>
+            </div>
+          </div>
+          <p class="threat-description">{threat.description}</p>
+          <div class="threat-stats">{threat.stats}</div>
+          <div class="solutions-section">
+            <h4>Recommended Solutions:</h4>
+            <ul class="solutions-list">
+              {threat.solutions.map((solution) => (
+                <li>{solution}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <!-- Expert Insights -->
+  <Section
+    title="Expert Perspective"
+    subtitle="Analysis and trends from our team of specialists"
+    background="soft"
+    padding="xl"
+  >
+    <div class="insights-grid">
+      {expertInsights.map((insight) => (
+        <Card
+          title={insight.title}
+          description={insight.content}
+          author={insight.author}
+          variant="value"
+        />
+      ))}
+    </div>
+  </Section>
+
+  <!-- Protection Methodology -->
+  <Section
+    title="Our Protection Approach"
+    subtitle="Proven methodology to defend against advanced threats"
+    background="gradient"
+    padding="xl"
+  >
+    <div class="methodology-grid">
+      <div class="methodology-step">
+        <div class="step-number">01</div>
+        <h3>Risk Assessment</h3>
+        <p>Comprehensive analysis of your organization's specific threat landscape</p>
+      </div>
+      <div class="methodology-step">
+        <div class="step-number">02</div>
+        <h3>Defense Design</h3>
+        <p>Multi-layered security architecture adapted to your identified threats</p>
+      </div>
+      <div class="methodology-step">
+        <div class="step-number">03</div>
+        <h3>Advanced Implementation</h3>
+        <p>Deployment of next-generation solutions with optimized configuration</p>
+      </div>
+      <div class="methodology-step">
+        <div class="step-number">04</div>
+        <h3>Continuous Monitoring</h3>
+        <p>24/7 surveillance with proactive threat hunting and automated response</p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Final CTA -->
+  <BigCTA
+    title="Ready to defend against these threats?"
+    subtitle="Our experts will help you assess your security posture and design effective defenses"
+    primaryButton={{ text: "Free Assessment", href: "/en/contact" }}
+    secondaryButton={{ text: "Download Report", href: "/en/contact" }}
+  />
+</Layout>
+
+<style>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border: 1px solid #e5e7eb;
+  }
+
+  .stat-metric {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-description {
+    color: #6b7280;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .stat-change {
+    font-weight: 600;
+    color: #059669;
+    font-size: 0.9rem;
+  }
+
+  .threats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .threat-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .threat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  }
+
+  .threat-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .threat-icon {
+    font-size: 2rem;
+    background: #f3f4f6;
+    padding: 0.75rem;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .threat-title-group {
+    flex: 1;
+  }
+
+  .threat-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .threat-trend {
+    font-size: 0.875rem;
+    color: #dc2626;
+    font-weight: 600;
+  }
+
+  .threat-description {
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .threat-stats {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .solutions-section h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+  }
+
+  .solutions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .solutions-list li {
+    padding: 0.5rem 0;
+    color: #4b5563;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .solutions-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #059669;
+    font-weight: 600;
+  }
+
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .methodology-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .methodology-step {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .step-number {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    line-height: 56px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+  }
+
+  .methodology-step h3 {
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .methodology-step p {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .threats-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .methodology-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

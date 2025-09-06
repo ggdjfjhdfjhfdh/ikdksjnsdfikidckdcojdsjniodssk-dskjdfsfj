@@ -1,0 +1,137 @@
+---
+export interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
+  className?: string;
+  sizes?: string;
+  priority?: boolean;
+}
+
+const { 
+  src, 
+  alt, 
+  width, 
+  height, 
+  loading = 'lazy', 
+  className = '', 
+  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+  priority = false 
+} = Astro.props;
+
+// Generar versiones WebP y AVIF si es posible
+const getOptimizedSrc = (originalSrc: string, format: string) => {
+  if (originalSrc.startsWith('http')) return originalSrc;
+  const ext = originalSrc.split('.').pop();
+  return originalSrc.replace(`.${ext}`, `.${format}`);
+};
+
+const webpSrc = getOptimizedSrc(src, 'webp');
+const avifSrc = getOptimizedSrc(src, 'avif');
+---
+
+<picture class={`optimized-image ${className}`}>
+  <!-- AVIF para navegadores modernos -->
+  <source srcset={avifSrc} type="image/avif" sizes={sizes} />
+  
+  <!-- WebP como fallback -->
+  <source srcset={webpSrc} type="image/webp" sizes={sizes} />
+  
+  <!-- Imagen original como fallback final -->
+  <img 
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={priority ? 'eager' : loading}
+    decoding="async"
+    sizes={sizes}
+    class="responsive-image"
+  />
+</picture>
+
+<style>
+  .optimized-image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  
+  .responsive-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  
+  .responsive-image[loading="lazy"] {
+    opacity: 0;
+    animation: fadeInImage 0.5s ease forwards;
+  }
+  
+  @keyframes fadeInImage {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Placeholder mejorado mientras carga */
+  .optimized-image::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(90deg, #f8fafc 25%, #e2e8f0 50%, #f8fafc 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 8px;
+  }
+  
+  @keyframes loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  
+  .optimized-image img {
+    position: relative;
+    z-index: 1;
+    border-radius: 8px;
+  }
+  
+  /* Optimizaciones de rendimiento */
+  .optimized-image {
+    contain: layout style;
+    content-visibility: auto;
+  }
+  
+  /* Soporte para modo oscuro */
+  @media (prefers-color-scheme: dark) {
+    .optimized-image::before {
+      background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+    }
+  }
+  
+  /* Reducir animaciones si el usuario lo prefiere */
+  @media (prefers-reduced-motion: reduce) {
+    .optimized-image::before {
+      animation: none;
+    }
+    
+    .responsive-image {
+      transition: none;
+    }
+  }
+  
+  /* Optimización para dispositivos de baja potencia */
+  @media (max-width: 768px) {
+    .optimized-image::before {
+      animation-duration: 2s;
+    }
+  }
+</style>

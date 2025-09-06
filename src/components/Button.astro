@@ -1,0 +1,306 @@
+---
+import LoadingSpinner from './LoadingSpinner.astro';
+
+export interface Props {
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  loading?: boolean;
+  icon?: string;
+  iconPosition?: 'left' | 'right';
+  fullWidth?: boolean;
+  className?: string;
+  target?: '_blank' | '_self';
+  rel?: string;
+  ariaLabel?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  type = 'button',
+  disabled = false,
+  loading = false,
+  icon,
+  iconPosition = 'left',
+  fullWidth = false,
+  className = '',
+  target,
+  rel,
+  ariaLabel
+} = Astro.props;
+
+const isLink = !!href;
+const Tag = isLink ? 'a' : 'button';
+
+const baseClasses = 'btn';
+const variantClasses = {
+  primary: 'btn-primary',
+  secondary: 'btn-secondary',
+  outline: 'btn-outline',
+  ghost: 'btn-ghost'
+};
+const sizeClasses = {
+  sm: 'btn-sm',
+  md: 'btn-md',
+  lg: 'btn-lg'
+};
+
+const classes = [
+  baseClasses,
+  variantClasses[variant],
+  sizeClasses[size],
+  fullWidth && 'btn-full-width',
+  disabled && 'btn-disabled',
+  loading && 'btn-loading',
+  'btn-hover-lift',
+  'micro-hover',
+  'ripple-effect',
+  className
+].filter(Boolean).join(' ');
+
+const linkProps = isLink ? {
+  href,
+  target,
+  rel: target === '_blank' ? 'noopener noreferrer' : rel
+} : {};
+
+const buttonProps = !isLink ? {
+  type,
+  disabled: disabled || loading
+} : {};
+---
+
+<Tag 
+  class={classes}
+  aria-label={ariaLabel}
+  aria-disabled={disabled || loading}
+  {...linkProps}
+  {...buttonProps}
+>
+  {loading && (
+    <LoadingSpinner size={size === 'lg' ? 'md' : 'sm'} variant="secondary" inline />
+  )}
+  
+  {!loading && icon && iconPosition === 'left' && (
+    <span class="btn-icon btn-icon-left" aria-hidden="true">{icon}</span>
+  )}
+  
+  <span class={`btn-content ${loading ? 'btn-content-loading' : ''}`}>
+    <slot />
+  </span>
+  
+  {!loading && icon && iconPosition === 'right' && (
+    <span class="btn-icon btn-icon-right" aria-hidden="true">{icon}</span>
+  )}
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-6);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+    outline: none;
+    
+    /* Focus styles */
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  }
+  
+  /* Size variants */
+  .btn-sm {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--fs-sm);
+    gap: var(--space-1);
+  }
+  
+  .btn-md {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--fs-base);
+    gap: var(--space-2);
+  }
+  
+  .btn-lg {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--fs-lg);
+    gap: var(--space-3);
+  }
+  
+  /* Variant styles */
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    
+    &:hover:not(.btn-disabled):not(.btn-loading) {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124, 247, 212, 0.3);
+    }
+    
+    &:active:not(.btn-disabled):not(.btn-loading) {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(124, 247, 212, 0.2);
+    }
+  }
+  
+  .btn-secondary {
+    background: var(--bg-soft);
+    color: var(--fg);
+    border-color: var(--border);
+    
+    &:hover:not(.btn-disabled):not(.btn-loading) {
+      background: var(--bg-muted);
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active:not(.btn-disabled):not(.btn-loading) {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+  }
+  
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
+    
+    &:hover:not(.btn-disabled):not(.btn-loading) {
+      background: var(--accent);
+      color: var(--bg);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(124, 247, 212, 0.2);
+    }
+    
+    &:active:not(.btn-disabled):not(.btn-loading) {
+      transform: translateY(0);
+    }
+  }
+  
+  .btn-ghost {
+    background: transparent;
+    color: var(--fg);
+    border-color: transparent;
+    
+    &:hover:not(.btn-disabled):not(.btn-loading) {
+      background: var(--bg-soft);
+      color: var(--accent);
+    }
+  }
+  
+  /* States */
+  .btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  .btn-loading {
+    cursor: wait;
+    pointer-events: none;
+  }
+  
+  .btn-content-loading {
+    opacity: 0.7;
+  }
+  
+  .btn-full-width {
+    width: 100%;
+  }
+  
+  /* Icon styles */
+  .btn-icon {
+    display: flex;
+    align-items: center;
+    font-size: 1.1em;
+  }
+  
+  /* Ripple effect */
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+  }
+  
+  .btn:active:not(.btn-disabled):not(.btn-loading)::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .btn {
+      min-height: 44px; /* Touch target size */
+    }
+    
+    .btn-sm {
+      min-height: 40px;
+    }
+    
+    .btn-lg {
+      min-height: 48px;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .btn {
+      transition: none;
+    }
+    
+    .btn:hover:not(.btn-disabled):not(.btn-loading) {
+      transform: none;
+    }
+    
+    .btn::before {
+      display: none;
+    }
+  }
+  
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .btn {
+      border-width: 2px;
+    }
+    
+    .btn-primary {
+      background: ButtonText;
+      color: ButtonFace;
+      border-color: ButtonText;
+    }
+    
+    .btn-outline {
+      background: ButtonFace;
+      color: ButtonText;
+      border-color: ButtonText;
+    }
+  }
+</style>

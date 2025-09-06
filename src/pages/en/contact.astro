@@ -1,0 +1,445 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Section from '../../components/Section.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import BigCTA from '../../components/BigCTA.astro';
+
+// Contact information
+const contactInfo = {
+  email: "hello@sesecpro.com",
+  phone: "+34 900 123 456",
+  address: "Madrid, Spain",
+  hours: "Mon-Fri 9:00-18:00 CET"
+};
+
+// FAQ items
+const faqItems = [
+  {
+    question: "How long does a security audit take?",
+    answer: "It depends on the scope, but a standard audit takes 2-4 weeks. We give you a precise estimate after the initial consultation."
+  },
+  {
+    question: "Do you work with companies of all sizes?",
+    answer: "Yes, from startups to large corporations. We adapt our methodology and pricing to each client's size and needs."
+  },
+  {
+    question: "Do you offer emergency services?",
+    answer: "Yes, we have a 24/7 response protocol for security incidents. Guaranteed response time in less than 2 hours."
+  },
+  {
+    question: "What does post-implementation support include?",
+    answer: "30 days of included support: question resolution, minor adjustments, and verification that everything works correctly."
+  },
+  {
+    question: "How do you guarantee confidentiality?",
+    answer: "NDA signed before first contact, ISO 27001 certified systems, and strict data handling policies."
+  }
+];
+
+// Service types for form
+const serviceTypes = [
+  { value: "audit", label: "Security Audit" },
+  { value: "pentest", label: "Pentesting" },
+  { value: "hardening", label: "System Hardening" },
+  { value: "incident", label: "Incident Response" },
+  { value: "gdpr", label: "GDPR Consulting" },
+  { value: "training", label: "Training" },
+  { value: "consultation", label: "General Consultation" },
+  { value: "other", label: "Other" }
+];
+---
+
+<Layout 
+  title="Contact - Free Consultation | Sesecpro"
+  description="Contact our cybersecurity experts. First consultation free. Guaranteed response in 24h."
+  lang="en"
+>
+  <!-- Hero Section -->
+  <Section 
+    title="Let's talk about your project"
+    subtitle="First consultation free. No commitment, no fine print."
+    background="gradient"
+    spacing="large"
+    alignment="center"
+  >
+    <div class="hero-content">
+      <p class="hero-description">
+        Tell us about your current situation and we'll give you an honest assessment 
+        of what you need. If we can't help you, we'll tell you who can.
+      </p>
+      <div class="hero-guarantees">
+        <div class="guarantee">
+          <svg class="guarantee-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12,6 12,12 16,14"/>
+          </svg>
+          <span>24h response</span>
+        </div>
+        <div class="guarantee">
+          <svg class="guarantee-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 9V5a3 3 0 0 0-6 0v4"/>
+            <rect x="2" y="9" width="20" height="11" rx="2" ry="2"/>
+          </svg>
+          <span>Total confidentiality</span>
+        </div>
+        <div class="guarantee">
+          <svg class="guarantee-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          <span>No commitment</span>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Contact Form Section -->
+  <Section 
+    background="default"
+    spacing="large"
+  >
+    <div class="contact-layout">
+      <div class="contact-info">
+        <h2 class="contact-title">Contact Information</h2>
+        <p class="contact-subtitle">
+          Prefer to talk directly? These are our contact channels.
+        </p>
+        
+        <div class="contact-methods">
+          <div class="contact-method">
+            <div class="method-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h3 class="method-title">Email</h3>
+              <a href={`mailto:${contactInfo.email}`} class="method-value">{contactInfo.email}</a>
+            </div>
+          </div>
+          
+          <div class="contact-method">
+            <div class="method-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h3 class="method-title">Phone</h3>
+              <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} class="method-value">{contactInfo.phone}</a>
+            </div>
+          </div>
+          
+          <div class="contact-method">
+            <div class="method-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h3 class="method-title">Location</h3>
+              <span class="method-value">{contactInfo.address}</span>
+            </div>
+          </div>
+          
+          <div class="contact-method">
+            <div class="method-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12,6 12,12 16,14"/>
+              </svg>
+            </div>
+            <div class="method-content">
+              <h3 class="method-title">Hours</h3>
+              <span class="method-value">{contactInfo.hours}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="emergency-contact">
+          <h3 class="emergency-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            24/7 Emergencies
+          </h3>
+          <p class="emergency-description">
+            For critical security incidents, call directly. 
+            Guaranteed response in less than 2 hours.
+          </p>
+          <a href="tel:+34900123456" class="emergency-phone">+34 900 123 456</a>
+        </div>
+      </div>
+      
+      <div class="form-container">
+        <ContactForm serviceTypes={serviceTypes} />
+      </div>
+    </div>
+  </Section>
+
+  <!-- FAQ Section -->
+  <Section 
+    title="Frequently Asked Questions"
+    subtitle="Answers to the most common questions"
+    background="soft"
+    spacing="large"
+  >
+    <div class="faq-container">
+      {faqItems.map((item, index) => (
+        <div class="faq-item">
+          <h3 class="faq-question">{item.question}</h3>
+          <p class="faq-answer">{item.answer}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+
+  <!-- Final CTA -->
+  <BigCTA 
+    title="Prefer a call?"
+    subtitle="Schedule a 30-minute video call to discuss your project with no commitment."
+    primaryButton={{
+      text: "Schedule call",
+      href: "https://calendly.com/sesecpro/consultation",
+      variant: "primary"
+    }}
+    secondaryButton={{
+      text: "View methodology",
+      href: "/en/methodology",
+      variant: "outline"
+    }}
+    background="gradient"
+    size="large"
+  />
+</Layout>
+
+<style>
+  .hero-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .hero-description {
+    font-size: var(--fs-body);
+    color: var(--fg-dim);
+    line-height: 1.7;
+    margin-bottom: var(--sp-8);
+  }
+  
+  .hero-guarantees {
+    display: flex;
+    justify-content: center;
+    gap: var(--sp-8);
+    flex-wrap: wrap;
+  }
+  
+  .guarantee {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--fg-dim);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .guarantee-icon {
+    color: var(--accent);
+  }
+  
+  /* Contact Layout */
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-12);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .contact-info {
+    padding: var(--sp-8);
+  }
+  
+  .contact-title {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: var(--sp-3);
+    line-height: 1.2;
+  }
+  
+  .contact-subtitle {
+    font-size: var(--fs-body);
+    color: var(--fg-dim);
+    line-height: 1.6;
+    margin-bottom: var(--sp-8);
+  }
+  
+  .contact-methods {
+    margin-bottom: var(--sp-10);
+  }
+  
+  .contact-method {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-6);
+  }
+  
+  .method-icon {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-3);
+    color: var(--accent);
+    backdrop-filter: blur(10px);
+  }
+  
+  .method-content {
+    flex: 1;
+  }
+  
+  .method-title {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: var(--sp-1);
+    line-height: 1.3;
+  }
+  
+  .method-value {
+    color: var(--fg-dim);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+  
+  .method-value:hover {
+    color: var(--accent);
+  }
+  
+  .emergency-contact {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-left: 4px solid #ff6b6b;
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    backdrop-filter: blur(10px);
+  }
+  
+  .emergency-title {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: #ff6b6b;
+    margin-bottom: var(--sp-3);
+  }
+  
+  .emergency-description {
+    color: var(--fg-dim);
+    line-height: 1.5;
+    margin-bottom: var(--sp-4);
+    font-size: 14px;
+  }
+  
+  .emergency-phone {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+  
+  .emergency-phone:hover {
+    color: var(--accent-2);
+  }
+  
+  .form-container {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-8);
+    backdrop-filter: blur(10px);
+  }
+  
+  /* FAQ Section */
+  .faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .faq-item {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--sp-6);
+    margin-bottom: var(--sp-4);
+    backdrop-filter: blur(10px);
+    transition: all var(--dur) var(--ease);
+  }
+  
+  .faq-item:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-1);
+    border-color: var(--accent);
+  }
+  
+  .faq-question {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: var(--sp-3);
+    line-height: 1.3;
+  }
+  
+  .faq-answer {
+    color: var(--fg-dim);
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-guarantees {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-4);
+    }
+    
+    .contact-layout {
+      grid-template-columns: 1fr;
+      gap: var(--sp-8);
+    }
+    
+    .contact-info {
+      padding: 0;
+    }
+    
+    .form-container {
+      padding: var(--sp-6);
+    }
+    
+    .contact-method {
+      margin-bottom: var(--sp-4);
+    }
+    
+    .emergency-contact {
+      padding: var(--sp-4);
+    }
+    
+    .faq-item {
+      padding: var(--sp-4);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .contact-layout {
+      gap: var(--sp-16);
+    }
+  }
+</style>

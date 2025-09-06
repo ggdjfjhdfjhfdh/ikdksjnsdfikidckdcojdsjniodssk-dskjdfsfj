@@ -1,0 +1,86 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Shield icon with enhanced security elements -->
+  <g transform="translate(10, 10)" filter="url(#glow)">
+    <path d="M20 3L10 7V18C10 24 15 29 20 30C25 29 30 24 30 18V7L20 3Z" 
+          fill="url(#logoGradient)" 
+          stroke="#047857" 
+          stroke-width="0.8"/>
+    
+    <!-- Digital circuit lines -->
+    <path d="M15 12H25M15 16H25M15 20H25" 
+          stroke="white" 
+          stroke-width="0.5" 
+          stroke-dasharray="1 2" 
+          opacity="0.6"/>
+    
+    <!-- Lock symbol -->
+    <rect x="17" y="17" width="6" height="5" rx="1" fill="white" opacity="0.9"/>
+    <path d="M18 17V15C18 13.9 18.9 13 20 13V13C21.1 13 22 13.9 22 15V17" 
+          stroke="white" 
+          stroke-width="1.2" 
+          stroke-linecap="round"/>
+    <circle cx="20" cy="19.5" r="0.8" fill="#047857"/>
+  </g>
+  
+  <!-- SESEC Text with enhanced typography -->
+  <g transform="translate(55, 15)" fill="#1F2937">
+    <!-- S -->
+    <path d="M4 10C4 7 6.5 4.5 9.5 4.5H12C15 4.5 17.5 7 17.5 10C17.5 13 15 15.5 12 15.5H10C7 15.5 4.5 18 4.5 21C4.5 24 7 26.5 10 26.5H12.5C15.5 26.5 18 24 18 21" 
+          stroke="currentColor" 
+          stroke-width="2.8" 
+          stroke-linecap="round"/>
+    
+    <!-- E -->
+    <path d="M25 5H37M25 5V26M25 26H37M25 15.5H34" 
+          stroke="currentColor" 
+          stroke-width="2.8" 
+          stroke-linecap="round"/>
+    
+    <!-- S -->
+    <path d="M44 10C44 7 46.5 4.5 49.5 4.5H52C55 4.5 57.5 7 57.5 10C57.5 13 55 15.5 52 15.5H50C47 15.5 44.5 18 44.5 21C44.5 24 47 26.5 50 26.5H52.5C55.5 26.5 58 24 58 21" 
+          stroke="currentColor" 
+          stroke-width="2.8" 
+          stroke-linecap="round"/>
+    
+    <!-- E -->
+    <path d="M65 5H77M65 5V26M65 26H77M65 15.5H74" 
+          stroke="currentColor" 
+          stroke-width="2.8" 
+          stroke-linecap="round"/>
+    
+    <!-- C -->
+    <path d="M92 10C92 7 89.5 4.5 86.5 4.5H84C81 4.5 78.5 7 78.5 10V21C78.5 24 81 26.5 84 26.5H86.5C89.5 26.5 92 24 92 21" 
+          stroke="currentColor" 
+          stroke-width="2.8" 
+          stroke-linecap="round"/>
+  </g>
+  
+  <!-- Enhanced tagline with better typography -->
+  <text x="55" y="45" 
+        font-family="Inter, system-ui, sans-serif" 
+        font-size="9" 
+        font-weight="500" 
+        letter-spacing="0.5" 
+        fill="#4B5563">CYBERSECURITY EXCELLENCE</text>
+  
+  <!-- Dynamic security particles -->
+  <g opacity="0.6">
+    <circle cx="180" cy="15" r="2" fill="#10B981"/>
+    <circle cx="185" cy="20" r="1.5" fill="#059669"/>
+    <circle cx="190" cy="25" r="1" fill="#047857"/>
+    <circle cx="175" cy="25" r="1" fill="#10B981"/>
+    <circle cx="182" cy="30" r="0.8" fill="#059669"/>
+  </g>
+</svg>

@@ -1,0 +1,265 @@
+---
+export interface Props {
+  logos: Array<{
+    name: string;
+    src: string;
+    alt: string;
+    width?: number;
+    height?: number;
+  }>;
+  speed?: 'slow' | 'normal' | 'fast';
+  direction?: 'left' | 'right';
+  pauseOnHover?: boolean;
+}
+
+const { 
+  logos, 
+  speed = 'normal', 
+  direction = 'left',
+  pauseOnHover = true 
+} = Astro.props;
+
+// Usar logos sin duplicar
+const displayLogos = logos;
+---
+
+<div class={`logo-strip ${pauseOnHover ? 'pause-on-hover' : ''}`}>
+  <div class="logo-strip-track" data-speed={speed} data-direction={direction}>
+    {displayLogos.map((logo, index) => (
+      <div class="logo-item" key={`${logo.name}-${index}`}>
+        <img 
+          src={logo.src} 
+          alt={logo.alt}
+          width={logo.width || 120}
+          height={logo.height || 60}
+          loading="lazy"
+          class="logo-image"
+        />
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .logo-strip {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    padding: var(--sp-6) 0;
+  }
+  
+  .logo-strip::before,
+  .logo-strip::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  
+  .logo-strip::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--bg-soft), transparent);
+  }
+  
+  .logo-strip::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--bg-soft), transparent);
+  }
+  
+  .logo-strip-track {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-8);
+    animation: scroll-left 30s linear infinite;
+  }
+  
+  .logo-strip-track[data-direction="right"] {
+    animation-direction: reverse;
+  }
+  
+  .logo-strip-track[data-speed="slow"] {
+    animation-duration: 45s;
+  }
+  
+  .logo-strip-track[data-speed="fast"] {
+    animation-duration: 20s;
+  }
+  
+  .logo-strip.pause-on-hover:hover .logo-strip-track {
+    animation-play-state: paused;
+  }
+  
+  .logo-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--sp-2);
+    transition: all var(--dur) var(--ease);
+    min-width: 140px;
+    height: 80px;
+  }
+  
+  .logo-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+  }
+  
+  .logo-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: opacity(0.9);
+    transition: all var(--dur) var(--ease);
+  }
+  
+  .logo-item:hover .logo-image {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.05);
+  }
+  
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .logo-strip {
+      padding: var(--sp-4) 0;
+    }
+    
+    .logo-strip-track {
+      gap: var(--sp-6);
+    }
+    
+    .logo-item {
+      min-width: 100px;
+      height: 60px;
+      padding: var(--sp-2) var(--sp-3);
+    }
+    
+    .logo-strip::before,
+    .logo-strip::after {
+      width: 40px;
+    }
+  }
+  
+  /* Reducir movimiento si está configurado */
+  @media (prefers-reduced-motion: reduce) {
+    .logo-strip-track {
+      animation: none;
+    }
+    
+    .logo-strip {
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    
+    .logo-strip::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .logo-strip::before,
+    .logo-strip::after {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  class LogoStripController {
+    constructor() {
+      this.strips = document.querySelectorAll('.logo-strip');
+      this.init();
+    }
+    
+    init() {
+      // Verificar si las animaciones están deshabilitadas
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      
+      if (prefersReducedMotion) {
+        this.disableAnimations();
+        return;
+      }
+      
+      // Configurar observador de visibilidad para optimizar rendimiento
+      this.setupVisibilityObserver();
+    }
+    
+    disableAnimations() {
+      this.strips.forEach(strip => {
+        const track = strip.querySelector('.logo-strip-track');
+        if (track) {
+          track.style.animation = 'none';
+        }
+      });
+    }
+    
+    setupVisibilityObserver() {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            const track = entry.target.querySelector('.logo-strip-track');
+            if (track) {
+              if (entry.isIntersecting) {
+                track.style.animationPlayState = 'running';
+              } else {
+                track.style.animationPlayState = 'paused';
+              }
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+          rootMargin: '50px 0px'
+        }
+      );
+      
+      this.strips.forEach(strip => {
+        observer.observe(strip);
+      });
+      
+      // Guardar referencia para cleanup
+      this.observer = observer;
+    }
+    
+    destroy() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    }
+  }
+  
+  // Inicializar controlador
+  let logoStripController = null;
+  
+  // Esperar a que el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      logoStripController = new LogoStripController();
+    });
+  } else {
+    logoStripController = new LogoStripController();
+  }
+  
+  // Cleanup al cambiar de página
+  document.addEventListener('astro:before-swap', () => {
+    if (logoStripController) {
+      logoStripController.destroy();
+    }
+  });
+</script>

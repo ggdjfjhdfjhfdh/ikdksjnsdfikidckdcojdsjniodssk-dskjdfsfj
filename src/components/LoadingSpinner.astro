@@ -1,0 +1,165 @@
+---
+export interface Props {
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'accent';
+  text?: string;
+  inline?: boolean;
+}
+
+const { 
+  size = 'md', 
+  variant = 'primary', 
+  text, 
+  inline = false 
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'spinner-sm',
+  md: 'spinner-md',
+  lg: 'spinner-lg'
+};
+
+const variantClasses = {
+  primary: 'spinner-primary',
+  secondary: 'spinner-secondary',
+  accent: 'spinner-accent'
+};
+---
+
+<div class={`loading-spinner ${inline ? 'inline' : ''} ${sizeClasses[size]} ${variantClasses[variant]}`}>
+  <div class="spinner" role="status" aria-label="Cargando">
+    <svg class="spinner-svg" viewBox="0 0 24 24" fill="none">
+      <circle 
+        class="spinner-circle-bg" 
+        cx="12" 
+        cy="12" 
+        r="10" 
+        stroke="currentColor" 
+        stroke-width="2"
+      />
+      <circle 
+        class="spinner-circle" 
+        cx="12" 
+        cy="12" 
+        r="10" 
+        stroke="currentColor" 
+        stroke-width="2" 
+        stroke-linecap="round"
+      />
+    </svg>
+  </div>
+  {text && (
+    <span class="loading-text">{text}</span>
+  )}
+</div>
+
+<style>
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+  
+  .loading-spinner.inline {
+    display: inline-flex;
+  }
+  
+  .spinner {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .spinner-svg {
+    animation: spin 1s linear infinite;
+    transform-origin: center;
+  }
+  
+  .spinner-circle-bg {
+    opacity: 0.2;
+  }
+  
+  .spinner-circle {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: dash 2s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes dash {
+    0% {
+      stroke-dashoffset: 60;
+    }
+    50% {
+      stroke-dashoffset: 15;
+    }
+    100% {
+      stroke-dashoffset: 60;
+    }
+  }
+  
+  /* Size variants */
+  .spinner-sm .spinner-svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .spinner-md .spinner-svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .spinner-lg .spinner-svg {
+    width: 32px;
+    height: 32px;
+  }
+  
+  /* Color variants */
+  .spinner-primary {
+    color: var(--accent);
+  }
+  
+  .spinner-secondary {
+    color: var(--fg-dim);
+  }
+  
+  .spinner-accent {
+    color: var(--accent-2);
+  }
+  
+  .loading-text {
+    font-size: var(--fs-sm);
+    color: var(--fg-dim);
+    font-weight: 500;
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .spinner-svg {
+      animation: none;
+    }
+    
+    .spinner-circle {
+      animation: none;
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+    }
+    
+    .loading-spinner::after {
+      content: '⏳';
+      font-size: 1.2em;
+    }
+    
+    .spinner {
+      display: none;
+    }
+  }
+</style>
