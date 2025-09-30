@@ -1,0 +1,676 @@
+:root {
+    --modal-bg: rgba(0, 0, 0, 0.75);
+    --modal-blur: 4px;
+    --modal-transition: 0.3s ease-in-out;
+    --icon-size: 20px;
+    --input-bg: rgba(255, 255, 255, 0.04);
+    --whatsapp-color: #25D366;
+    --whatsapp-hover: #128C7E;
+    /* Colores por defecto para asegurar resaltado visible */
+    --color-primary: #1565c0;
+    --color-primary-dark: #003c8f;
+    --color-primary-transparent: rgba(21, 101, 192, 0.15);
+    /* Map tokens from design system to modal variables to avoid invisible text */
+    --color-text: var(--fg, #f0f6fc);
+    --color-text-light: var(--fg-dim, #c9d1d9);
+    --color-border: var(--border, #21262d);
+    --color-background: var(--bg, #0a0e13);
+    --color-background-alt: var(--bg-soft, #0d1117);
+}
+
+.emergency-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--modal-transition), visibility var(--modal-transition);
+    pointer-events: none;
+    /* Create new stacking context */
+    isolation: isolate;
+    transform: translateZ(0);
+    will-change: transform;
+    display: none;
+}
+
+.emergency-modal.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    display: block;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 9998;
+}
+
+.modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    z-index: 9999;
+    /* Prevent any descendant stacking contexts from affecting visibility */
+    isolation: isolate;
+}
+
+.emergency-modal.active .modal-container {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    /* Ensure it's above other content when active */
+    z-index: 9999;
+}
+
+.modal-content {
+    background: var(--color-background);
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-background-alt);
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.modal-header h3::before {
+    content: "🚨";
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-background);
+    color: var(--color-text-light);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.modal-close:hover {
+    background: var(--color-border);
+    color: var(--color-text);
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.divider {
+    border: none;
+    height: 1px;
+    background: var(--color-border);
+    margin: 1.5rem 0;
+}
+
+/* Grid de tipos de incidentes */
+.incident-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.incident-type {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-background-alt);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.incident-type:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary);
+}
+
+.incident-type input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Resaltar la opción seleccionada (compatibilidad amplia): */
+.incident-type input[type="radio"]:checked+.type-name {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: underline;
+    border-bottom: 2px solid var(--color-primary);
+    background: rgba(21, 101, 192, 0.08);
+    border-radius: 4px;
+    padding: 0.2em 0.5em;
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.incident-type input[type="radio"]:focus+.type-name {
+    outline: 2px solid var(--color-primary);
+}
+
+/* Mantener compatibilidad si existiera icono */
+.incident-type input[type="radio"]:checked+.type-icon {
+    background: var(--color-primary);
+    transform: scale(1.05);
+}
+
+.incident-type .type-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    background: var(--color-background);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.incident-type .type-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.contact-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.contact-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.contact-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.contact-button.whatsapp {
+    background: var(--whatsapp-color);
+    color: white;
+}
+
+.contact-button.whatsapp:hover {
+    background: var(--whatsapp-hover);
+}
+
+.contact-button.email {
+    background: var(--color-primary);
+    color: white;
+}
+
+.contact-button.email:hover {
+    background: var(--color-primary-dark);
+}
+
+.contact-button.phone {
+    background: var(--color-background-alt);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+.contact-button.phone:hover {
+    background: var(--color-background);
+    border-color: var(--color-primary);
+}
+
+.emergency-contacts {
+    margin-bottom: 1.5rem;
+}
+
+/* Force consistent icon sizing inside options */
+.icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure SVGs inside icon scale correctly */
+.icon svg,
+.icon>svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.icon.icon-whatsapp {
+    color: #fff;
+}
+
+.emergency-option-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.emergency-option-button.whatsapp {
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+}
+
+.emergency-option-button.whatsapp:hover {
+    background: #128C7E;
+}
+
+.emergency-option-button.primary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.emergency-option-button.primary:hover {
+    background: var(--color-primary-dark);
+}
+
+/* Wizard Form */
+.wizard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.progress-container {
+    width: 100%;
+    height: 4px;
+    background: var(--color-background-alt);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--color-primary);
+    width: 0;
+    transition: width 0.3s ease;
+}
+
+.wizard-step {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    position: relative;
+    /* Mantener el espacio para el contenido */
+    min-height: 200px;
+    padding: 1.5rem;
+}
+
+.wizard-step.active {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* Asegurar que el contenedor de campos específicos preserve su contenido */
+#type-specific-fields {
+    position: relative;
+    min-height: 150px;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+/* Asegurar que los campos del formulario sean visibles */
+.wizard-step .form-group {
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+
+#type-specific-fields {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    min-height: 100px;
+    /* Asegurar que el contenedor tenga altura incluso vacío */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="datetime-local"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--input-bg);
+    color: var(--color-text);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary-transparent);
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.wizard-controls {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+}
+
+.next-step,
+.prev-step {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.next-step {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+}
+
+.next-step:hover {
+    background: var(--color-primary-dark);
+}
+
+.prev-step {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+}
+
+.prev-step:hover {
+    background: var(--color-background-alt);
+    border-color: var(--color-text);
+}
+
+.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    top: 50%;
+    left: 50%;
+    margin: -0.5rem 0 0 -0.5rem;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-right-color: transparent;
+    animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.success-message,
+.error-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Botón CTA para crear ticket */
+.cta-button {
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(21, 101, 192, 0.08);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+    margin: 1.5rem 0 0 0;
+    width: 100%;
+    display: block;
+}
+
+.cta-button:hover,
+.cta-button:focus {
+    background: var(--color-primary-dark);
+    box-shadow: 0 4px 16px rgba(21, 101, 192, 0.15);
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Wizard modal específico */
+#emergency-wizard-modal .modal-container {
+    width: 100%;
+    max-width: 540px;
+    min-width: 320px;
+    min-height: 400px;
+    max-height: 90vh;
+    padding: 0;
+    overflow-y: auto;
+}
+
+#emergency-wizard-modal .modal-content {
+    padding: 0;
+    background: var(--surface-2, #1a1a1a);
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+#emergency-wizard-modal .modal-header {
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: 12px 12px 0 0;
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+.progress-container {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--color-primary, #1565c0);
+    width: 33.33%;
+    transition: width 0.3s ease-out;
+}
+
+#emergency-wizard-modal .modal-header h2 {
+    color: #fff;
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+#emergency-wizard-modal .close-modal {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+#emergency-wizard-modal .close-modal:hover {
+    color: #ffb300;
+}
+
+#emergency-wizard-modal .modal-body,
+#emergency-wizard-modal .wizard-form {
+    padding: 2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#emergency-wizard-modal .wizard-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+}
+
+#emergency-wizard-modal .wizard-step.active {
+    animation: fadeSlideIn 0.3s ease-out;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#emergency-wizard-modal .wizard-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+#emergency-wizard-modal .wizard-step h3 {
+    margin-top: 0;
+    color: var(--color-primary);
+}
+
+#emergency-wizard-modal .form-summary ul {
+    list-style: none;
+    padding: 0;
+}
+
+#emergency-wizard-modal .form-summary li {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}

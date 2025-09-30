@@ -1,0 +1,596 @@
+---
+
+---
+
+<div
+    id="emergency-wizard-modal"
+    class="emergency-modal"
+    aria-modal="true"
+    role="dialog"
+    aria-labelledby="wizard-title"
+    style="display:none"
+>
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="wizard-title">Reportar Incidente Urgente</h2>
+                <button class="close-modal" aria-label="Cerrar modal"
+                    >&times;</button
+                >
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+
+            <form id="emergency-wizard-form" class="wizard-form" novalidate>
+                <!-- Paso 1: Datos generales -->
+                <div class="wizard-step active" data-step="1">
+                    <h3>Datos de contacto</h3>
+
+                    <div class="form-group">
+                        <label for="organization">Organización *</label>
+                        <input
+                            type="text"
+                            id="organization"
+                            name="organization"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact_name">Nombre de contacto *</label>
+                        <input
+                            type="text"
+                            id="contact_name"
+                            name="contact_name"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact_email">Email *</label>
+                        <input
+                            type="email"
+                            id="contact_email"
+                            name="contact_email"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact_phone">Teléfono *</label>
+                        <input
+                            type="tel"
+                            id="contact_phone"
+                            name="contact_phone"
+                            required
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="incident_type">Tipo de incidente *</label>
+                        <select
+                            id="incident_type"
+                            name="incident_type"
+                            required
+                        >
+                            <option value="">Selecciona...</option>
+                            <option value="malware">Malware</option>
+                            <option value="phishing">Phishing</option>
+                            <option value="ddos">DDoS</option>
+                            <option value="ransomware">Ransomware</option>
+                            <option value="data_breach">Fuga de datos</option>
+                            <option value="other">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="wizard-actions">
+                        <button type="button" class="next-step"
+                            >Siguiente</button
+                        >
+                    </div>
+                </div>
+
+                <!-- Paso 2: Preguntas específicas -->
+                <div class="wizard-step" data-step="2">
+                    <h3>Detalles del incidente</h3>
+                    <div id="type-specific-fields"></div>
+                    <div class="wizard-actions">
+                        <button type="button" class="prev-step">Anterior</button
+                        >
+                        <button type="button" class="next-step"
+                            >Siguiente</button
+                        >
+                    </div>
+                </div>
+
+                <!-- Paso 3: Confirmación y envío -->
+                <div class="wizard-step" data-step="3">
+                    <h3>Confirmar y enviar</h3>
+                    <div class="form-summary"></div>
+                    <div class="wizard-actions">
+                        <button type="button" class="prev-step">Anterior</button
+                        >
+                        <button type="submit" class="submit-step">Enviar</button
+                        >
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    (() => {
+        const modal = document.getElementById("emergency-wizard-modal");
+        const form = modal.querySelector("#emergency-wizard-form");
+        const steps = Array.from(modal.querySelectorAll(".wizard-step"));
+        const progressBar = modal.querySelector(".progress-bar");
+        let currentStep = 0;
+
+        const typeSpecificQuestions = {
+            malware: `
+      <div class="form-group">
+        <label for="malware_type">Tipo de malware *</label>
+        <select id="malware_type" name="malware_type" required>
+          <option value="">Selecciona el tipo...</option>
+          <option value="virus">Virus</option>
+          <option value="trojan">Troyano</option>
+          <option value="spyware">Spyware</option>
+          <option value="rootkit">Rootkit</option>
+          <option value="worm">Gusano</option>
+          <option value="cryptominer">Cryptominer</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="infection_vector">Vector de infección *</label>
+        <select id="infection_vector" name="infection_vector" required>
+          <option value="">¿Cómo entró?</option>
+          <option value="email">Email malicioso</option>
+          <option value="download">Descarga de archivo</option>
+          <option value="usb">Dispositivo USB</option>
+          <option value="website">Sitio web comprometido</option>
+          <option value="update">Actualización falsa</option>
+          <option value="unknown">Desconocido</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="infection_time">¿Cuándo se detectó? *</label>
+        <input type="datetime-local" id="infection_time" name="infection_time" required />
+      </div>
+      <div class="form-group">
+        <label for="affected_systems">Sistemas afectados *</label>
+        <textarea id="affected_systems" name="affected_systems" placeholder="Listado de equipos, servidores o sistemas afectados" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="observed_impact">Impacto observado</label>
+        <textarea id="observed_impact" name="observed_impact" placeholder="Describe los efectos visibles: lentitud, archivos encriptados, comportamientos extraños..."></textarea>
+      </div>
+    `,
+            phishing: `
+      <div class="form-group">
+        <label for="phishing_channel">Canal de phishing *</label>
+        <select id="phishing_channel" name="phishing_channel" required>
+          <option value="">¿Por dónde llegó?</option>
+          <option value="email">Email</option>
+          <option value="sms">SMS</option>
+          <option value="whatsapp">WhatsApp</option>
+          <option value="social">Red social</option>
+          <option value="web">Sitio web falso</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="phishing_target">Objetivo del ataque *</label>
+        <select id="phishing_target" name="phishing_target" required multiple>
+          <option value="credentials">Robo de credenciales</option>
+          <option value="financial">Datos financieros</option>
+          <option value="personal">Datos personales</option>
+          <option value="corporate">Información corporativa</option>
+          <option value="malware">Instalación de malware</option>
+          <option value="unknown">Desconocido</option>
+        </select>
+        <small class="help-text">Mantén Ctrl para seleccionar varios</small>
+      </div>
+      <div class="form-group">
+        <label for="detection_time">¿Cuándo se detectó? *</label>
+        <input type="datetime-local" id="detection_time" name="detection_time" required />
+      </div>
+      <div class="form-group">
+        <label for="affected_users">Usuarios afectados</label>
+        <textarea id="affected_users" name="affected_users" placeholder="Lista de usuarios o departamentos que recibieron el phishing"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="phishing_content">Contenido del phishing</label>
+        <textarea id="phishing_content" name="phishing_content" placeholder="Copia el texto o describe el contenido del mensaje"></textarea>
+      </div>
+    `,
+            ddos: `
+      <div class="form-group">
+        <label for="attack_start">Inicio del ataque *</label>
+        <input type="datetime-local" id="attack_start" name="attack_start" required />
+      </div>
+      <div class="form-group">
+        <label for="affected_services">Servicios afectados *</label>
+        <textarea id="affected_services" name="affected_services" placeholder="Lista de servicios, IPs o dominios afectados" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="attack_type">Tipo de ataque DDoS *</label>
+        <select id="attack_type" name="attack_type" required>
+          <option value="">Selecciona el tipo...</option>
+          <option value="volumetric">Volumétrico (inundación)</option>
+          <option value="protocol">Protocolo (SYN flood, etc)</option>
+          <option value="application">Capa de aplicación</option>
+          <option value="mixed">Mixto/Múltiple</option>
+          <option value="unknown">Desconocido</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="traffic_volume">Volumen de tráfico</label>
+        <input type="text" id="traffic_volume" name="traffic_volume" placeholder="Ej: 50Gbps, si se conoce" />
+      </div>
+      <div class="form-group">
+        <label for="mitigation_status">Estado de mitigación *</label>
+        <select id="mitigation_status" name="mitigation_status" required>
+          <option value="none">Sin mitigación</option>
+          <option value="partial">Parcialmente mitigado</option>
+          <option value="full">Completamente mitigado</option>
+        </select>
+      </div>
+    `,
+            ransomware: `
+      <div class="form-group">
+        <label for="infection_time">¿Cuándo comenzó? *</label>
+        <input type="datetime-local" id="infection_time" name="infection_time" required />
+      </div>
+      <div class="form-group">
+        <label for="ransomware_family">Familia de ransomware</label>
+        <input type="text" id="ransomware_family" name="ransomware_family" placeholder="Si se conoce (ej: Ryuk, WannaCry...)" />
+      </div>
+      <div class="form-group">
+        <label for="encrypted_systems">Sistemas afectados *</label>
+        <textarea id="encrypted_systems" name="encrypted_systems" placeholder="Lista detallada de sistemas encriptados/afectados" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="backup_status">Estado de backups *</label>
+        <select id="backup_status" name="backup_status" required>
+          <option value="">Selecciona estado...</option>
+          <option value="available">Disponibles y actualizados</option>
+          <option value="partial">Parcialmente disponibles</option>
+          <option value="outdated">Desactualizados</option>
+          <option value="encrypted">Encriptados también</option>
+          <option value="none">Sin backups</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="ransom_amount">Cantidad del rescate</label>
+        <input type="text" id="ransom_amount" name="ransom_amount" placeholder="Cantidad y moneda solicitada" />
+      </div>
+      <div class="form-group">
+        <label for="ransom_note">Mensaje del atacante</label>
+        <textarea id="ransom_note" name="ransom_note" placeholder="Copia el mensaje o nota de rescate si está disponible"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="business_impact">Impacto en el negocio *</label>
+        <textarea id="business_impact" name="business_impact" placeholder="Describe qué operaciones están afectadas y su gravedad" required></textarea>
+      </div>
+    `,
+            data_breach: `
+      <div class="form-group">
+        <label for="detection_time">¿Cuándo se detectó? *</label>
+        <input type="datetime-local" id="detection_time" name="detection_time" required />
+      </div>
+      <div class="form-group">
+        <label for="breach_type">Tipo de datos comprometidos *</label>
+        <select id="breach_type" name="breach_type" required multiple>
+          <option value="pii">Datos personales (PII)</option>
+          <option value="financial">Datos financieros</option>
+          <option value="health">Datos de salud</option>
+          <option value="credentials">Credenciales</option>
+          <option value="corporate">Datos corporativos</option>
+          <option value="ip">Propiedad intelectual</option>
+          <option value="other">Otros</option>
+        </select>
+        <small class="help-text">Mantén Ctrl para seleccionar varios</small>
+      </div>
+      <div class="form-group">
+        <label for="data_location">Ubicación de los datos *</label>
+        <textarea id="data_location" name="data_location" placeholder="¿Dónde estaban almacenados los datos? (BD, archivos, etc)" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="records_affected">Número de registros *</label>
+        <input type="number" id="records_affected" name="records_affected" placeholder="Cantidad aproximada de registros" required />
+      </div>
+      <div class="form-group">
+        <label for="breach_vector">Vector de la fuga *</label>
+        <select id="breach_vector" name="breach_vector" required>
+          <option value="">¿Cómo ocurrió?</option>
+          <option value="hack">Ataque externo</option>
+          <option value="insider">Amenaza interna</option>
+          <option value="error">Error humano</option>
+          <option value="unknown">Desconocido</option>
+          <option value="other">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="containment_status">Estado de contención *</label>
+        <select id="containment_status" name="containment_status" required>
+          <option value="ongoing">Fuga activa</option>
+          <option value="contained">Contenida</option>
+          <option value="unknown">Desconocido</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="data_exposure">Exposición de datos</label>
+        <textarea id="data_exposure" name="data_exposure" placeholder="¿Dónde se han expuesto los datos? (Dark web, público...)"></textarea>
+      </div>
+    `,
+            other: `
+      <div class="form-group">
+        <label for="incident_time">¿Cuándo ocurrió? *</label>
+        <input type="datetime-local" id="incident_time" name="incident_time" required />
+      </div>
+      <div class="form-group">
+        <label for="incident_category">Categoría general *</label>
+        <select id="incident_category" name="incident_category" required>
+          <option value="">Selecciona categoría...</option>
+          <option value="intrusion">Intrusión</option>
+          <option value="sabotage">Sabotaje</option>
+          <option value="fraud">Fraude</option>
+          <option value="availability">Problema de disponibilidad</option>
+          <option value="data">Problema con datos</option>
+          <option value="other">Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="incident_description">Descripción detallada *</label>
+        <textarea id="incident_description" name="incident_description" placeholder="Describe qué ha ocurrido, cómo se detectó y el impacto actual" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="affected_assets">Activos afectados *</label>
+        <textarea id="affected_assets" name="affected_assets" placeholder="Lista de sistemas, datos o servicios afectados" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="current_status">Estado actual *</label>
+        <select id="current_status" name="current_status" required>
+          <option value="ongoing">En curso</option>
+          <option value="contained">Contenido</option>
+          <option value="resolved">Resuelto</option>
+          <option value="unknown">Desconocido</option>
+        </select>
+      </div>
+    `,
+        };
+
+        function setProgress(idx) {
+            const pct = ((idx + 1) / steps.length) * 100;
+            progressBar.style.width = pct + "%";
+        }
+
+        function showStep(idx) {
+            if (idx < 0 || idx >= steps.length) return;
+
+            // Si vamos a Step 2, asegura preguntas según tipo
+            if (idx === 1) {
+                if (!updateTypeSpecificFields()) {
+                    alert("Selecciona un tipo de incidente");
+                    return;
+                }
+            }
+
+            steps.forEach((step, i) => {
+                if (i === idx) {
+                    step.style.display = "block";
+                    step.classList.add("active");
+                    step.style.opacity = "1";
+                    step.style.transform = "translateY(0)";
+                } else {
+                    step.style.display = "none";
+                    step.classList.remove("active");
+                }
+            });
+
+            currentStep = idx;
+            setProgress(idx);
+        }
+
+        function validateStep(idx) {
+            const step = steps[idx];
+            let valid = true;
+            step.querySelectorAll("[required]").forEach((input) => {
+                if (!String(input.value || "").trim()) {
+                    input.classList.add("invalid");
+                    valid = false;
+                } else {
+                    input.classList.remove("invalid");
+                }
+            });
+            return valid;
+        }
+
+        function fillSummary() {
+            const summary = steps[2].querySelector(".form-summary");
+            const data = new FormData(form);
+            let html = "<ul>";
+            for (const [key, value] of data.entries()) {
+                html += `<li><strong>${key}:</strong> ${value}</li>`;
+            }
+            html += "</ul>";
+            summary.innerHTML = html;
+        }
+
+        function updateTypeSpecificFields() {
+            const container = modal.querySelector("#type-specific-fields");
+            const select = form.querySelector("#incident_type");
+            const selected = select?.value;
+
+            if (!container) {
+                console.error(
+                    "Container de preguntas específicas no encontrado",
+                );
+                return false;
+            }
+            if (!selected) return false;
+
+            const template = typeSpecificQuestions[selected];
+            if (!template) {
+                console.error("Sin plantilla para tipo:", selected);
+                return false;
+            }
+            container.innerHTML = template;
+            return true;
+        }
+
+        // Eventos UI
+        form.querySelectorAll(".next-step").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                if (!validateStep(currentStep)) return;
+
+                // Navegación controlada
+                if (currentStep === 0) {
+                    // Prepara Step 2 según tipo
+                    if (!updateTypeSpecificFields()) {
+                        alert("Selecciona un tipo de incidente");
+                        return;
+                    }
+                    const target = currentStep + 1;
+                    showStep(target);
+                    const first = steps[target].querySelector(
+                        "input, select, textarea",
+                    );
+                    first && first.focus();
+                    return;
+                }
+
+                if (currentStep === 1) {
+                    fillSummary();
+                }
+
+                showStep(currentStep + 1);
+            });
+        });
+
+        form.querySelectorAll(".prev-step").forEach((btn) => {
+            btn.addEventListener("click", () => showStep(currentStep - 1));
+        });
+
+        // Cambios de tipo en Step 1
+        const incidentTypeSelect = form.querySelector("#incident_type");
+        incidentTypeSelect?.addEventListener("change", () => {
+            if (currentStep === 1) updateTypeSpecificFields();
+        });
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!validateStep(currentStep)) return;
+
+            const data = Object.fromEntries(new FormData(form).entries());
+            
+            // Mapear los tipos de incidente del wizard a los esperados por el backend
+            const incidentTypeMapping = {
+                'malware': 'Malware/Ransomware',
+                'phishing': 'Phishing',
+                'ddos': 'Ataque DDoS',
+                'ransomware': 'Malware/Ransomware',
+                'data_breach': 'Brecha de datos',
+                'other': 'Otro incidente'
+            };
+            
+            // Transformar los datos para el backend
+            const backendData = {
+                ...data,
+                incident_type: incidentTypeMapping[data.incident_type] || 'Otro incidente',
+                description: `Organización: ${data.organization}\nContacto: ${data.contact_name}\nEmail: ${data.contact_email}\nTeléfono: ${data.contact_phone}\n\nDetalles del incidente:\n${JSON.stringify(data, null, 2)}`,
+                organization: data.organization,
+                contact_name: data.contact_name,
+                contact_email: data.contact_email,
+                contact_phone: data.contact_phone
+            };
+            
+            try {
+                const res = await fetch("https://sesec-backend.fly.dev/api/tickets/security-incidents", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "X-Emergency-Token": "89ae197c406d9683548b2a55a8bc6260f2733dfc4941acfcbe39efdf0d56df25"
+                    },
+                    body: JSON.stringify(backendData),
+                });
+                
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(errorData.message || `Error ${res.status}: ${res.statusText}`);
+                }
+                
+                const result = await res.json();
+                form.reset();
+                hideModal();
+                showStep(0);
+                
+                // Redireccionar a la página del ticket
+                window.location.href = `/incidente/${result.ticket_id}`;
+            } catch (err) {
+                console.error("Error enviando ticket:", err);
+                // Mostrar error en consola pero no popup
+            }
+        });
+
+        function initializeWizard() {
+            steps.forEach((step, i) => {
+                step.style.display = i === 0 ? "block" : "none";
+                step.style.opacity = i === 0 ? "1" : "0";
+                if (i === 0) step.classList.add("active");
+                else step.classList.remove("active");
+            });
+            currentStep = 0;
+            setProgress(0);
+        }
+
+        // Modal helpers compatibles con host
+        function showModal() {
+            modal.style.display = "block";
+            requestAnimationFrame(() => modal.classList.add("active"));
+            document.body.style.overflow = "hidden";
+        }
+        function hideModal() {
+            modal.classList.remove("active");
+            setTimeout(() => (modal.style.display = "none"), 200);
+            document.body.style.overflow = "";
+            form.reset();
+            initializeWizard();
+        }
+
+        // Cierre modal
+        const closeBtn = modal.querySelector(".close-modal");
+        closeBtn.addEventListener("click", hideModal);
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) hideModal();
+        });
+        modal
+            .querySelector(".modal-container")
+            .addEventListener("click", (e) => {
+                e.stopPropagation();
+            });
+
+        // Exponer para el host
+        window.showEmergencyWizard = showModal;
+
+        // Init local + respuesta a eventos del host
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", initializeWizard);
+        } else {
+            initializeWizard();
+        }
+        modal.addEventListener("wizard:mounted", initializeWizard);
+        modal.addEventListener("wizard:opened", () => {
+            // Si el usuario abrió directamente, asegura Step 1 visible
+            if (modal.style.display !== "block") showModal();
+            // Si ya seleccionó tipo antes, pre-render de Step 2 al saltar
+            if (currentStep === 1) updateTypeSpecificFields();
+        });
+    })();
+</script>

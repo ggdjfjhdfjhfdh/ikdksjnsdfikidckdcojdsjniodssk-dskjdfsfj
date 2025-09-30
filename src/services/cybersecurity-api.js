@@ -1,5 +1,6 @@
 // Cybersecurity APIs Service
 // Handles data fetching from multiple threat intelligence sources
+import { rateLimitedFetch, checkRateLimit } from '../middleware/rate-limiter.js';
 
 class CybersecurityAPI {
   constructor() {
@@ -223,7 +224,7 @@ class CybersecurityAPI {
       
       try {
         // Usar endpoint público JSON reciente que no requiere autenticación
-        const response = await fetch('https://urlhaus.abuse.ch/downloads/json_recent/', {
+        const response = await rateLimitedFetch('https://urlhaus.abuse.ch/downloads/json_recent/', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -332,49 +333,22 @@ class CybersecurityAPI {
           }).length;
         });
         
-        // Generate fallback data if no recent URLs found
+        // No fallback data - only show real API data
         if (recentUrls.length === 0) {
-          const fallbackCount = Math.floor(Math.random() * 500) + 100; // 100-600 URLs
-          const fallbackThreatTypes = [
-            { type: 'malware', count: Math.floor(Math.random() * 200) + 50 },
-            { type: 'phishing', count: Math.floor(Math.random() * 150) + 40 },
-            { type: 'exploit', count: Math.floor(Math.random() * 100) + 30 },
-            { type: 'trojan', count: Math.floor(Math.random() * 80) + 20 },
-            { type: 'ransomware', count: Math.floor(Math.random() * 60) + 15 }
-          ];
-          
-          const fallbackCountries = [
-            { country: 'US', count: Math.floor(Math.random() * 100) + 50 },
-            { country: 'CN', count: Math.floor(Math.random() * 80) + 40 },
-            { country: 'RU', count: Math.floor(Math.random() * 60) + 30 },
-            { country: 'DE', count: Math.floor(Math.random() * 40) + 20 },
-            { country: 'BR', count: Math.floor(Math.random() * 30) + 15 }
-          ];
-          
-          const fallbackTrend = Array.from({length: 24}, () => Math.floor(Math.random() * 50) + 10);
-          
           return {
-            count: fallbackCount,
-            total_urls: fallbackCount,
+            count: 0,
+            total_urls: 0,
             recent_samples: [],
-            trend: fallbackTrend,
-            threatTypes: fallbackThreatTypes,
-            topCountries: fallbackCountries,
-            malwareFamilies: [
-              { family: 'Emotet', count: Math.floor(Math.random() * 50) + 20 },
-              { family: 'TrickBot', count: Math.floor(Math.random() * 40) + 15 },
-              { family: 'Qakbot', count: Math.floor(Math.random() * 30) + 10 }
-            ],
-            topTLDs: [
-              { tld: '.com', count: Math.floor(Math.random() * 200) + 100 },
-              { tld: '.net', count: Math.floor(Math.random() * 100) + 50 },
-              { tld: '.org', count: Math.floor(Math.random() * 80) + 40 }
-            ],
+            trend: [],
+            threatTypes: [],
+            topCountries: [],
+            malwareFamilies: [],
+            topTLDs: [],
             topHosts: [],
             rawData: { urls: [] },
             analytics: {
-              averageHourly: Math.round(fallbackTrend.reduce((a,b)=>a+b,0)/24),
-              onlineRatio: 0.85
+              averageHourly: 0,
+              onlineRatio: 0
             },
             lastUpdate: new Date().toISOString(),
             dataQuality: 'simulated'
@@ -453,32 +427,32 @@ class CybersecurityAPI {
         // Endpoints reales de Cloudflare Radar API según documentación oficial
         const [layer7Summary, layer7Timeseries, layer7TopAttacks, layer7TopLocations, layer7TopTargets, layer7MitigationTechniques] = await Promise.allSettled([
           // Resumen de ataques de capa 7 (aplicación)
-          fetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/summary?dateRange=1d&format=json', {
+          rateLimitedFetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/summary?dateRange=1d&format=json', {
             headers,
             signal: controller.signal
           }),
           // Serie temporal de ataques de capa 7 por técnica de mitigación
-          fetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/timeseries_groups/mitigation_product?dateRange=1d&aggInterval=1h&format=json', {
+          rateLimitedFetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/timeseries_groups/mitigation_product?dateRange=1d&aggInterval=1h&format=json', {
             headers,
             signal: controller.signal
           }),
           // Top pares origen-destino de ataques
-          fetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/attacks?dateRange=1d&limit=10&format=json', {
+          rateLimitedFetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/attacks?dateRange=1d&limit=10&format=json', {
             headers,
             signal: controller.signal
           }),
           // Top ubicaciones origen de ataques
-          fetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/locations/origin?dateRange=1d&limit=10&format=json', {
+          rateLimitedFetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/locations/origin?dateRange=1d&limit=10&format=json', {
             headers,
             signal: controller.signal
           }),
           // Top ubicaciones objetivo de ataques
-          fetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/locations/target?dateRange=1d&limit=10&format=json', {
+          rateLimitedFetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/top/locations/target?dateRange=1d&limit=10&format=json', {
             headers,
             signal: controller.signal
           }),
           // Técnicas de mitigación más utilizadas
-          fetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/timeseries_groups/mitigation_product?dateRange=7d&aggInterval=1d&format=json', {
+          rateLimitedFetch('https://api.cloudflare.com/client/v4/radar/attacks/layer7/timeseries_groups/mitigation_product?dateRange=7d&aggInterval=1d&format=json', {
             headers,
             signal: controller.signal
           })
@@ -778,7 +752,7 @@ class CybersecurityAPI {
         const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         
         const [topPorts, dailySummary, topSources, portHistory443, portHistory22, threatFeeds] = await Promise.allSettled([
-          fetch('https://isc.sans.edu/api/topports/records/50?json', {
+          rateLimitedFetch('https://isc.sans.edu/api/topports/records/50?json', {
             signal: controller.signal,
             headers: {
               'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -786,7 +760,7 @@ class CybersecurityAPI {
               'Cache-Control': 'no-cache'
             }
           }),
-          fetch(`https://isc.sans.edu/api/dailysummary/${yesterday}/${today}?json`, {
+          rateLimitedFetch(`https://isc.sans.edu/api/dailysummary/${yesterday}/${today}?json`, {
             signal: controller.signal,
             headers: {
               'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -794,7 +768,7 @@ class CybersecurityAPI {
               'Cache-Control': 'no-cache'
             }
           }),
-          fetch(`https://isc.sans.edu/api/sources/attacks/50/${today}?json`, {
+          rateLimitedFetch(`https://isc.sans.edu/api/sources/attacks/50/${today}?json`, {
             signal: controller.signal,
             headers: {
               'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -802,7 +776,7 @@ class CybersecurityAPI {
               'Cache-Control': 'no-cache'
             }
           }),
-          fetch('https://isc.sans.edu/api/porthistory/443/7?json', {
+          rateLimitedFetch('https://isc.sans.edu/api/porthistory/443/7?json', {
             signal: controller.signal,
             headers: {
               'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -810,7 +784,7 @@ class CybersecurityAPI {
               'Cache-Control': 'no-cache'
             }
           }),
-          fetch('https://isc.sans.edu/api/porthistory/22/7?json', {
+          rateLimitedFetch('https://isc.sans.edu/api/porthistory/22/7?json', {
             signal: controller.signal,
             headers: {
               'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -818,7 +792,7 @@ class CybersecurityAPI {
               'Cache-Control': 'no-cache'
             }
           }),
-          fetch('https://isc.sans.edu/api/threatfeeds?json', {
+          rateLimitedFetch('https://isc.sans.edu/api/threatfeeds?json', {
             signal: controller.signal,
             headers: {
               'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -910,7 +884,7 @@ class CybersecurityAPI {
         if (portsData.length === 0) {
           // Try alternate endpoint if no ports were returned
           try {
-            const altResp = await fetch('https://isc.sans.edu/api/topports/2?json', {
+            const altResp = await rateLimitedFetch('https://isc.sans.edu/api/topports/2?json', {
               signal: controller.signal,
               headers: {
                 'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -1002,7 +976,7 @@ class CybersecurityAPI {
       try {
         // Fetch fuentes optimizadas según documentación RansomWatch
         const [postsResponse, groupsResponse] = await Promise.allSettled([
-          fetch('https://raw.githubusercontent.com/joshhighet/ransomwatch/main/posts.json', {
+          rateLimitedFetch('https://raw.githubusercontent.com/joshhighet/ransomwatch/main/posts.json', {
             signal: controller.signal,
             headers: {
               'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -1011,7 +985,7 @@ class CybersecurityAPI {
               'Accept-Encoding': 'gzip, deflate'
             }
           }),
-          fetch('https://raw.githubusercontent.com/joshhighet/ransomwatch/main/groups.json', {
+          rateLimitedFetch('https://raw.githubusercontent.com/joshhighet/ransomwatch/main/groups.json', {
             signal: controller.signal,
             headers: {
               'User-Agent': 'SESEC-ThreatIntelligence/2.0 (+https://sesec.es)',
@@ -1150,53 +1124,28 @@ class CybersecurityAPI {
         let threatLevel = recent24h.length > 10 ? 'High' : 
                          recent24h.length > 5 ? 'Medium' : 'Low';
         
-        // Generate fallback data if no recent activity found
+        // No fallback data - only show real data
         if (recent24h.length === 0 && recent7d.length === 0) {
-          const fallbackCount24h = Math.floor(Math.random() * 15) + 5; // 5-20 attacks
-          const fallbackCount7d = Math.floor(Math.random() * 80) + 30; // 30-110 attacks
-          const fallbackCount30d = Math.floor(Math.random() * 200) + 100; // 100-300 attacks
-          
-          const fallbackGroups = [
-            { name: 'LockBit', count: Math.floor(Math.random() * 20) + 10, description: 'Active ransomware group' },
-            { name: 'BlackCat', count: Math.floor(Math.random() * 15) + 8, description: 'ALPHV ransomware group' },
-            { name: 'Cl0p', count: Math.floor(Math.random() * 12) + 6, description: 'Clop ransomware group' },
-            { name: 'Royal', count: Math.floor(Math.random() * 10) + 5, description: 'Royal ransomware group' },
-            { name: 'Play', count: Math.floor(Math.random() * 8) + 4, description: 'Play ransomware group' }
-          ];
-          
-          const fallbackTrend = Array.from({length: 24}, () => Math.floor(Math.random() * 5) + 1);
-          threatLevel = 'Medium';
+          threatLevel = 'Low';
           
           return {
-            count: fallbackCount24h,
-            count7d: fallbackCount7d,
-            count30d: fallbackCount30d,
-            trend: fallbackTrend,
-            topGroups: fallbackGroups,
+            count: 0,
+            count7d: 0,
+            count30d: 0,
+            trend: Array.from({length: 24}, () => 0),
+            topGroups: [],
             threatLevel: threatLevel,
-            geographicDistribution: [
-              { country: 'usa', count: Math.floor(Math.random() * 30) + 15 },
-              { country: 'germany', count: Math.floor(Math.random() * 20) + 10 },
-              { country: 'france', count: Math.floor(Math.random() * 15) + 8 },
-              { country: 'uk', count: Math.floor(Math.random() * 12) + 6 },
-              { country: 'spain', count: Math.floor(Math.random() * 10) + 5 }
-            ],
-            industryTargets: [
-              { industry: 'healthcare', count: Math.floor(Math.random() * 25) + 12 },
-              { industry: 'finance', count: Math.floor(Math.random() * 20) + 10 },
-              { industry: 'education', count: Math.floor(Math.random() * 15) + 8 },
-              { industry: 'government', count: Math.floor(Math.random() * 12) + 6 },
-              { industry: 'manufacturing', count: Math.floor(Math.random() * 10) + 5 }
-            ],
+            geographicDistribution: [],
+            industryTargets: [],
             statistics: {
-              totalGroups: fallbackGroups.length,
-              mostActiveGroup: fallbackGroups[0].name,
-              averageDaily: Math.round(fallbackCount30d / 30),
-              weeklyGrowth: Math.floor(Math.random() * 20) + 5
+              totalGroups: 0,
+              mostActiveGroup: null,
+              averageDaily: 0,
+              weeklyGrowth: 0
             },
             rawData: {
               allPosts: [],
-              allGroups: fallbackGroups,
+              allGroups: [],
               recentPosts: [],
               weeklyPosts: [],
               monthlyPosts: []

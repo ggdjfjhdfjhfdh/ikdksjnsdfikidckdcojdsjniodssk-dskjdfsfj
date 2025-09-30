@@ -3,7 +3,8 @@ import { fetchAllThreatData } from './cybersecurity-api.js';
 // In-memory cache
 let threatDataCache = null;
 let lastUpdateTime = null;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 3 * 60 * 1000; // 3 minutes for fresher data
+let isInitializing = false;
 
 // Cache statistics
 let cacheStats = {
@@ -23,12 +24,34 @@ export async function getCachedThreatData() {
   // Check if cache is valid
   if (threatDataCache && lastUpdateTime && (now - lastUpdateTime) < CACHE_DURATION) {
     cacheStats.hits++;
-    console.log('📋 Serving threat data from cache');
+    console.log('📋 Serving threat data from cache (age: ' + Math.round((now - lastUpdateTime) / 1000) + 's)');
     return {
       ...threatDataCache,
       metadata: {
         ...threatDataCache.metadata,
         cached: true,
+        cacheAge: now - lastUpdateTime,
+        cacheStats
+      }
+    };
+  }
+  
+  // If cache exists but is expired, serve stale data while updating in background
+  if (threatDataCache && !isInitializing) {
+    console.log('📋 Serving stale cache while updating in background...');
+    cacheStats.hits++;
+    
+    // Update cache in background
+    updateThreatCache().catch(error => {
+      console.error('❌ Background cache update failed:', error);
+    });
+    
+    return {
+      ...threatDataCache,
+      metadata: {
+        ...threatDataCache.metadata,
+        cached: true,
+        stale: true,
         cacheAge: now - lastUpdateTime,
         cacheStats
       }
@@ -153,21 +176,35 @@ export function resetCacheStats() {
 /**
  * Start automatic cache updates
  */
-export function startCacheUpdates() {
+export async function startCacheUpdates() {
   console.log('🚀 Starting automatic cache updates...');
   
-  // Initial cache load
-  getCachedThreatData().catch(error => {
-    console.error('❌ Error during initial cache load:', error);
-  });
+  // Aggressive initial cache preload
+  isInitializing = true;
+  try {
+    console.log('🔄 Preloading cache with fresh data...');
+    await updateThreatCache();
+    console.log('✅ Initial cache preload completed successfully');
+  } catch (error) {
+    console.error('❌ Error during initial cache preload:', error);
+    // Try to get any available data even if some sources fail
+    try {
+      await getCachedThreatData();
+    } catch (fallbackError) {
+      console.error('❌ Complete cache initialization failed:', fallbackError);
+    }
+  } finally {
+    isInitializing = false;
+  }
   
-  // Set up periodic updates every 5 minutes
+  // Set up periodic updates every 3 minutes
   const updateInterval = setInterval(async () => {
     try {
+      console.log('🔄 Running scheduled cache update...');
       await updateThreatCache();
-      console.log('🔄 Automatic cache update completed');
+      console.log('✅ Scheduled cache update completed');
     } catch (error) {
-      console.error('❌ Error during automatic cache update:', error);
+      console.error('❌ Error during scheduled cache update:', error);
     }
   }, CACHE_DURATION);
   
@@ -182,5 +219,5 @@ export function startCacheUpdates() {
     console.log('🛑 Cache update interval cleared');
   });
   
-  console.log('✅ Automatic cache updates started');
+  console.log('✅ Automatic cache updates started with 3-minute intervals');
 }

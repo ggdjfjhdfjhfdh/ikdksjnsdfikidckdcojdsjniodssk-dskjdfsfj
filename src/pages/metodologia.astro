@@ -129,24 +129,24 @@ const certifications = [
     spacing="large"
     alignment="center"
   >
-    <div class="hero-content">
-      <p class="hero-description">
+    <div class="methodology-hero-content">
+      <p class="methodology-hero-description">
         No improvisamos. Cada proyecto sigue una metodología probada que combina 
         estándares internacionales con nuestra experiencia práctica. Transparencia 
         total, plazos realistas y resultados que puedes medir.
       </p>
-      <div class="hero-metrics">
-        <div class="metric">
-          <div class="metric-number">4</div>
-          <div class="metric-label">Fases estructuradas</div>
+      <div class="methodology-hero-metrics">
+        <div class="methodology-metric">
+          <div class="methodology-metric-number">4</div>
+          <div class="methodology-metric-label">Fases estructuradas</div>
         </div>
-        <div class="metric">
-          <div class="metric-number">100%</div>
-          <div class="metric-label">Trazabilidad</div>
+        <div class="methodology-metric">
+          <div class="methodology-metric-number">100%</div>
+          <div class="methodology-metric-label">Trazabilidad</div>
         </div>
-        <div class="metric">
-          <div class="metric-number">24h</div>
-          <div class="metric-label">Tiempo de respuesta</div>
+        <div class="methodology-metric">
+          <div class="methodology-metric-number">24h</div>
+          <div class="methodology-metric-label">Tiempo de respuesta</div>
         </div>
       </div>
     </div>
@@ -169,7 +169,7 @@ const certifications = [
     background="soft"
     spacing="large"
   >
-    <div class="values-grid">
+    <div class="methodology-values-grid">
       {coreValues.map((value) => (
         <Card 
           variant="value"
@@ -188,7 +188,7 @@ const certifications = [
     background="default"
     spacing="large"
   >
-    <div class="standards-intro">
+    <div class="methodology-standards-intro">
       <p>
         Nuestro trabajo se basa en los estándares más rigurosos de la industria. 
         No reinventamos la rueda: aplicamos metodologías probadas y las adaptamos 
@@ -196,10 +196,10 @@ const certifications = [
       </p>
     </div>
     
-    <div class="certifications-grid">
+    <div class="methodology-certifications-grid">
       {certifications.map((cert) => (
-        <div class="certification-card">
-          <div class="cert-icon">
+        <div class="methodology-certification-card">
+          <div class="methodology-cert-icon">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M9 12l2 2 4-4"/>
               <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
@@ -208,8 +208,8 @@ const certifications = [
               <path d="M12 21c0-1 1-3 3-3s3 2 3 3-1 3-3 3-3-2-3-3"/>
             </svg>
           </div>
-          <h3 class="cert-name">{cert.name}</h3>
-          <p class="cert-description">{cert.description}</p>
+          <h3 class="methodology-cert-name">{cert.name}</h3>
+          <p class="methodology-cert-description">{cert.description}</p>
         </div>
       ))}
     </div>
@@ -222,9 +222,9 @@ const certifications = [
     background="soft"
     spacing="large"
   >
-    <div class="quality-grid">
-      <div class="quality-card">
-        <div class="quality-icon">
+    <div class="methodology-quality-grid">
+      <div class="methodology-quality-card">
+        <div class="methodology-quality-icon">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
             <polyline points="12,6 12,12 16,14"/>
@@ -234,8 +234,8 @@ const certifications = [
         <p>Estimaciones basadas en proyectos reales. Comunicación proactiva si surgen imprevistos.</p>
       </div>
       
-      <div class="quality-card">
-        <div class="quality-icon">
+      <div class="methodology-quality-card">
+        <div class="methodology-quality-icon">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 12l2 2 4-4"/>
             <path d="M21 12c-1 0-3-1-3-3s2-3 3-3 3 1 3 3-2 3-3 3"/>
@@ -248,8 +248,8 @@ const certifications = [
         <p>Procesos basados en estándares internacionales y experiencia práctica en cientos de proyectos.</p>
       </div>
       
-      <div class="quality-card">
-        <div class="quality-icon">
+      <div class="methodology-quality-card">
+        <div class="methodology-quality-icon">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M14 9V5a3 3 0 0 0-6 0v4"/>
             <rect x="2" y="9" width="20" height="11" rx="2" ry="2"/>
@@ -259,8 +259,8 @@ const certifications = [
         <p>NDA firmado antes del primer contacto. Tus datos nunca salen de nuestros sistemas certificados.</p>
       </div>
       
-      <div class="quality-card">
-        <div class="quality-icon">
+      <div class="methodology-quality-card">
+        <div class="methodology-quality-icon">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
             <circle cx="8.5" cy="7" r="4"/>
@@ -292,187 +292,3 @@ const certifications = [
     size="large"
   />
 </Layout>
-
-<style>
-  .hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  
-  .hero-description {
-    font-size: var(--fs-body);
-    color: var(--fg-dim);
-    line-height: 1.7;
-    margin-bottom: var(--sp-8);
-  }
-  
-  .hero-metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--sp-6);
-    margin-top: var(--sp-8);
-  }
-  
-  .metric {
-    text-align: center;
-  }
-  
-  .metric-number {
-    font-size: var(--fs-h2);
-    font-weight: 700;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: var(--sp-2);
-  }
-  
-  .metric-label {
-    font-size: 14px;
-    color: var(--fg-dim);
-    font-weight: 500;
-  }
-  
-  /* Values Grid */
-  .values-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--sp-6);
-    margin-top: var(--sp-8);
-  }
-  
-  /* Standards Section */
-  .standards-intro {
-    max-width: 700px;
-    margin: 0 auto var(--sp-10) auto;
-    text-align: center;
-  }
-  
-  .standards-intro p {
-    font-size: var(--fs-body);
-    color: var(--fg-dim);
-    line-height: 1.6;
-  }
-  
-  .certifications-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--sp-6);
-  }
-  
-  .certification-card {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: var(--sp-6);
-    text-align: center;
-    backdrop-filter: blur(10px);
-    transition: all var(--dur) var(--ease);
-  }
-  
-  .certification-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-1), 0 0 20px rgba(124, 247, 212, 0.1);
-    border-color: var(--accent);
-  }
-  
-  .cert-icon {
-    color: var(--accent);
-    margin-bottom: var(--sp-4);
-  }
-  
-  .cert-name {
-    font-size: var(--fs-h3);
-    font-weight: 600;
-    color: var(--fg);
-    margin-bottom: var(--sp-2);
-  }
-  
-  .cert-description {
-    font-size: 14px;
-    color: var(--fg-dim);
-    line-height: 1.5;
-    margin: 0;
-  }
-  
-  /* Quality Assurance */
-  .quality-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--sp-6);
-  }
-  
-  .quality-card {
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: var(--sp-6);
-    backdrop-filter: blur(10px);
-    transition: all var(--dur) var(--ease);
-  }
-  
-  .quality-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-1);
-    border-color: var(--accent);
-  }
-  
-  .quality-icon {
-    color: var(--accent);
-    margin-bottom: var(--sp-4);
-  }
-  
-  .quality-card h3 {
-    font-size: var(--fs-h3);
-    font-weight: 600;
-    color: var(--fg);
-    margin-bottom: var(--sp-3);
-    line-height: 1.3;
-  }
-  
-  .quality-card p {
-    color: var(--fg-dim);
-    line-height: 1.5;
-    margin: 0;
-  }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .hero-metrics {
-      grid-template-columns: 1fr;
-      gap: var(--sp-4);
-    }
-    
-    .values-grid {
-      grid-template-columns: 1fr;
-      gap: var(--sp-4);
-    }
-    
-    .certifications-grid {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: var(--sp-4);
-    }
-    
-    .certification-card {
-      padding: var(--sp-4);
-    }
-    
-    .quality-grid {
-      grid-template-columns: 1fr;
-      gap: var(--sp-4);
-    }
-    
-    .quality-card {
-      padding: var(--sp-4);
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .certifications-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .quality-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-</style>

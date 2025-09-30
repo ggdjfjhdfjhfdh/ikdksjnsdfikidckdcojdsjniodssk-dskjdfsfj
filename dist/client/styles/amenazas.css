@@ -1,0 +1,41 @@
+/* Estilos específicos para la página de amenazas */
+
+.country-progress-bar {
+  height: 100%;
+  background-color: var(--color-primary-500);
+  border-radius: 9999px;
+  transition: width 0.3s ease-in-out;
+}
+
+.attack-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.progress-fill.critical {
+  background: linear-gradient(90deg, #ff4757, #ff3742);
+}
+
+.progress-fill.high {
+  background: linear-gradient(90deg, #ff8c00, #ff7f50);
+}
+
+.progress-fill.medium {
+  background: linear-gradient(90deg, #ffd700, #ffc125);
+}
+
+.progress-fill-critical { width: 90%; }
+.progress-fill-high { width: 70%; }
+.progress-fill-medium { width: 50%; }
+.progress-fill-low { width: 30%; }

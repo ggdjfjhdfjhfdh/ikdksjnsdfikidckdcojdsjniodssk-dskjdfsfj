@@ -1,0 +1,304 @@
+.footer {
+  background: var(--bg-soft);
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+  padding: var(--space-12) 0;
+}
+
+.footer-content {
+  padding: 0 var(--space-6);
+}
+
+.footer-main {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--space-16);
+}
+
+/* Brand Section */
+.footer-brand {
+  max-width: 400px;
+}
+
+.brand-logo {
+  margin-bottom: var(--space-6);
+}
+
+.brand-logo img {
+  height: 40px;
+  width: auto;
+}
+
+.brand-description {
+  color: var(--fg-dim);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  margin-bottom: var(--space-8);
+}
+
+/* Contact Info */
+.contact-title {
+  color: var(--fg);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+.contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  transition: color var(--dur) var(--ease);
+}
+
+.contact-item:hover {
+  color: var(--accent);
+}
+
+.contact-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Footer Links */
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-8);
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-section .section-title {
+  color: var(--fg);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+.section-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.footer-link {
+  color: var(--fg-dim);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  transition: color var(--dur) var(--ease);
+  padding: var(--space-1) 0;
+}
+
+.footer-link:hover {
+  color: var(--accent);
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--fg-dim);
+  text-decoration: none;
+  transition: all var(--dur) var(--ease);
+}
+
+.social-link:hover {
+  background: var(--glass-border);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding: var(--space-6) 0;
+}
+
+.footer-bottom-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.copyright,
+.compliance {
+  color: var(--fg-dim);
+  font-size: var(--fs-sm);
+  margin: 0;
+}
+
+.compliance {
+  font-weight: 500;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+  
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-main {
+    padding-top: var(--space-12);
+  }
+  
+  .footer-links {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  
+  .footer-bottom-content {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: var(--space-8) 0;
+  }
+  
+  .footer-content {
+    padding: 0 var(--space-4);
+  }
+  
+  .footer-main {
+    padding-top: var(--space-8);
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
+  
+  .footer-brand {
+    max-width: 100%;
+  }
+  
+  .footer-links {
+    gap: var(--space-6);
+  }
+}
+
+/* Compact footer styles for threats page */
+.footer-compact {
+  display: none;
+}
+
+[data-page="amenazas"] .footer-compact {
+  display: block;
+  height: 80px;
+  padding: 0;
+}
+
+[data-page="amenazas"] .footer-main {
+  display: none;
+}
+
+.compact-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 var(--space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.compact-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.brand-name {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.brand-year {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+}
+
+.compact-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.compact-link {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.compact-link:hover {
+  color: var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .compact-content {
+    padding: 0 var(--space-4);
+  }
+  
+  .compact-links {
+    gap: var(--space-4);
+  }
+  
+  .compact-link {
+    font-size: var(--fs-xs);
+  }
+}

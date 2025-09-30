@@ -1,33 +1,39 @@
 ---
-import Navigation from '../components/Navigation.astro';
-import Footer from '../components/Footer.astro';
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import EmergencyModal from "../components/EmergencyModal.astro";
+
+// Importar estilos globales - ahora se importan desde public/styles/ via link tags
 
 export interface Props {
   title: string;
   description?: string;
-  lang?: 'es' | 'en';
+  lang?: "es" | "en";
   canonical?: string;
 }
 
-const { title, description = 'Consultoría en ciberseguridad profesional', lang = 'es', canonical } = Astro.props;
+const {
+  title,
+  description = "Consultoría en ciberseguridad profesional",
+  lang = "es",
+  canonical,
+} = Astro.props;
 const currentPath = Astro.url.pathname;
-const baseUrl = Astro.site || 'https://sesecpro.com';
+const baseUrl = Astro.site || "https://sesecpro.es";
 
 // Generar URLs alternativas para hreflang
 const getAlternateUrl = (targetLang: string) => {
-  if (currentPath.startsWith('/en/')) {
-    return targetLang === 'es' 
-      ? currentPath.replace('/en/', '/') 
-      : currentPath;
+  if (currentPath.startsWith("/en/")) {
+    return targetLang === "es" ? currentPath.replace("/en/", "/") : currentPath;
   } else {
-    return targetLang === 'en' 
-      ? `/en${currentPath === '/' ? '' : currentPath}`
+    return targetLang === "en"
+      ? `/en${currentPath === "/" ? "" : currentPath}`
       : currentPath;
   }
 };
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={lang}>
   <head>
     <meta charset="UTF-8" />
@@ -35,97 +41,132 @@ const getAlternateUrl = (targetLang: string) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    
-    <!-- Configuración de crossorigin para recursos -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval'; worker-src 'self' blob:; object-src 'none';" />
-    
+
+    <!-- Configuración de crossorigin para recursos eliminada para evitar conflictos con vercel.json -->
+
     <!-- SEO -->
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="ciberseguridad, consultoría, auditoría, pentesting, seguridad informática, hardening, respuesta incidentes, ISO 27001, NIST, compliance" />
-    <meta name="author" content="SESEC - Consultoría en Ciberseguridad" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta
+      name="keywords"
+      content="ciberseguridad, consultoría, auditoría, pentesting, seguridad informática, hardening, respuesta incidentes, ISO 27001, NIST, compliance"
+    />
+    <meta name="author" content="SESECPRO - Consultoría en Ciberseguridad" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
     <meta name="googlebot" content="index, follow" />
     <link rel="canonical" href={canonical || `${baseUrl}${currentPath}`} />
-    
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/styles/global.css" />
+    <link rel="preload" href="/styles/emergency-modal.css" as="style" />
+    <link rel="stylesheet" href="/styles/emergency-modal.css" />
+
     <!-- hreflang -->
-    <link rel="alternate" hreflang="es" href={`${baseUrl}${getAlternateUrl('es')}`} />
-    <link rel="alternate" hreflang="en" href={`${baseUrl}${getAlternateUrl('en')}`} />
-    <link rel="alternate" hreflang="x-default" href={`${baseUrl}${getAlternateUrl('es')}`} />
-    
+    <link
+      rel="alternate"
+      hreflang="es"
+      href={`${baseUrl}${getAlternateUrl("es")}`}
+    />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href={`${baseUrl}${getAlternateUrl("en")}`}
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={`${baseUrl}${getAlternateUrl("es")}`}
+    />
+
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={`${baseUrl}${currentPath}`} />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
-    
+    <meta property="og:locale" content={lang === "es" ? "es_ES" : "en_US"} />
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    
+
     <!-- Preload critical fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" /></noscript>
-    
-    <!-- Critical CSS -->
-    <style>
-      @import '../styles/animations.css';
-      @import '../styles/tokens.css';
-    </style>
-    
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript
+      ><link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      /></noscript
+    >
+
+    <!-- Estilos globales -->
+    <link rel="stylesheet" href="/styles/main.css" />
+
     <!-- Fix para module preloads -->
-    <script src="/src/scripts/module-preload-fix.js" type="module"></script>
-    
+    <script src="/scripts/module-preload-fix.js" type="module"></script>
+
+    <!-- Emergency Modal Script (public, non-module) -->
+    <script src="/scripts/emergency-modal.js" defer></script>
+
     <!-- Performance hints -->
     <meta name="theme-color" content="#0b0f14" />
     <meta name="color-scheme" content="dark" />
-    
+
     <!-- Accessibility meta tags -->
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+
     <!-- Structured data for better SEO -->
     <script type="application/ld+json" is:inline>
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "SESEC",
-      "description": "Consultoría especializada en ciberseguridad empresarial",
-      "url": "https://sesecpro.com",
-      "logo": "https://sesecpro.com/images/logo.svg",
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+34-XXX-XXX-XXX",
-        "contactType": "customer service",
-        "availableLanguage": ["Spanish", "English"]
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "ES"
-      },
-      "sameAs": [
-        "https://linkedin.com/company/sesec",
-        "https://twitter.com/sesecpro"
-      ],
-      "serviceType": [
-        "Auditorías de Ciberseguridad",
-        "Pentesting",
-        "Hardening de Sistemas",
-        "Respuesta a Incidentes",
-        "Consultoría ISO 27001"
-      ]
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "SESEC",
+        "description": "Consultoría especializada en ciberseguridad empresarial",
+        "url": "https://sesecpro.com",
+        "logo": "https://sesecpro.com/images/logo.svg",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+34-614-420-875",
+          "contactType": "customer service",
+          "availableLanguage": ["Spanish", "English"]
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "ES"
+        },
+        "sameAs": [
+          "https://linkedin.com/company/sesec",
+          "https://twitter.com/sesecpro"
+        ],
+        "serviceType": [
+          "Auditorías de Ciberseguridad",
+          "Pentesting",
+          "Hardening de Sistemas",
+          "Respuesta a Incidentes",
+          "Consultoría ISO 27001"
+        ]
+      }
     </script>
   </head>
-  
+
   <body>
     <a href="#main-content" class="skip-link">
-      {lang === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}
+      {lang === "es" ? "Saltar al contenido principal" : "Skip to main content"}
     </a>
     <div id="app">
       <Navigation lang={lang} />
@@ -134,51 +175,66 @@ const getAlternateUrl = (targetLang: string) => {
       </main>
       <Footer lang={lang} />
     </div>
-    
+
     <!-- Configuración global -->
-    <script define:vars={{ backendUrl: import.meta.env.BACKEND_URL }}>
+    <script
+      define:vars={{
+        backendUrl: import.meta.env.PUBLIC_BACKEND_URL,
+        emergencyToken: import.meta.env.PUBLIC_EMERGENCY_TOKEN,
+      }}
+    >
       window.BACKEND_URL = backendUrl;
+      // Token público (solo para llamadas de emergencia desde frontend). Se recomienda configurar en entorno de despliegue.
+      window.PUBLIC_EMERGENCY_TOKEN = emergencyToken || "";
     </script>
-    
+
     <!-- Scripts de microinteracciones -->
-  <script>
-    import('../scripts/microinteractions.js');
-    import('../scripts/performance.js');
-  </script>
-    
+    <script>
+      import("../scripts/microinteractions.js");
+      import("../scripts/performance.js");
+    </script>
+
+    <!-- Emergency modal module import removed; public script loaded above sets up modal behavior -->
+
     <!-- Service Worker Registration -->
     <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', async () => {
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", async () => {
           try {
-            const registration = await navigator.serviceWorker.register('/sw.js');
-            console.log('Service Worker registered:', registration);
-            
+            const registration =
+              await navigator.serviceWorker.register("/sw.js");
+            console.log("Service Worker registered:", registration);
+
             // Manejar actualizaciones
-            registration.addEventListener('updatefound', () => {
+            registration.addEventListener("updatefound", () => {
               const newWorker = registration.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              newWorker.addEventListener("statechange", () => {
+                if (
+                  newWorker.state === "installed" &&
+                  navigator.serviceWorker.controller
+                ) {
                   // Mostrar notificación de actualización disponible
-                  if (confirm('Nueva versión disponible. ¿Recargar página?')) {
-                    newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  if (confirm("Nueva versión disponible. ¿Recargar página?")) {
+                    newWorker.postMessage({ type: "SKIP_WAITING" });
                     window.location.reload();
                   }
                 }
               });
             });
-            
           } catch (error) {
-            console.log('Service Worker registration failed:', error);
+            console.log("Service Worker registration failed:", error);
           }
         });
-        
+
         // Escuchar cambios del service worker
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
+        navigator.serviceWorker.addEventListener("controllerchange", () => {
           window.location.reload();
         });
       }
     </script>
+
+    <!-- Emergency Modal Component -->
+    <EmergencyModal />
   </body>
 </html>
 
@@ -188,25 +244,54 @@ const getAlternateUrl = (targetLang: string) => {
     background: var(--bg);
     color: var(--fg);
   }
-  
+
   #app {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
-  
+
+  footer {
+    background: var(--bg-soft);
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+
   /* Ocultar footer en página de amenazas */
   body:has([data-page="amenazas"]) footer {
-    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    height: 80px;
+    overflow: hidden;
+    padding: 0;
   }
-  
+
+  /* Eliminar scroll y fijar posición en página de amenazas */
+  body:has([data-page="amenazas"]) {
+    overflow: hidden;
+    height: 100vh;
+    position: fixed;
+    width: 100%;
+  }
+
+  html:has([data-page="amenazas"]) {
+    overflow: hidden;
+    height: 100vh;
+  }
+
   /* Ajustar main para ocupar toda la pantalla en amenazas */
   body:has([data-page="amenazas"]) main {
     flex: 1;
-    height: 100vh;
+    height: calc(100vh - 80px); /* Dejar espacio para el footer */
     overflow: hidden;
   }
-  
+
   /* Smooth scrolling with reduced motion support */
   @media (prefers-reduced-motion: no-preference) {
     html {

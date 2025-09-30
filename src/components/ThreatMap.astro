@@ -40,12 +40,22 @@ function processGeoData(data) {
   };
 
   // Procesar datos de Cloudflare
-  if (data.cloudflare?.top_countries) {
-    data.cloudflare.top_countries.forEach(country => {
+  if (data.cloudflare?.topOriginCountries) {
+    data.cloudflare.topOriginCountries.forEach(country => {
       const regionId = countryToRegion[country.country] || 'as';
       const region = regions.find(r => r.id === regionId);
       if (region) {
-        region.threats += country.percentage || 0;
+        region.threats += country.attacks || 0;
+      }
+    });
+  }
+
+  if (data.cloudflare?.topTargetCountries) {
+    data.cloudflare.topTargetCountries.forEach(country => {
+      const regionId = countryToRegion[country.country] || 'as';
+      const region = regions.find(r => r.id === regionId);
+      if (region) {
+        region.threats += country.attacks || 0;
       }
     });
   }
@@ -632,44 +642,14 @@ const maxThreat = Math.max(...regions.map(r => r.threats));
         return 'Bajo';
       }
 
-      // Datos simulados por tipo de amenaza
+      // No fallback data - only real threat data will be used
       const threatTypeData = {
-        'na': {
-          malware: 245,
-          phishing: 189,
-          ransomware: 67,
-          ddos: 34
-        },
-        'eu': {
-          malware: 198,
-          phishing: 156,
-          ransomware: 45,
-          ddos: 28
-        },
-        'as': {
-          malware: 312,
-          phishing: 234,
-          ransomware: 89,
-          ddos: 56
-        },
-        'sa': {
-          malware: 134,
-          phishing: 98,
-          ransomware: 23,
-          ddos: 15
-        },
-        'af': {
-          malware: 87,
-          phishing: 65,
-          ransomware: 12,
-          ddos: 8
-        },
-        'oc': {
-          malware: 45,
-          phishing: 32,
-          ransomware: 8,
-          ddos: 4
-        }
+        'na': { malware: 0, phishing: 0, ransomware: 0, ddos: 0 },
+        'eu': { malware: 0, phishing: 0, ransomware: 0, ddos: 0 },
+        'as': { malware: 0, phishing: 0, ransomware: 0, ddos: 0 },
+        'sa': { malware: 0, phishing: 0, ransomware: 0, ddos: 0 },
+        'af': { malware: 0, phishing: 0, ransomware: 0, ddos: 0 },
+        'oc': { malware: 0, phishing: 0, ransomware: 0, ddos: 0 }
       };
 
       // Función para filtrar amenazas

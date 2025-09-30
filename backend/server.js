@@ -5,14 +5,22 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { startCacheUpdates } from './services/cache-manager.js';
+import { initializeDatabase } from './services/database.js';
 import threatRoutes from './routes/threat.js';
 import analyticsRoutes from './routes/analytics.js';
 import alertsRoutes from './routes/alerts.js';
+import ticketsRoutes from './routes/tickets.js';
 
 dotenv.config();
 
 const app = express();
+
+// Endpoint raíz para verificación rápida
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Backend is running' });
+});
 const PORT = process.env.PORT || 3000;
+
 
 // Security middleware
 app.use(helmet({
@@ -21,9 +29,9 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://static.cloudflareinsights.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https:"],
+      connectSrc: ["'self'", "https:", "https://cloudflareinsights.com", "https://sesec-backend.fly.dev"],
     },
   },
 }));
@@ -31,11 +39,12 @@ app.use(helmet({
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://sesec-2025.vercel.app', 'https://www.sesec.es', 'https://sesecpro.es', 'http://localhost:4321', 'http://127.0.0.1:4321']
-    : ['http://localhost:4321', 'http://127.0.0.1:4321'],
+    ? ['https://sesecpro.es', 'https://www.sesecpro.es', 'https://sesec-2025.vercel.app', 'http://localhost:4321', 'http://127.0.0.1:4321']
+    : ['http://localhost:4321', 'http://127.0.0.1:4321', 'http://localhost:4322', 'http://localhost:4323', 'http://localhost:4324', 'http://127.0.0.1:4322', 'http://127.0.0.1:4323', 'http://127.0.0.1:4324'],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control']
+  methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control', 'X-Emergency-Token', 'x-emergency-token'],
+  optionsSuccessStatus: 200
 }));
 
 // Rate limiting
@@ -63,6 +72,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api/threat', threatRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/alerts', alertsRoutes);
+app.use('/api/tickets', ticketsRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -84,6 +94,7 @@ app.get('/api/status', (req, res) => {
       threats: '/api/threat',
       analytics: '/api/analytics', 
       alerts: '/api/alerts',
+      tickets: '/api/tickets',
       health: '/health'
     },
     timestamp: new Date().toISOString()
@@ -100,20 +111,24 @@ app.use('*', (req, res) => {
       threats: '/api/threat',
       analytics: '/api/analytics',
       alerts: '/api/alerts',
+      tickets: '/api/tickets',
       health: '/health',
       status: '/api/status'
     }
   });
 });
 
-// Global error handler
+
+
+
+  // Global error handler
 app.use((error, req, res, next) => {
   console.error('❌ Global error handler:', error);
-  
+
   res.status(error.status || 500).json({
     success: false,
-    error: process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
+    error: process.env.NODE_ENV === 'production'
+      ? 'Internal server error'
       : error.message,
     timestamp: new Date().toISOString(),
     ...(process.env.NODE_ENV !== 'production' && { stack: error.stack })
@@ -121,15 +136,29 @@ app.use((error, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 SESEC Backend API running on port ${PORT}`);
+app.listen(PORT, '0.0.0.0', async () => {
+  console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-  console.log(`📋 API status: http://localhost:${PORT}/api/status`);
+  console.log(`📈 API Status: http://localhost:${PORT}/api/status`);
+  console.log(`🛡️ Security headers enabled`);
+  console.log(`⚡ Compression enabled`);
+  console.log(`🚦 Rate limiting: 100 requests per 15 minutes`);
   
-  // Start cache updates
-  startCacheUpdates();
-  console.log('⚡ Cache update scheduler started');
+  // Initialize database
+  try {
+    await initializeDatabase();
+    console.log('✅ Database initialized successfully');
+  } catch (error) {
+    console.error('❌ Failed to initialize database:', error);
+  }
+  
+  // Initialize automatic cache updates
+  try {
+    await startCacheUpdates();
+  } catch (error) {
+    console.error('❌ Failed to initialize cache updates:', error);
+  }
 });
 
 // Graceful shutdown

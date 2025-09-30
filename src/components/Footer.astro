@@ -26,7 +26,6 @@ const footerData = {
         links: [
           { text: 'Metodología', href: '/metodologia' },
           { text: 'Contacto', href: '/contacto' },
-          { text: 'Blog', href: '/blog' },
           { text: 'Casos de Éxito', href: '/casos-exito' }
         ]
       },
@@ -43,22 +42,22 @@ const footerData = {
     },
     contact: {
       title: 'Contacto',
-      email: 'info@sesecpro.com',
-      phone: '+34 XXX XXX XXX',
+      email: 'contacto@sesecpro.com',
+      phone: '+34 614 420 875',
       address: 'España'
     },
     social: {
       title: 'Síguenos',
       links: [
-        { text: 'LinkedIn', href: 'https://linkedin.com/company/sesec', icon: 'linkedin' },
+        { text: 'LinkedIn', href: 'https://linkedin.com/company/sesecpro', icon: 'linkedin' },
         { text: 'Twitter', href: 'https://twitter.com/sesecpro', icon: 'twitter' }
       ]
     },
-    copyright: `© ${currentYear} SESEC. Todos los derechos reservados.`,
+    copyright: `© ${currentYear} SESECPRO. Todos los derechos reservados.`,
     compliance: 'Cumplimiento RGPD • ISO 27001 • ENS'
   },
   en: {
-    company: 'SESEC',
+    company: 'SESECPRO',
     description: 'Specialized cybersecurity consulting for enterprises',
     sections: {
       services: {
@@ -75,7 +74,6 @@ const footerData = {
         links: [
           { text: 'Methodology', href: '/en/methodology' },
           { text: 'Contact', href: '/en/contact' },
-          { text: 'Blog', href: '/en/blog' },
           { text: 'Success Stories', href: '/en/success-stories' }
         ]
       },
@@ -92,18 +90,18 @@ const footerData = {
     },
     contact: {
       title: 'Contact',
-      email: 'info@sesecpro.com',
-      phone: '+34 XXX XXX XXX',
+      email: 'contacto@sesecpro.com',
+      phone: '+34 614 420 875',
       address: 'Spain'
     },
     social: {
       title: 'Follow Us',
       links: [
-        { text: 'LinkedIn', href: 'https://linkedin.com/company/sesec', icon: 'linkedin' },
+        { text: 'LinkedIn', href: 'https://linkedin.com/company/sesecpro', icon: 'linkedin' },
         { text: 'Twitter', href: 'https://twitter.com/sesecpro', icon: 'twitter' }
       ]
     },
-    copyright: `© ${currentYear} SESEC. All rights reserved.`,
+    copyright: `© ${currentYear} SESECPRO. All rights reserved.`,
     compliance: 'GDPR Compliant • ISO 27001 • ENS'
   }
 };
@@ -112,9 +110,24 @@ const data = footerData[lang];
 ---
 
 <footer class="footer">
-  <div class="container">
+<div class="footer-content container">
+   <!-- Compact footer for threats page -->
+    <div class="footer-compact" data-page-footer="amenazas">
+      <div class="compact-content">
+        <div class="compact-brand">
+          <span class="brand-name">SESEC</span>
+          <span class="brand-year">© {currentYear}</span>
+        </div>
+        <div class="compact-links">
+          <a href="/politica-privacidad" class="compact-link">Privacidad</a>
+          <a href="/terminos-condiciones" class="compact-link">Términos</a>
+          <a href="/contacto" class="compact-link">Contacto</a>
+        </div>
+      </div>
+    </div>
+    
     <!-- Main Footer Content -->
-    <div class="footer-main">
+    <div class="footer-main container">
       <!-- Company Info -->
       <div class="footer-brand">
         <div class="brand-logo">
@@ -215,222 +228,9 @@ const data = footerData[lang];
     <div class="footer-bottom">
       <div class="footer-bottom-content">
         <p class="copyright">{data.copyright}</p>
-        <p class="compliance">{data.compliance}</p>
       </div>
     </div>
   </div>
 </footer>
 
-<style>
-  .footer {
-    background: var(--bg-soft);
-    border-top: 1px solid var(--border);
-    margin-top: auto;
-  }
-  
-  .footer-main {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: var(--space-16);
-    padding: var(--space-20) 0;
-  }
-  
-  /* Brand Section */
-  .footer-brand {
-    max-width: 400px;
-  }
-  
-  .brand-logo {
-    margin-bottom: var(--space-6);
-  }
-  
-  .brand-logo img {
-    height: 40px;
-    width: auto;
-  }
-  
-  .brand-description {
-    color: var(--fg-dim);
-    font-size: var(--fs-base);
-    line-height: 1.6;
-    margin-bottom: var(--space-8);
-  }
-  
-  /* Contact Info */
-  .contact-title {
-    color: var(--fg);
-    font-size: var(--fs-lg);
-    font-weight: 600;
-    margin-bottom: var(--space-4);
-  }
-  
-  .contact-items {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-  
-  .contact-item {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    color: var(--fg-dim);
-    text-decoration: none;
-    font-size: var(--fs-sm);
-    transition: color var(--dur) var(--ease);
-  }
-  
-  .contact-item:hover {
-    color: var(--accent);
-  }
-  
-  .contact-icon {
-    color: var(--accent);
-    flex-shrink: 0;
-  }
-  
-  /* Footer Links */
-  .footer-links {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-8);
-  }
-  
-  .footer-section {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .section-title {
-    color: var(--fg);
-    font-size: var(--fs-base);
-    font-weight: 600;
-    margin-bottom: var(--space-4);
-  }
-  
-  .section-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-  
-  .footer-link {
-    color: var(--fg-dim);
-    text-decoration: none;
-    font-size: var(--fs-sm);
-    transition: color var(--dur) var(--ease);
-    padding: var(--space-1) 0;
-  }
-  
-  .footer-link:hover {
-    color: var(--accent);
-  }
-  
-  /* Social Links */
-  .social-links {
-    display: flex;
-    gap: var(--space-3);
-  }
-  
-  .social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: var(--glass);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--fg-dim);
-    text-decoration: none;
-    transition: all var(--dur) var(--ease);
-  }
-  
-  .social-link:hover {
-    background: var(--glass-border);
-    border-color: var(--accent);
-    color: var(--accent);
-    transform: translateY(-2px);
-  }
-  
-  /* Footer Bottom */
-  .footer-bottom {
-    border-top: 1px solid var(--border);
-    padding: var(--space-6) 0;
-  }
-  
-  .footer-bottom-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-  }
-  
-  .copyright,
-  .compliance {
-    color: var(--fg-dim);
-    font-size: var(--fs-sm);
-    margin: 0;
-  }
-  
-  .compliance {
-    font-weight: 500;
-  }
-  
-  /* Screen reader only */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 1024px) {
-    .footer-main {
-      grid-template-columns: 1fr;
-      gap: var(--space-12);
-    }
-    
-    .footer-links {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-6);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .footer-main {
-      padding: var(--space-12) 0;
-    }
-    
-    .footer-links {
-      grid-template-columns: 1fr;
-      gap: var(--space-8);
-    }
-    
-    .footer-bottom-content {
-      flex-direction: column;
-      text-align: center;
-      gap: var(--space-2);
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .footer-main {
-      padding: var(--space-8) 0;
-    }
-    
-    .social-links {
-      justify-content: center;
-    }
-  }
-</style>
+<link rel="stylesheet" href="/styles/footer.css" />

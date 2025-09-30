@@ -1,0 +1,261 @@
+.logo-strip {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(10px);
+  padding: var(--sp-6) 0;
+}
+
+.logo-strip::before,
+.logo-strip::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.logo-strip::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg-soft), transparent);
+}
+
+.logo-strip::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg-soft), transparent);
+}
+
+.logo-strip-track {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-12); /* Aumentado el espacio entre logos */
+  justify-content: space-around; /* Distribuye los logos uniformemente */
+  animation: scroll-left 30s linear infinite;
+}
+
+.logo-strip-track[data-direction="right"] {
+  animation-direction: reverse;
+}
+
+.logo-strip-track[data-speed="slow"] {
+  animation-duration: 45s;
+}
+
+.logo-strip-track[data-speed="fast"] {
+  animation-duration: 20s;
+}
+
+.logo-strip.pause-on-hover:hover .logo-strip-track {
+  animation-play-state: paused;
+}
+
+.logo-item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--sp-2);
+  transition: all var(--dur) var(--ease);
+  min-width: 140px;
+  height: 80px;
+}
+
+.logo-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.logo-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: opacity(0.9);
+  transition: all var(--dur) var(--ease);
+}
+
+.logo-item:hover .logo-image {
+  filter: grayscale(0%) opacity(1);
+  transform: scale(1.05);
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Responsive - Mobile First Approach */
+@media (max-width: 768px) {
+  .logo-strip {
+    padding: var(--sp-4) 0;
+    margin: 0 var(--sp-3);
+    width: calc(100% - var(--sp-6));
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(59, 130, 246, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    overflow: hidden; /* Cambiado de visible a hidden */
+  }
+  
+  .logo-strip-track {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 columnas con tamaño controlado */
+    gap: var(--sp-2); /* Espacio reducido */
+    animation: none !important;
+    justify-content: center;
+    align-items: center;
+    padding: var(--sp-2); /* Padding reducido */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .logo-item {
+    min-width: 0 !important; /* Permite que se ajuste al contenedor */
+    width: 100%;
+    height: 70px; /* Altura reducida */
+    padding: var(--sp-2); /* Padding reducido */
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  
+  .logo-item:hover {
+    background: rgba(255, 255, 255, 0.95);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.12);
+  }
+  
+  .logo-image {
+    filter: opacity(1) !important;
+    transform: scale(0.9); /* Escala reducida */
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+    width: auto;
+    height: auto;
+  }
+  
+  /* Ocultar gradientes en móvil ya que no hay scroll */
+  .logo-strip::before,
+  .logo-strip::after {
+    display: none;
+  }
+  
+  /* Optimización para orientación horizontal - 2 columnas (más seguro) */
+  @media (max-width: 768px) and (orientation: landscape) {
+    .logo-strip-track {
+      grid-template-columns: repeat(2, minmax(0, 1fr)); /* Mantenemos 2 columnas */
+      gap: var(--sp-1);
+      padding: var(--sp-1);
+    }
+    
+    .logo-item {
+      height: 60px;
+      padding: var(--sp-1);
+    }
+    
+    .logo-image {
+      transform: scale(0.8);
+      max-width: 80%;
+      max-height: 80%;
+    }
+  }
+  
+  /* Optimización para dispositivos muy pequeños - 2 columnas ajustadas */
+  @media (max-width: 360px) {
+    .logo-strip {
+      margin: 0 var(--sp-2);
+      width: calc(100% - var(--sp-4));
+      padding: var(--sp-3) 0;
+    }
+    
+    .logo-strip-track {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-2);
+      padding: var(--sp-2);
+    }
+    
+    .logo-item {
+      height: 70px;
+      padding: var(--sp-2);
+    }
+  }
+  
+  /* Tablets pequeñas - 2 columnas (más estable) */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .logo-strip-track {
+      grid-template-columns: repeat(2, minmax(0, 1fr)); /* Mantenemos 2 columnas */
+      gap: var(--sp-2);
+      padding: var(--sp-2);
+    }
+    
+    .logo-item {
+      height: 75px;
+      padding: var(--sp-2);
+    }
+    
+    .logo-image {
+      transform: scale(0.95);
+      max-width: 90%;
+      max-height: 90%;
+    }
+  }
+  
+  /* Para 5 elementos (partners) - ajuste especial */
+  .logo-strip-track {
+    /* Aseguramos que los 5 logos se distribuyan bien */
+  }
+  
+  /* Si hay número impar, el último item ocupa 2 columnas centrado */
+  .logo-item:nth-child(5):last-child {
+    grid-column: span 2;
+    justify-self: center;
+    max-width: 60%;
+  }
+}
+
+/* Ocultar indicadores de carrusel en móvil ya que no hay scroll */
+@media (max-width: 768px) {
+  .logo-strip::after {
+    display: none;
+  }
+}
+
+/* Reducir movimiento si está configurado */
+@media (prefers-reduced-motion: reduce) {
+  .logo-strip-track {
+    animation: none;
+  }
+  
+  .logo-strip {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .logo-strip::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .logo-strip::before,
+  .logo-strip::after {
+    display: none;
+  }
+}

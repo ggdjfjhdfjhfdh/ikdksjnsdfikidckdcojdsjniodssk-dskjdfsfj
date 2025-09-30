@@ -7,6 +7,7 @@ import Timeline from '../components/Timeline.astro';
 import LogoStrip from '../components/LogoStrip.astro';
 import BigCTA from '../components/BigCTA.astro';
 import SEO from '../components/SEO.astro';
+import Button from '../components/Button.astro';
 
 // Servicios destacados
 const featuredServices = [
@@ -195,19 +196,19 @@ const testimonials = [
 ];
 ---
 
-<Layout>
+<Layout title="Sesecpro - Todo por la seguridad digital">
   <SEO 
     slot="head"
-    title="SESEC - Consultoría en Ciberseguridad | Expertos en Seguridad Digital"
+    title="Sesecpro - Todo por la seguridad digital"
     description="Consultoría especializada en ciberseguridad para empresas. Auditorías, implementación de soluciones Zero Trust, y estrategias de seguridad personalizadas."
     canonical="https://sesecpro.com/"
-    ogImage="/images/hero-og.jpg"
+    image="/images/hero-og.jpg"
   />
 
   <main>
     <!-- Hero Section -->
     <Hero 
-      title="Protege tu empresa con ciberseguridad de vanguardia"
+      title="Defiende tu empresa con ciberseguridad de vanguardia"
       subtitle="Consultoría especializada en seguridad digital para empresas que buscan protección integral y estrategias personalizadas."
       ctaPrimary={{
         text: "Solicitar consulta gratuita",
@@ -261,21 +262,15 @@ const testimonials = [
                 <span class="counter" data-target="0">---</span>
                 <div class="loading-skeleton"></div>
               </div>
-              <h3 class="card-title-modern">Sitios Web Peligrosos</h3>
+              <h3 class="card-title-modern">URL'S PELIGROSAS</h3>
               <p class="card-subtitle-modern">Páginas maliciosas detectadas en 24h</p>
-              <div class="trend-indicator">
-                <span class="trend-arrow">↗</span>
-                <span class="trend-text">+12% vs ayer</span>
-              </div>
+            
             </div>
             <div class="sparkline-container">
               <canvas class="sparkline" width="80" height="20" data-trend="[]"></canvas>
               <div class="sparkline-loading"></div>
             </div>
-            <div class="data-source">
-              <span class="source-name">URLhaus</span>
-              <span class="api-status" data-status="loading">●</span>
-            </div>
+
           </div>
 
           <!-- Card 2: Ataques DDoS España -->
@@ -289,58 +284,18 @@ const testimonials = [
                 <span class="unit">%</span>
                 <div class="loading-skeleton"></div>
               </div>
-              <h3 class="card-title-modern">Ataques País a País</h3>
+              <h3 class="card-title-modern">ATAQUES PAÍS A PAÍS</h3>
               <p class="card-subtitle-modern">Rutas de ataque globales</p>
-              <div class="trend-indicator">
-                <span class="trend-arrow">↘</span>
-                <span class="trend-text">-5% vs ayer</span>
-              </div>
+             
             </div>
             <div class="sparkline-container">
               <canvas class="sparkline" width="80" height="20" data-trend="[]"></canvas>
               <div class="sparkline-loading"></div>
             </div>
-            <div class="data-source">
-              <span class="source-name">Cloudflare Radar</span>
-              <span class="api-status" data-status="loading">●</span>
-            </div>
+
           </div>
 
-          <!-- Card 3: Puertos Bajo Ataque -->
-          <div class="cyber-card glass-card scanned-ports" data-api="sansISC">
-            <div class="card-header">
-              <div class="status-indicator" data-status="loading"></div>
-            </div>
-            <div class="card-content">
-              <div class="ports-list-modern">
-                <div class="port-item-modern">
-                  <span class="port-number">---</span>
-                  <span class="port-count">Cargando...</span>
-                  <div class="port-loading"></div>
-                </div>
-                <div class="port-item-modern">
-                  <span class="port-number">---</span>
-                  <span class="port-count">Cargando...</span>
-                  <div class="port-loading"></div>
-                </div>
-                <div class="port-item-modern">
-                  <span class="port-number">---</span>
-                  <span class="port-count">Cargando...</span>
-                  <div class="port-loading"></div>
-                </div>
-              </div>
-              <h3 class="card-title-modern">Puertos Vulnerables</h3>
-              <p class="card-subtitle-modern">Más atacados hoy</p>
-            </div>
-            <div class="sparkline-container">
-              <canvas class="sparkline" width="80" height="20" data-trend="[]"></canvas>
-              <div class="sparkline-loading"></div>
-            </div>
-            <div class="data-source">
-              <span class="source-name">SANS ISC</span>
-              <span class="api-status" data-status="loading">●</span>
-            </div>
-          </div>
+
 
           <!-- Card 4: Víctimas Ransomware -->
           <div class="cyber-card glass-card ransomware-victims" data-api="ransomwatch">
@@ -352,37 +307,29 @@ const testimonials = [
                 <span class="counter" data-target="0">---</span>
                 <div class="loading-skeleton"></div>
               </div>
-              <h3 class="card-title-modern">Víctimas Ransomware</h3>
+              <h3 class="card-title-modern">VICTIMAS DE RANSOMWARE</h3>
               <p class="card-subtitle-modern">Reportadas en 24h</p>
-              <div class="trend-indicator">
-                <span class="trend-arrow">↗</span>
-                <span class="trend-text">+3 vs ayer</span>
-              </div>
+             
             </div>
             <div class="sparkline-container">
               <canvas class="sparkline" width="80" height="20" data-trend="[]"></canvas>
               <div class="sparkline-loading"></div>
             </div>
-            <div class="data-source">
-              <span class="source-name">RansomWatch</span>
-              <span class="api-status" data-status="loading">●</span>
-            </div>
+
           </div>
         </div>
 
         <!-- Enlace a página de amenazas -->
         <div class="threats-link-container">
-          <a href="/amenazas" class="threats-link-button">
-            <div class="button-content">
-              <span class="button-icon">🔍</span>
-              <div class="button-text">
-                <span class="button-title">Explorar Amenazas</span>
-                <span class="button-subtitle">Análisis detallado y tendencias</span>
-              </div>
-              <span class="button-arrow">→</span>
-            </div>
-          </a>
-        </div>
+            <Button
+              href="/amenazas"
+              variant="primary"
+              size="lg"
+              ariaLabel="Análisis y tendencias"
+            >
+              ANÁLISIS Y TENDENCIAS
+            </Button>
+          </div>
 
 
       </div>
@@ -437,746 +384,29 @@ const testimonials = [
       subtitle="Contacta con nuestros expertos y descubre cómo podemos proteger tu empresa de las amenazas digitales más avanzadas."
       primaryButton={{
         text: "Solicitar consulta gratuita",
-        href: "/contacto"
+        href: "/contacto",
+        variant: "primary"
       }}
       secondaryButton={{
-        text: "Ver casos de éxito",
-        href: "/casos"
+        text: "Ver servicios",
+        href: "/servicios",
+        variant: "outline"
       }}
+      background="gradient"
+      size="large"
     />
   </main>
 </Layout>
 
-<style>
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-
-  .use-cases-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-
-  /* Real-time Cybersecurity Dashboard Styles */
-  .realtime-cyber-dashboard {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-    position: relative;
-  }
-
-  /* Dashboard Info Section */
-  .dashboard-info {
-    margin-bottom: 3rem;
-  }
-
-  .info-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .info-card h4 {
-    color: #1e293b;
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    letter-spacing: -0.025em;
-  }
-
-  .info-card p {
-    color: #64748b;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .info-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .info-card li {
-    color: #64748b;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin-bottom: 0.75rem;
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  .info-card li::before {
-    content: '•';
-    color: #3b82f6;
-    font-weight: bold;
-    position: absolute;
-    left: 0;
-  }
-
-  .info-card strong {
-     color: #1e293b;
-     font-weight: 600;
-   }
-
-   /* Analysis Button */
-   .analysis-button-container {
-     display: flex;
-     justify-content: center;
-     margin-top: 3rem;
-     margin-bottom: 2rem;
-   }
-
-   .analysis-button {
-     background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-     color: white;
-     border: none;
-     padding: 1rem 2.5rem;
-     border-radius: 50px;
-     font-size: 1.1rem;
-     font-weight: 600;
-     cursor: pointer;
-     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-     display: flex;
-     align-items: center;
-     gap: 0.75rem;
-     box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
-     position: relative;
-     overflow: hidden;
-   }
-
-   .analysis-button::before {
-     content: '';
-     position: absolute;
-     top: 0;
-     left: -100%;
-     width: 100%;
-     height: 100%;
-     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-     transition: left 0.5s ease;
-   }
-
-   .analysis-button:hover {
-     transform: translateY(-3px) scale(1.05);
-     box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
-   }
-
-   .analysis-button:hover::before {
-     left: 100%;
-   }
-
-   .button-icon {
-     font-size: 1.2rem;
-   }
-
-   .button-arrow {
-     font-size: 1.2rem;
-     transition: transform 0.3s ease;
-   }
-
-   .analysis-button:hover .button-arrow {
-     transform: translateX(4px);
-   }
-
-   .dashboard-header {
-     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .dashboard-title {
-    color: #1e293b;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-    letter-spacing: -0.025em;
-  }
-
-  .status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(16, 185, 129, 0.1);
-    border-radius: 20px;
-    border: 1px solid rgba(16, 185, 129, 0.2);
-  }
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    background: #10b981;
-    border-radius: 50%;
-    animation: statusPulse 2s infinite;
-  }
-
-  @keyframes statusPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.2); }
-  }
-
-  .status-text {
-    color: #10b981;
-    font-weight: 600;
-    font-size: 0.875rem;
-    letter-spacing: 0.025em;
-  }
-
-  /* Glassmorphism Cards Grid - Horizontal Layout */
-  .cyber-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-  }
-
-  @media (max-width: 1200px) {
-    .cyber-cards-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .cyber-cards-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* Glass Card Design */
-  .cyber-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 2rem 1.5rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  }
-
-  .cyber-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-  }
-
-  .cyber-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    border-color: rgba(59, 130, 246, 0.3);
-    background: rgba(255, 255, 255, 0.98);
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-
-  .card-icon-modern {
-    font-size: 2.5rem;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-    transition: transform 0.3s ease;
-  }
-
-  .cyber-card:hover .card-icon-modern {
-    transform: scale(1.1) rotate(5deg);
-  }
-
-
-
-  .time-badge {
-    background: rgba(59, 130, 246, 0.2);
-    color: #3b82f6;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    letter-spacing: 0.025em;
-  }
-
-  .card-content {
-    margin-bottom: 1.5rem;
-  }
-
-  /* Large Metric Value */
-  .metric-value-large {
-    font-size: 4rem;
-    font-weight: 900;
-    color: #1e293b;
-    margin: 1rem 0 0.5rem 0;
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    line-height: 1;
-    background: linear-gradient(135deg, #1e293b, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 0.25rem;
-  }
-
-  .metric-value-large .counter {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: -2px;
-  }
-
-  .metric-value-large .unit {
-    font-size: 2rem;
-    color: #64748b;
-    font-weight: 700;
-  }
-
-  .card-title-modern {
-    color: #1e293b;
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-    letter-spacing: -0.025em;
-  }
-
-  .card-subtitle-modern {
-    font-size: 0.8rem;
-    color: #64748b;
-    font-weight: 500;
-    margin-bottom: 1rem;
-  }
-
-  .metric-description {
-    font-size: 0.75rem;
-    color: #9ca3af;
-    margin-bottom: 1rem;
-    font-style: italic;
-    line-height: 1.4;
-  }
-
-  /* Estilos para el botón de amenazas */
-  .threats-link-container {
-    display: flex;
-    justify-content: center;
-    margin: 3rem 0;
-  }
-
-  .threats-link-button {
-    display: inline-block;
-    text-decoration: none;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 16px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-  }
-
-  .threats-link-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-  }
-
-  .button-content {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: white;
-  }
-
-  .button-icon {
-    font-size: 1.5rem;
-    opacity: 0.9;
-  }
-
-  .button-text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .button-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-  }
-
-  .button-subtitle {
-    font-size: 0.9rem;
-    opacity: 0.8;
-  }
-
-  .button-arrow {
-    font-size: 1.2rem;
-    transition: transform 0.3s ease;
-  }
-
-  .threats-link-button:hover .button-arrow {
-    transform: translateX(4px);
-  }
-
-  @media (max-width: 768px) {
-    .threats-link-button {
-      padding: 1.25rem 1.5rem;
-    }
-    
-    .button-content {
-      gap: 0.75rem;
-    }
-    
-    .button-title {
-      font-size: 1rem;
-    }
-    
-    .button-subtitle {
-      font-size: 0.85rem;
-    }
-  }
-
-  /* Ports List Modern Styling */
-  .ports-list-modern {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .port-item-modern {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background: rgba(59, 130, 246, 0.05);
-    border-radius: 12px;
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    transition: all 0.2s ease;
-    position: relative;
-  }
-
-  .port-item-modern:hover {
-    background: rgba(59, 130, 246, 0.1);
-    border-color: rgba(59, 130, 246, 0.2);
-    transform: translateX(4px);
-  }
-
-  .port-number {
-    font-family: 'Monaco', 'Menlo', monospace;
-    font-weight: 800;
-    color: #1e293b;
-    font-size: 1.1rem;
-    background: linear-gradient(135deg, #1e293b, #3b82f6);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .port-count {
-    color: #64748b;
-    font-size: 0.875rem;
-    font-weight: 600;
-  }
-
-  /* Sparkline Container */
-  .sparkline-container {
-    height: 20px;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .sparkline {
-    opacity: 0.6;
-  }
-
-  .no-data {
-      color: #64748b;
-      font-size: 0.75rem;
-      font-style: italic;
-      opacity: 0.6;
-    }
-
-    /* Loading States */
-    .status-indicator {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #fbbf24;
-      animation: pulse 2s infinite;
-    }
-
-    .status-indicator[data-status="ok"] {
-      background: #10b981;
-      animation: none;
-    }
-
-    .status-indicator[data-status="error"] {
-      background: #ef4444;
-      animation: none;
-    }
-
-    .loading-skeleton {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      animation: shimmer 1.5s infinite;
-      border-radius: 8px;
-      opacity: 0;
-    }
-
-    .cyber-card[data-api] .loading-skeleton {
-      opacity: 1;
-    }
-
-    .sparkline-loading {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-      animation: shimmer 1.5s infinite;
-      border-radius: 4px;
-    }
-
-    .port-loading {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-      animation: shimmer 1.5s infinite;
-      border-radius: 4px;
-    }
-
-    .trend-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      font-size: 0.75rem;
-      opacity: 0.8;
-    }
-
-    .trend-arrow {
-      font-size: 1rem;
-      font-weight: bold;
-    }
-
-    .trend-text {
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .api-status {
-      font-size: 0.75rem;
-      margin-left: 0.5rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-      display: inline-block;
-    }
-
-    .api-status[data-status="loading"] {
-      color: #fbbf24;
-      background-color: rgba(251, 191, 36, 0.1);
-      animation: pulse 2s infinite;
-    }
-
-    .api-status[data-status="ok"] {
-      color: #10b981;
-      background-color: rgba(16, 185, 129, 0.1);
-    }
-
-    .api-status[data-status="fallback"] {
-      color: #f59e0b;
-      background-color: rgba(245, 158, 11, 0.1);
-    }
-
-    .api-status[data-status="requires_token"] {
-      color: #8b5cf6;
-      background-color: rgba(139, 92, 246, 0.1);
-    }
-
-    .api-status[data-status="error"] {
-      color: #ef4444;
-      background-color: rgba(239, 68, 68, 0.1);
-    }
-
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-  .data-source {
-    color: #64748b;
-    font-size: 0.75rem;
-    text-align: center;
-    opacity: 0.6;
-    font-weight: 500;
-    letter-spacing: 0.025em;
-  }
-
-  /* CTA Section */
-  .cyber-cta {
-    text-align: center;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 2rem;
-  }
-
-  .cta-content h3 {
-    color: #1e293b;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.025em;
-  }
-
-  .cta-content p {
-    color: #64748b;
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-  }
-
-  .cta-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 2rem;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    color: white;
-    text-decoration: none;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    border: none;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-  }
-
-  .cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-  }
-
-  .cta-button svg {
-    transition: transform 0.2s ease;
-  }
-
-  .cta-button:hover svg {
-    transform: translateX(4px);
-  }
-
-  /* Data Attribution */
-  .data-attribution {
-    text-align: center;
-    padding: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .data-attribution p {
-    color: #64748b;
-    font-size: 0.75rem;
-    opacity: 0.6;
-    margin: 0;
-    line-height: 1.5;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .realtime-cyber-dashboard {
-      padding: 1rem 0.5rem;
-    }
-
-    .dashboard-header {
-      flex-direction: column;
-      gap: 1rem;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    .cyber-cards-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .cyber-card {
-      padding: 1.25rem;
-    }
-
-    .main-number .counter {
-      font-size: 2rem;
-    }
-
-    .cta-content h3 {
-      font-size: 1.25rem;
-    }
-
-    .cta-button {
-      padding: 0.875rem 1.5rem;
-      font-size: 0.9rem;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .services-grid,
-    .use-cases-grid,
-    .testimonials-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .threats-preview {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-  }
-
-</style>
+<!-- Importar estilos del dashboard desde archivo externo -->
+<link rel="stylesheet" href="/styles/dashboard.css" />
 
 <script>
   // Cybersecurity Dashboard API Integration
   class CyberDashboard {
     constructor() {
-      this.apiEndpoint = import.meta.env.BACKEND_URL + '/api/threat/data';
+      const BACKEND_URL = import.meta.env.PUBLIC_BACKEND_URL || 'https://sesec-backend.fly.dev';
+this.apiEndpoint = `${BACKEND_URL}/api/threat/data`;
       this.refreshInterval = 15 * 60 * 1000; // 15 minutes
       this.retryAttempts = 3;
       this.retryDelay = 5000;
@@ -1361,26 +591,28 @@ const testimonials = [
       const sparkline = card.querySelector('.sparkline');
       const trendText = card.querySelector('.trend-text');
       
-      // Mostrar número de ataques país a país si están disponibles
-      if (counter && data.topAttackPairs && data.topAttackPairs.length > 0) {
-        this.animateCounter(counter, data.topAttackPairs.length);
-        card.querySelector('.unit').textContent = '';
-      } else if (counter && data.percentage !== undefined) {
-        this.animateCounter(counter, data.percentage);
-        card.querySelector('.unit').textContent = '%';
+      // Calcular el total de ataques país a país usando topAttackPairs
+      const totalAttacks = data.topAttackPairs ? 
+        data.topAttackPairs.reduce((sum, pair) => sum + (pair.attacks || 0), 0) : 0;
+
+      console.log('Cloudflare Data:', data);
+      console.log('Total Attack Pairs (index.astro):', totalAttacks);
+      console.log('Top Attack Pairs (index.astro):', data.topAttackPairs);
+
+      if (counter) {
+        this.animateCounter(counter, totalAttacks);
+        card.querySelector('.unit').textContent = ''; // No mostrar '%' si es un conteo total
       }
       
-      // Actualizar subtítulo con información de ataques país a país
-      if (subtitle && data.topAttackPairs && data.topAttackPairs.length > 0) {
-        const topPair = data.topAttackPairs[0];
-        subtitle.textContent = `${topPair.origin_country} → ${topPair.target_country}`;
-      } else if (subtitle) {
-        subtitle.textContent = `Top técnica: ${data.topTechnique || 'DDoS'}`;
+      // Actualizar subtítulo con información sobre los ataques país a país
+      if (subtitle) {
+        const uniquePairs = data.topAttackPairs ? data.topAttackPairs.length : 0;
+        subtitle.textContent = `${uniquePairs} Ataques en 24h`;
       }
       
-      // Actualizar tendencia con datos reales
-      if (trendText && data.topAttackPairs && data.topAttackPairs.length > 0) {
-        trendText.textContent = `${data.topAttackPairs.length} rutas activas`;
+      // Actualizar tendencia con el total de ataques país a país
+      if (trendText) {
+        trendText.textContent = `${totalAttacks} ataques entre países`;
       }
       
       if (sparkline && data.trend) {
@@ -1456,6 +688,7 @@ const testimonials = [
           }
           
           // Update dashboard data
+          console.log('Datos recibidos del backend para dashboard:', result.data);
           this.updateDashboard(result.data);
         } else {
           throw new Error(result.error || 'Invalid API response');

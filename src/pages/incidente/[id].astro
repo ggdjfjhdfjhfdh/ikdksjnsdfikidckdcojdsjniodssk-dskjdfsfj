@@ -1,0 +1,1031 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Button from '../../components/Button.astro';
+import SEO from '../../components/SEO.astro';
+import LoadingSpinner from '../../components/LoadingSpinner.astro';
+
+// Configuración para rutas dinámicas - renderizado en el servidor
+export const prerender = false;
+
+const { id } = Astro.params;
+const PUBLIC_BACKEND_URL = import.meta.env.PUBLIC_BACKEND_URL || 'https://sesec-backend.fly.dev';
+const EMERGENCY_SHARED_SECRET = import.meta.env.EMERGENCY_SHARED_SECRET || '89ae197c406d9683548b2a55a8bc6260f2733dfc4941acfcbe39efdf0d56df25';
+
+// Función para obtener datos del ticket
+async function fetchTicketData(ticketId) {
+  try {
+    console.log('🔍 Fetching ticket data for ID:', ticketId);
+    console.log('🌐 Backend URL:', PUBLIC_BACKEND_URL);
+    
+    const response = await fetch(`${PUBLIC_BACKEND_URL}/api/tickets/security-incidents/${ticketId}`, {
+      headers: {
+        'x-emergency-token': EMERGENCY_SHARED_SECRET,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log('📊 Response status:', response.status);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ Ticket data received:', data);
+    
+    return data.ticket; // El backend devuelve { success: true, ticket: {...} }
+  } catch (error) {
+    console.error('❌ Error fetching ticket data:', error);
+    throw error;
+  }
+}
+
+// Normalizar tipos de incidente
+function normalizeIncidentType(type) {
+  const typeMap = {
+    'Malware/Ransomware': 'Malware/Ransomware',
+    'Phishing': 'Phishing',
+    'Ataque DDoS': 'Ataque DDoS',
+    'Brecha de datos': 'Brecha de datos',
+    'Acceso no autorizado': 'Acceso no autorizado',
+    'Vulnerabilidad crítica': 'Vulnerabilidad crítica',
+    'Otro incidente': 'Otro incidente',
+    'insider_threat': 'Amenaza Interna',
+    'zero_day': 'Zero-Day',
+    'social_engineering': 'Ingeniería Social'
+  };
+  return typeMap[type] || type;
+}
+
+// Generar recomendaciones basadas en el tipo de incidente
+function generateRecommendations(incidentType, severity) {
+  // Normalizar el tipo de incidente para el mapeo
+  const normalizedType = incidentType?.toLowerCase().replace(/[^a-z]/g, '');
+  
+  const recommendations = {
+    malware: [
+      '🚨 INMEDIATO: Desconectar el equipo infectado de la red',
+      '🔒 Aislar sistemas comprometidos para evitar propagación',
+      '🛡️ Ejecutar análisis antivirus completo en modo seguro',
+      '💾 Verificar integridad de backups antes de restaurar',
+      '🔄 Actualizar todas las firmas de seguridad y parches',
+      '📋 Documentar archivos y procesos afectados'
+    ],
+    ransomware: [
+      '🚨 CRÍTICO: NO pagar el rescate - desconectar inmediatamente',
+      '🔌 Aislar todos los sistemas de la red corporativa',
+      '💾 Verificar backups offline y su integridad',
+      '📞 Contactar con autoridades y equipo forense',
+      '🔍 Identificar vector de entrada para prevenir reinfección',
+      '📋 Inventariar sistemas y datos afectados'
+    ],
+    phishing: [
+      '🔐 URGENTE: Cambiar credenciales comprometidas inmediatamente',
+      '🛡️ Activar autenticación multifactor (MFA) en todas las cuentas',
+      '📧 Bloquear remitente y reportar el email malicioso',
+      '👥 Notificar a usuarios afectados sobre el incidente',
+      '🔍 Revisar logs de acceso para detectar uso indebido',
+      '📚 Programar capacitación de seguridad para el equipo'
+    ],
+    ddos: [
+      '🌐 INMEDIATO: Activar protección DDoS en CDN/WAF',
+      '📞 Contactar con ISP para implementar filtrado upstream',
+      '📊 Monitorizar tráfico y identificar patrones de ataque',
+      '⚖️ Implementar rate limiting y throttling',
+      '🔄 Activar servidores de respaldo si están disponibles',
+      '📋 Documentar características del ataque para análisis'
+    ],
+    databreach: [
+      '🚨 CRÍTICO: Contener la brecha y cerrar vectores de acceso',
+      '📞 Notificar a autoridades de protección de datos (72h)',
+      '🔍 Evaluar alcance: qué datos y cuántos usuarios afectados',
+      '👥 Informar a clientes/usuarios afectados según normativa',
+      '🛡️ Implementar medidas de seguridad adicionales',
+      '📋 Preparar informe detallado para reguladores'
+    ],
+    intrusion: [
+      '🔒 INMEDIATO: Cambiar todas las credenciales administrativas',
+      '🔍 Realizar análisis forense para identificar alcance',
+      '🛡️ Parchear vulnerabilidades explotadas',
+      '📊 Revisar logs de sistema para actividad maliciosa',
+      '🔄 Implementar monitoreo adicional de seguridad',
+      '📋 Documentar métodos de intrusión para prevención'
+    ],
+    other: [
+      '🛑 INMEDIATO: Contener el incidente para evitar escalada',
+      '📞 Contactar con equipo de respuesta a incidentes',
+      '📋 Documentar todos los síntomas y evidencias',
+      '🔍 Evaluar impacto potencial en sistemas críticos',
+      '🛡️ Implementar medidas de protección temporales',
+      '📊 Monitorizar sistemas para detectar cambios'
+    ]
+  };
+
+  // Mapeo de tipos específicos a categorías principales
+  const typeMapping = {
+    'malwareransomware': 'malware',
+    'ataqueddos': 'ddos',
+    'brechadedatos': 'databreach',
+    'fugadedatos': 'databreach'
+  };
+
+  const mappedType = typeMapping[normalizedType] || normalizedType;
+  
+  // Ajustar recomendaciones según severidad
+  let baseRecommendations = recommendations[mappedType] || recommendations.other;
+  
+  if (severity === 'critical' || severity === 'high') {
+    // Para incidentes críticos, agregar recomendaciones adicionales
+    baseRecommendations = [
+      '🚨 ALERTA CRÍTICA: Activar protocolo de emergencia',
+      ...baseRecommendations,
+      '📞 Escalar inmediatamente a dirección ejecutiva',
+      '📺 Preparar comunicación para medios si es necesario'
+    ];
+  }
+
+  return baseRecommendations;
+}
+
+// Formatear fecha
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleString('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+// Formatear nivel de severidad
+function formatSeverity(severity: string) {
+  const severityMap = {
+    'low': { text: 'Baja', class: 'severity-low' },
+    'medium': { text: 'Media', class: 'severity-medium' },
+    'high': { text: 'Alta', class: 'severity-high' },
+    'critical': { text: 'Crítica', class: 'severity-critical' }
+  };
+  return severityMap[severity] || { text: severity, class: 'severity-unknown' };
+}
+
+// Funciones de utilidad para iconos y formateo
+function getBrowserIcon(browser: string): string {
+  const icons = {
+    'chrome': '🌐',
+    'firefox': '🦊',
+    'safari': '🧭',
+    'edge': '🌐',
+    'opera': '🔴'
+  };
+  return icons[browser?.toLowerCase()] || '🌐';
+}
+
+function getOSIcon(os: string): string {
+  const icons = {
+    'windows': '🪟',
+    'macos': '🍎',
+    'linux': '🐧',
+    'ios': '📱',
+    'android': '🤖'
+  };
+  return icons[os?.toLowerCase()] || '💻';
+}
+
+function getCountryFlag(countryCode: string): string {
+  if (!countryCode) return '🏁';
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char => 127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
+}
+
+function calculateElapsedTime(startDate: string): string {
+  const start = new Date(startDate);
+  const now = new Date();
+  const diff = now.getTime() - start.getTime();
+  
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  return `${hours}h ${minutes}m`;
+}
+
+// Calcular próxima actualización
+function calculateNextUpdate(lastUpdate) {
+  const last = new Date(lastUpdate);
+  const next = new Date(last.getTime() + (30 * 60 * 1000)); // +30 minutos
+  return formatDate(next);
+}
+
+let ticket = null;
+let error = null;
+let isLoading = true;
+
+try {
+  ticket = await fetchTicketData(id);
+  isLoading = false;
+} catch (err) {
+  error = err.message;
+  isLoading = false;
+  console.error('Error loading ticket:', error);
+}
+---
+
+<Layout 
+  title={`Incidente #${id} - Gestión de Ciberseguridad | Sesecpro`}
+  description={`Detalles del incidente de seguridad #${id}. Información completa sobre el estado, respuesta y recomendaciones.`}
+  lang="es"
+>
+  <SEO 
+    slot="head"
+    title={`Incidente #${id} - SESEC Ciberseguridad`}
+    description={`Gestión y seguimiento del incidente de seguridad #${id}. Información detallada, tiempos de respuesta y recomendaciones técnicas.`}
+    type="article"
+    image="/images/og-default.jpg"
+    imageAlt={`Incidente de seguridad #${id} - SESEC Ciberseguridad`}
+  />
+
+  <div class="incident-page-wrapper">
+    <main class="incident-content">
+      {isLoading ? (
+        <div class="loading-container">
+          <LoadingSpinner />
+          <p>Cargando información del incidente...</p>
+        </div>
+    ) : error ? (
+      <div class="error-container">
+        <h2>Error al cargar el incidente</h2>
+        <p>{error}</p>
+        <Button href="/contacto" variant="primary">Contactar Soporte</Button>
+      </div>
+    ) : ticket ? (
+      <>
+        <!-- Header del Incidente -->
+        <header class="incident-header">
+          <div class="incident-title">
+            <div class="title-main">
+              <h1>Incidente #{ticket.id.substring(0, 8)}</h1>
+              <span class={`incident-status status-${ticket.priority || 'medium'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                {ticket.status.toUpperCase()}
+              </span>
+            </div>
+            <div class="incident-type">
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              {normalizeIncidentType(ticket.incident_type)}
+              <span class="severity-indicator">{formatSeverity(ticket.priority || 'medium').text}</span>
+            </div>
+          </div>
+          
+          <div class="incident-meta">
+            <div class="meta-primary">
+              <div class="progress-indicator">
+                <div class="progress-ring">
+                  <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                    <path class="circle" stroke-dasharray={`${ticket.resolution_progress || 0}, 100`} d="M18 2.0845
+                      a 15.9155 15.9155 0 0 1 0 31.831
+                      a 15.9155 15.9155 0 0 1 0 -31.831"></path>
+                  </svg>
+                  <div class="progress-text">
+                    <span class="progress-percentage">{ticket.resolution_progress || 0}%</span>
+                    <span class="progress-label">Completado</span>
+                  </div>
+                </div>
+              </div>
+              <div class="time-indicators">
+                <div class="time-item">
+                  <span class="time-label">Tiempo Activo</span>
+                  <span class="time-value">{calculateElapsedTime(ticket.created_at)}</span>
+                </div>
+                <div class="time-item">
+                  <span class="time-label">Tiempo de Respuesta</span>
+                  <span class="time-value">{ticket.response?.estimated_time || '15 minutos'}</span>
+                </div>
+              </div>
+            </div>
+            <div class="meta-secondary">
+              <div class="meta-row">
+                <div class="meta-cell">
+                  <span class="meta-label">Creado</span>
+                  <span class="meta-value">{formatDate(ticket.created_at)}</span>
+                </div>
+                <div class="meta-cell">
+                  <span class="meta-label">Última Actualización</span>
+                  <span class="meta-value">{formatDate(ticket.updated_at || ticket.created_at)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="main-content">
+          <!-- Detalles y Línea de Tiempo -->
+          <section class="incident-details">
+            <div class="details-grid">
+             
+
+              <!-- Información de Contacto -->
+              {ticket.contact_info && (
+                <div class="details-card contact-info">
+                  <h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Información de Contacto
+                  </h3>
+                  <div class="info-grid">
+                    {ticket.contact_info.organization && (
+                      <div class="info-group">
+                        <h4>Organización</h4>
+                        <div class="info-value">{ticket.contact_info.organization}</div>
+                      </div>
+                    )}
+                    {ticket.contact_info.contact_name && (
+                      <div class="info-group">
+                        <h4>Contacto</h4>
+                        <div class="info-value">{ticket.contact_info.contact_name}</div>
+                      </div>
+                    )}
+                    {ticket.contact_info.contact_email && (
+                      <div class="info-group">
+                        <h4>Email</h4>
+                        <div class="info-value">
+                          <a href={`mailto:${ticket.contact_info.contact_email}`}>{ticket.contact_info.contact_email}</a>
+                        </div>
+                      </div>
+                    )}
+                    {ticket.contact_info.contact_phone && (
+                      <div class="info-group">
+                        <h4>Teléfono</h4>
+                        <div class="info-value">
+                          <a href={`tel:${ticket.contact_info.contact_phone}`}>{ticket.contact_info.contact_phone}</a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              
+            <!-- Detalles del Incidente -->
+                          <div class="overview-card details-card" style="width: 100%;">
+                <h3>Detalles del Incidente</h3>
+                <div class="details-content">
+                  <div class="detail-item">
+                    <span class="detail-label">Tipo</span>
+                    <span class="detail-value">{normalizeIncidentType(ticket.incident_type)}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Nivel de Emergencia</span>
+                    <span class="emergency-level">{ticket.response?.emergency_level || 'Alto'}</span>
+                  </div>
+                  {ticket.description && (
+                    <div class="detail-item description">
+                      <span class="detail-label">Descripción</span>
+                      <p class="incident-description">{ticket.description}</p>
+                    </div>
+                  )}
+                  <div class="detail-item">
+                    <span class="detail-label">Respuesta</span>
+                    <span class="detail-value">{ticket.response?.estimated_time || '2min'} vía {ticket.response?.contact_method || 'WhatsApp/Email'}</span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Origen</span>
+                    <span class="detail-value">{ticket.metadata?.source || 'Web'}</span>
+                  </div>
+                </div>
+              </div>
+          </section>
+
+          <!-- Widget de Comunicación Adaptativo -->
+          <section class="communication-widget-section">
+            <div class="communication-widget">
+              <div class="widget-header">
+                <svg xmlns="http://www.w3.org/2000/svg" class="widget-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <h3>Comunicación y Seguimiento</h3>
+                <span class="priority-indicator priority-{ticket.priority?.toLowerCase() || 'medium'}">{ticket.priority || 'MEDIO'}</span>
+              </div>
+              
+              <div class="widget-content">
+                {/* Widget adaptativo según la prioridad del incidente */}
+                {(ticket.priority === 'CRITICAL' || ticket.priority === 'HIGH') ? (
+                  <div class="critical-communication">
+                    <div class="urgent-notice">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                      </svg>
+                      <div class="urgent-text">
+                        <h4>Respuesta Inmediata Activada</h4>
+                        <p>Nuestro equipo de emergencia ha sido notificado automáticamente</p>
+                      </div>
+                    </div>
+                    
+                    <div class="communication-options critical">
+                      <div class="option-card primary">
+                        <div class="option-header">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                          </svg>
+                          <div class="option-info">
+                            <h5>Llamada Inmediata</h5>
+                            <p>Contacto directo en menos de 2 minutos</p>
+                          </div>
+                        </div>
+                        <button class="contact-btn primary" onclick="initiateCall()">
+                          Llamar Ahora
+                        </button>
+                      </div>
+                      
+                      <div class="option-card secondary">
+                        <div class="option-header">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                          </svg>
+                          <div class="option-info">
+                            <h5>WhatsApp Emergencia</h5>
+                            <p>Soporte técnico especializado</p>
+                          </div>
+                        </div>
+                        <button class="contact-btn secondary" onclick="openEmergencyChat()">
+                          💬 Abrir WhatsApp
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div class="status-updates">
+                      <h5>Actualizaciones Automáticas</h5>
+                      <p>Recibirás notificaciones cada <strong>5 minutos</strong> sobre el progreso</p>
+                    </div>
+                  </div>
+                ) : ticket.priority === 'MEDIUM' ? (
+                  <div class="medium-communication">
+                    <div class="response-info">
+                      <div class="response-time">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="time-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12,6 12,12 16,14"></polyline>
+                        </svg>
+                        <span>Tiempo estimado de respuesta: <strong>{ticket.response?.estimated_time || '15 minutos'}</strong></span>
+                      </div>
+                    </div>
+                    
+                    <div class="communication-options medium">
+                      <div class="option-card">
+                        <div class="option-header">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                          </svg>
+                          <div class="option-info">
+                            <h5>WhatsApp Soporte</h5>
+                            <p>Respuesta en 10-15 minutos</p>
+                          </div>
+                        </div>
+                        <button class="contact-btn" onclick="openSupportChat()">
+                          💬 Abrir WhatsApp
+                        </button>
+                      </div>
+                      
+                      <div class="option-card">
+                        <div class="option-header">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                          </svg>
+                          <div class="option-info">
+                            <h5>Email Detallado</h5>
+                            <p>Respuesta completa en 30 minutos</p>
+                          </div>
+                        </div>
+                        <button class="contact-btn" onclick="requestEmailResponse()">
+                          Solicitar Email
+                        </button>
+                      </div>
+                      
+                      <div class="option-card">
+                        <div class="option-header">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="option-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                          </svg>
+                          <div class="option-info">
+                            <h5>Llamada Programada</h5>
+                            <p>Te llamamos en el horario que prefieras</p>
+                          </div>
+                        </div>
+                        <button class="contact-btn" onclick="scheduleCall()">
+                          Programar Llamada
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div class="status-updates">
+                      <h5>Seguimiento</h5>
+                      <p>Actualizaciones cada <strong>15 minutos</strong> por tu canal preferido</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div class="low-communication">
+                    <div class="response-info">
+                      <div class="response-time">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="time-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12,6 12,12 16,14"></polyline>
+                        </svg>
+                        <span>Tiempo estimado de respuesta: <strong>{ticket.response?.estimated_time || '1 hora'}</strong></span>
+                      </div>
+                    </div>
+                    
+                    <div class="auto-response-notice">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20,6 9,17 4,12"></polyline>
+                      </svg>
+                      <div class="notice-text">
+                        <h5>Respuesta Automática Enviada</h5>
+                        <p>Hemos enviado un email con los primeros pasos de resolución a <strong>{ticket.contact_info?.email || 'tu email'}</strong></p>
+                      </div>
+                    </div>
+                    
+                    <div class="tracking-portal">
+                      <h5>Portal de Seguimiento</h5>
+                      <p>Puedes seguir el progreso de tu incidente en esta página. Se actualizará automáticamente cada <strong>30 minutos</strong>.</p>
+                      <div class="portal-actions">
+                        <button class="contact-btn secondary" onclick="enableNotifications()">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                          </svg>
+                          Activar Notificaciones
+                        </button>
+                        <button class="contact-btn" onclick="requestCallback()">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                          </svg>
+                          Solicitar Llamada
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                <div class="widget-footer">
+                  <div class="next-update">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="update-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <polyline points="1 20 1 14 7 14"></polyline>
+                      <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          
+
+            <div class="recommendations-container">
+              <div class="section-header">
+                <svg xmlns="http://www.w3.org/2000/svg" class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <h2>Acciones Recomendadas</h2>
+              </div>
+              <ul class="recommendations-list">
+                {generateRecommendations(ticket.incident_type, ticket.priority).map((rec, index) => (
+                  <li class="recommendation-item">
+                    <span class="recommendation-number">{index + 1}</span>
+                    <p>{rec}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        </div>
+
+      </>
+    ) : (
+      <div class="no-data">
+        <h2>No se encontró información para este incidente</h2>
+        <p>El incidente solicitado no existe o no está disponible.</p>
+        <Button href="/contacto">Reportar Problema</Button>
+      </div>
+    )}
+    </main>
+  </div>
+
+  <link rel="stylesheet" href="/styles/incident-detail.css" />
+  
+  <script define:vars={{ ticketData: { 
+    id: ticket?.id || id, 
+    incident_type: ticket?.incident_type || 'No especificado', 
+    priority: ticket?.priority || 'MEDIUM', 
+    status: ticket?.status || 'OPEN', 
+    description: ticket?.description?.substring(0, 200) || 'Sin descripción',
+    created_at: ticket?.created_at || new Date().toISOString()
+  }}}>
+    // Datos del ticket disponibles globalmente
+    window.ticketData = ticketData;
+  </script>
+  
+  <script>
+    // Funciones del Widget de Comunicación
+    
+    // Función para mostrar notificaciones al usuario
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = 'notification notification-' + type;
+      notification.textContent = message;
+      
+      let backgroundColor = '#3b82f6'; // default info color
+      if (type === 'success') backgroundColor = '#10b981';
+      if (type === 'error') backgroundColor = '#ef4444';
+      
+      notification.style.cssText = 
+        'position: fixed;' +
+        'top: 20px;' +
+        'right: 20px;' +
+        'padding: 15px 20px;' +
+        'border-radius: 5px;' +
+        'color: white;' +
+        'font-weight: bold;' +
+        'z-index: 10000;' +
+        'max-width: 300px;' +
+        'box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);' +
+        'background-color: ' + backgroundColor + ';';
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
+    }
+
+    // Función para crear y mostrar contador regresivo
+    function showCallCountdown(minutes = 5) {
+      // Crear el elemento del contador
+      const countdownContainer = document.createElement('div');
+      countdownContainer.className = 'call-countdown-container';
+      countdownContainer.innerHTML = `
+        <div class="call-countdown-modal">
+          <div class="countdown-header">
+            <h3>📞 Llamada Solicitada</h3>
+            <button class="countdown-close" onclick="hideCallCountdown()">&times;</button>
+          </div>
+          <div class="countdown-content">
+            <div class="countdown-timer">
+              <div class="countdown-circle">
+                <svg class="countdown-svg" viewBox="0 0 100 100">
+                  <circle class="countdown-bg" cx="50" cy="50" r="45"></circle>
+                  <circle class="countdown-progress" cx="50" cy="50" r="45"></circle>
+                </svg>
+                <div class="countdown-text">
+                  <span class="countdown-time">${minutes}:00</span>
+                  <span class="countdown-label">minutos</span>
+                </div>
+              </div>
+            </div>
+            <div class="countdown-message">
+              <p>🔔 <strong>Nuestro equipo te contactará en aproximadamente ${minutes} minutos</strong></p>
+              <p>Mantén tu teléfono cerca y disponible</p>
+            </div>
+            <div class="countdown-actions">
+              <button class="countdown-btn secondary" onclick="hideCallCountdown()">Cerrar</button>
+              <button class="countdown-btn primary" onclick="cancelCall()">Cancelar Llamada</button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(countdownContainer);
+      
+      // Iniciar el contador
+      startCountdownTimer(minutes * 60); // Convertir a segundos
+    }
+    
+    // Función para iniciar el timer del contador
+    function startCountdownTimer(totalSeconds) {
+      const countdownElement = document.querySelector('.countdown-time');
+      const progressCircle = document.querySelector('.countdown-progress');
+      const circumference = 2 * Math.PI * 45; // radio = 45
+      
+      progressCircle.style.strokeDasharray = circumference;
+      progressCircle.style.strokeDashoffset = 0;
+      
+      let currentSeconds = totalSeconds;
+      
+      const timer = setInterval(() => {
+        const minutes = Math.floor(currentSeconds / 60);
+        const seconds = currentSeconds % 60;
+        
+        // Actualizar texto
+        countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        // Actualizar círculo de progreso
+        const progress = (totalSeconds - currentSeconds) / totalSeconds;
+        const offset = circumference * progress;
+        progressCircle.style.strokeDashoffset = offset;
+        
+        currentSeconds--;
+        
+        if (currentSeconds < 0) {
+          clearInterval(timer);
+          // Mostrar que la llamada debería llegar
+          countdownElement.textContent = '¡Llamando!';
+          setTimeout(() => {
+            hideCallCountdown();
+            showNotification('📞 Nuestro equipo debería estar contactándote ahora', 'info');
+          }, 2000);
+        }
+      }, 1000);
+      
+      // Guardar el timer para poder cancelarlo
+      window.callCountdownTimer = timer;
+    }
+    
+    // Función para ocultar el contador
+    function hideCallCountdown() {
+      const countdown = document.querySelector('.call-countdown-container');
+      if (countdown) {
+        countdown.remove();
+      }
+      if (window.callCountdownTimer) {
+        clearInterval(window.callCountdownTimer);
+      }
+    }
+    
+    // Función para cancelar la llamada
+    function cancelCall() {
+      if (confirm('¿Estás seguro de que quieres cancelar la llamada?')) {
+        hideCallCountdown();
+        showNotification('❌ Llamada cancelada', 'info');
+      }
+    }
+
+    // Solicitar llamada de emergencia (solo notifica al administrador)
+    async function startEmergencyCall() {
+      if (confirm('¿Deseas solicitar una llamada de emergencia? Se notificará inmediatamente a nuestro equipo para que te contacten.')) {
+        try {
+          const response = await fetch('https://web-sesec-2025-backend.fly.dev/api/tickets/communication/emergency-call', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + (localStorage.getItem('ticketToken') || 'emergency-access')
+            },
+            body: JSON.stringify({ 
+              ticketId: window.location.pathname.split('/').pop() 
+            })
+          });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            showNotification('✅ Solicitud de llamada enviada. Nuestro equipo ha sido notificado y te contactará pronto.', 'success');
+            // Mostrar contador regresivo para llamada de emergencia (2-3 minutos)
+            showCallCountdown(3);
+          } else {
+            showNotification('❌ Error al enviar la solicitud: ' + result.error, 'error');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showNotification('❌ Error de conexión. Por favor, intenta nuevamente.', 'error');
+        }
+      }
+    }
+
+    function initiateCall() {
+      startEmergencyCall();
+    }
+    
+    function openEmergencyChat() {
+      // Usar datos globales del ticket
+      const ticket = window.ticketData;
+      const description = ticket.description.length > 100 ? 
+        ticket.description.substring(0, 100) + '...' : 
+        ticket.description;
+      
+      const emergencyTemplate = `🚨 *EMERGENCIA CIBERSEGURIDAD* 🚨
+
+📋 *Ticket:* ${ticket.id}
+🔴 *Prioridad:* ${ticket.priority}
+⚠️ *Tipo:* ${ticket.incident_type}
+📊 *Estado:* ${ticket.status}
+
+📝 *Descripción:*
+${description}
+
+🆘 *Solicito asistencia inmediata para este incidente crítico.*
+
+---
+Enviado desde Portal SESEC`;
+
+      const whatsappNumber = '+34900123456'; // Número de emergencia
+      const encodedMessage = encodeURIComponent(emergencyTemplate);
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+      
+      // Abrir WhatsApp en nueva ventana
+      window.open(whatsappUrl, '_blank');
+      
+      // Mostrar confirmación
+      showNotification('Abriendo WhatsApp para chat de emergencia...', 'success');
+    }
+    
+    function openSupportChat() {
+      // Usar datos globales del ticket
+      const ticket = window.ticketData;
+      const description = ticket.description.length > 150 ? 
+        ticket.description.substring(0, 150) + '...' : 
+        ticket.description;
+      
+      const supportTemplate = `💬 *Consulta Soporte SESEC*
+
+📋 *Ticket:* ${ticket.id}
+🔵 *Prioridad:* ${ticket.priority}
+📂 *Tipo:* ${ticket.incident_type}
+📊 *Estado:* ${ticket.status}
+
+📝 *Descripción:*
+${description}
+
+❓ *Necesito asistencia con este incidente.*
+
+---
+Enviado desde Portal SESEC`;
+
+      const whatsappNumber = '+34900123456'; // Número de soporte
+      const encodedMessage = encodeURIComponent(supportTemplate);
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+      
+      // Abrir WhatsApp en nueva ventana
+      window.open(whatsappUrl, '_blank');
+      
+      // Mostrar confirmación
+      showNotification('Abriendo WhatsApp para chat de soporte...', 'info');
+    }
+    
+    async function requestEmailResponse() {
+      if (confirm('¿Deseas recibir una respuesta detallada por email en los próximos 30 minutos?')) {
+        try {
+          const response = await fetch('https://web-sesec-2025-backend.fly.dev/api/tickets/communication/request-email', {
+             method: 'POST',
+             headers: { 
+               'Content-Type': 'application/json',
+               'Authorization': 'Bearer ' + (localStorage.getItem('ticketToken') || 'emergency-access')
+             },
+             body: JSON.stringify({ 
+               ticketId: window.location.pathname.split('/').pop() 
+             })
+           });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            showNotification('✅ Solicitud enviada. Recibirás un email detallado pronto.', 'success');
+          } else {
+            showNotification('❌ Error al enviar la solicitud: ' + result.error, 'error');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showNotification('❌ Error de conexión. Por favor, intenta nuevamente.', 'error');
+        }
+      }
+    }
+    
+    async function scheduleCall() {
+      const time = prompt('¿En qué horario prefieres que te llamemos? (ej: 14:30, mañana 10:00)');
+      if (time) {
+        try {
+          const response = await fetch('https://web-sesec-2025-backend.fly.dev/api/tickets/communication/schedule-call', {
+             method: 'POST',
+             headers: { 
+               'Content-Type': 'application/json',
+               'Authorization': 'Bearer ' + (localStorage.getItem('ticketToken') || 'emergency-access')
+             },
+             body: JSON.stringify({ 
+               ticketId: window.location.pathname.split('/').pop(),
+               scheduledTime: time 
+             })
+           });
+
+          const result = await response.json();
+          
+          if (result.success) {
+             showNotification('✅ Llamada programada para: ' + time + '. Nuestro equipo ha sido notificado.', 'success');
+          } else {
+            showNotification('❌ Error al programar la llamada: ' + result.error, 'error');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showNotification('❌ Error de conexión. Por favor, intenta nuevamente.', 'error');
+        }
+      }
+    }
+    
+    function enableNotifications() {
+      // Activar notificaciones del navegador
+      if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            alert('Notificaciones activadas. Te mantendremos informado sobre el progreso.');
+            localStorage.setItem('notifications-enabled', 'true');
+            
+            setTimeout(() => {
+              new Notification('SESEC - Incidente ' + window.location.pathname.split('/').pop(), {
+                body: 'Las notificaciones están funcionando correctamente',
+                icon: '/favicon.ico'
+              });
+            }, 1000);
+          } else {
+            alert('Tu navegador no soporta notificaciones. Te mantendremos informado por email.');
+          }
+        });
+      } else {
+        alert('Tu navegador no soporta notificaciones. Te mantendremos informado por email.');
+      }
+    }
+    
+    async function requestCallback() {
+      if (confirm('¿Deseas que te llamemos cuando tengamos una actualización importante?')) {
+        try {
+          const response = await fetch('https://web-sesec-2025-backend.fly.dev/api/tickets/communication/request-callback', {
+             method: 'POST',
+             headers: { 
+               'Content-Type': 'application/json',
+               'Authorization': 'Bearer ' + (localStorage.getItem('ticketToken') || 'emergency-access')
+             },
+             body: JSON.stringify({ 
+               ticketId: window.location.pathname.split('/').pop() 
+             })
+           });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            showNotification('✅ Solicitud registrada. Te llamaremos cuando tengamos novedades importantes.', 'success');
+            // Mostrar contador regresivo para callback (5-10 minutos)
+            showCallCountdown(8);
+          } else {
+            showNotification('❌ Error al registrar la solicitud: ' + result.error, 'error');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showNotification('❌ Error de conexión. Por favor, intenta nuevamente.', 'error');
+        }
+      }
+    }
+    
+    // Auto-actualización de la página según la prioridad
+    function setupAutoRefresh() {
+      const priority = document.querySelector('.priority-indicator')?.textContent?.toLowerCase();
+      let interval;
+      
+      switch(priority) {
+        case 'critical':
+        case 'high':
+          interval = 5 * 60 * 1000; // 5 minutos
+          break;
+        case 'medium':
+          interval = 15 * 60 * 1000; // 15 minutos
+          break;
+        default:
+          interval = 30 * 60 * 1000; // 30 minutos
+      }
+      
+      setTimeout(() => {
+        if (confirm('¿Deseas actualizar la página para ver el progreso más reciente?')) {
+          window.location.reload();
+        }
+      }, interval);
+    }
+    
+    // Inicializar cuando se carga la página
+    document.addEventListener('DOMContentLoaded', function() {
+      setupAutoRefresh();
+      
+      // Mostrar notificación si están habilitadas
+      if (localStorage.getItem('notifications-enabled') === 'true') {
+        setTimeout(() => {
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('Incidente en seguimiento', {
+              body: 'Tu incidente está siendo procesado. Te mantendremos informado.',
+              icon: '/favicon.ico'
+            });
+          }
+        }, 2000);
+      }
+    });
+  </script>
+</Layout>
