@@ -634,10 +634,13 @@ function generateDynamicQuickActions(ticket) {
     priority: 'always'
   });
 
-  // Acciones basadas en prioridad
+  // Acciones basadas en prioridad - soportar español e inglés
   const priority = ticket.priority?.toLowerCase();
+  const isCriticalOrHigh = priority === 'crítica' || priority === 'critical' || 
+                          priority === 'alta' || priority === 'high';
+  const isMedium = priority === 'media' || priority === 'medium';
   
-  if (priority === 'crítica' || priority === 'alta') {
+  if (isCriticalOrHigh) {
     // Para incidentes críticos/altos - comunicación inmediata
     if (ticket.contact_phone) {
       actions.push({
@@ -666,7 +669,15 @@ function generateDynamicQuickActions(ticket) {
         priority: 'critical'
       });
     }
-  } else if (priority === 'media') {
+    
+    // Agregar acción de escalación inmediata para críticos
+    actions.push({
+      icon: '⚠️',
+      text: 'ESCALAR INMEDIATAMENTE',
+      url: `mailto:escalation@sesec.es?subject=ESCALACIÓN CRÍTICA: ${ticket.incident_type} - Ticket ${ticket.id}&body=INCIDENTE CRÍTICO REQUIERE ESCALACIÓN INMEDIATA%0A%0ATicket: ${ticket.id}%0ATipo: ${ticket.incident_type}%0APrioridad: ${ticket.priority}%0A%0ADetalles del incidente adjuntos.`,
+      priority: 'escalation'
+    });
+  } else if (isMedium) {
     // Para incidentes medios - comunicación programada
     if (ticket.contact_email) {
       actions.push({
@@ -697,31 +708,42 @@ function generateDynamicQuickActions(ticket) {
     }
   }
 
-  // Acciones específicas por tipo de incidente
-  const incidentType = ticket.incident_type?.toLowerCase();
+  // Acciones específicas por tipo de incidente - mejorar detección
+  const incidentType = ticket.incident_type?.toLowerCase() || '';
   
-  if (incidentType?.includes('ddos')) {
+  if (incidentType.includes('ddos')) {
     actions.push({
       icon: '🛡️',
       text: 'Panel anti-DDoS',
       url: `${baseUrl}/dashboard/ddos-protection`,
       priority: 'incident-specific'
     });
-  } else if (incidentType?.includes('malware') || incidentType?.includes('virus')) {
+  } else if (incidentType.includes('malware') || incidentType.includes('virus') || 
+             incidentType.includes('ransomware') || incidentType.includes('cryptominer')) {
     actions.push({
       icon: '🦠',
       text: 'Herramientas antimalware',
       url: `${baseUrl}/dashboard/malware-tools`,
       priority: 'incident-specific'
     });
-  } else if (incidentType?.includes('phishing')) {
+    
+    // Acción específica para ransomware
+    if (incidentType.includes('ransomware')) {
+      actions.push({
+        icon: '🔐',
+        text: 'Protocolo Ransomware',
+        url: `${baseUrl}/dashboard/ransomware-protocol`,
+        priority: 'incident-specific'
+      });
+    }
+  } else if (incidentType.includes('phishing')) {
     actions.push({
       icon: '🎣',
       text: 'Reportar phishing',
       url: `${baseUrl}/dashboard/phishing-report`,
       priority: 'incident-specific'
     });
-  } else if (incidentType?.includes('brecha') || incidentType?.includes('breach')) {
+  } else if (incidentType.includes('brecha') || incidentType.includes('breach')) {
     actions.push({
       icon: '🔒',
       text: 'Protocolo de brecha',
@@ -730,13 +752,13 @@ function generateDynamicQuickActions(ticket) {
     });
   }
 
-  // Acción de escalación si es necesaria
-  if (priority === 'crítica' && ticket.escalation_contact) {
+  // Siempre agregar acción de documentación para incidentes críticos
+  if (isCriticalOrHigh) {
     actions.push({
-      icon: '⬆️',
-      text: 'Escalar incidente',
-      url: `mailto:${ticket.escalation_contact}?subject=ESCALACIÓN CRÍTICA: Incidente ${ticket.id}`,
-      priority: 'escalation'
+      icon: '📝',
+      text: 'Documentar respuesta',
+      url: `${baseUrl}/dashboard/incident-documentation?ticket=${ticket.id}`,
+      priority: 'documentation'
     });
   }
 
