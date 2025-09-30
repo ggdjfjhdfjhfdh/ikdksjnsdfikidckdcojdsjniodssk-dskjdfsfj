@@ -157,11 +157,13 @@ function generatePlainText(ticket) {
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
     `🔗 ACCIONES RÁPIDAS\n` +
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-    `📋 Ver ticket completo: ${process.env.FRONTEND_URL || 'https://sesec.vercel.app'}/incidente/${ticket.id}\n` +
-    (ticket.contact_phone ? `📞 Llamar cliente: ${ticket.contact_phone}\n` : '') +
-    (ticket.contact_email ? `📧 Email cliente: ${ticket.contact_email}\n` : '') +
-    (ticket.war_room_channel ? `\n🔗 Canal de War Room: ${ticket.war_room_channel}\n` : '') +
-    `\nID del Ticket: ${ticket.id}\n`;
+    generateDynamicQuickActions(ticket).map(action => {
+      let prefix = '';
+      if (action.priority === 'critical') prefix = '🚨 ';
+      else if (action.priority === 'escalation') prefix = '⚠️ ';
+      return `${prefix}${action.icon} ${action.text}: ${action.url}`;
+    }).join('\n') + '\n\n' +
+    `ID del Ticket: ${ticket.id}\n`;
 }
 
 function generateHtml(ticket) {
@@ -352,6 +354,27 @@ function generateHtml(ticket) {
             background: rgba(255,255,255,0.3);
             transform: translateY(-2px);
           }
+          
+          .quick-actions a[style*="rgba(255,0,0"] {
+            background: rgba(255, 0, 0, 0.15) !important;
+            border-color: rgba(255, 0, 0, 0.4) !important;
+            color: #dc3545 !important;
+            font-weight: 700 !important;
+            animation: pulse 2s infinite;
+          }
+          
+          .quick-actions a[style*="rgba(255,165,0"] {
+            background: rgba(255, 165, 0, 0.15) !important;
+            border-color: rgba(255, 165, 0, 0.4) !important;
+            color: #fd7e14 !important;
+            font-weight: 700 !important;
+          }
+          
+          @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+          }
           .war-room {
             background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
             color: white;
@@ -448,9 +471,13 @@ function generateHtml(ticket) {
 
             <div class="quick-actions">
               <h2>🔗 Acciones Rápidas</h2>
-              <a href="${process.env.FRONTEND_URL || 'https://sesec.vercel.app'}/incidente/${ticket.id}">📋 Ver Ticket Completo</a>
-              ${ticket.contact_phone ? `<a href="tel:${ticket.contact_phone}">📞 Llamar Cliente</a>` : ''}
-              ${ticket.contact_email ? `<a href="mailto:${ticket.contact_email}">📧 Email Cliente</a>` : ''}
+              ${generateDynamicQuickActions(ticket).map(action => {
+                let buttonClass = '';
+                if (action.priority === 'critical') buttonClass = ' style="background: rgba(255,0,0,0.3); border-color: rgba(255,0,0,0.5);"';
+                else if (action.priority === 'escalation') buttonClass = ' style="background: rgba(255,165,0,0.3); border-color: rgba(255,165,0,0.5);"';
+                
+                return `<a href="${action.url}"${buttonClass}>${action.icon} ${action.text}</a>`;
+              }).join('')}
             </div>
 
             ${ticket.war_room_channel ? 
@@ -593,6 +620,127 @@ function getCommunicationMethodDetails(type, data) {
     icon: '💬',
     priority: 'MEDIA'
   };
+}
+
+function generateDynamicQuickActions(ticket) {
+  const actions = [];
+  const baseUrl = process.env.FRONTEND_URL || 'https://sesec.vercel.app';
+  
+  // Siempre incluir enlace al ticket completo
+  actions.push({
+    icon: '📋',
+    text: 'Ver ticket completo',
+    url: `${baseUrl}/incidente/${ticket.id}`,
+    priority: 'always'
+  });
+
+  // Acciones basadas en prioridad
+  const priority = ticket.priority?.toLowerCase();
+  
+  if (priority === 'crítica' || priority === 'alta') {
+    // Para incidentes críticos/altos - comunicación inmediata
+    if (ticket.contact_phone) {
+      actions.push({
+        icon: '📞',
+        text: 'LLAMAR INMEDIATAMENTE',
+        url: `tel:${ticket.contact_phone}`,
+        priority: 'critical'
+      });
+    }
+    
+    if (ticket.war_room_channel) {
+      actions.push({
+        icon: '🚨',
+        text: 'Unirse a War Room',
+        url: ticket.war_room_channel,
+        priority: 'critical'
+      });
+    }
+    
+    // WhatsApp para comunicación rápida si está disponible
+    if (ticket.contact_whatsapp) {
+      actions.push({
+        icon: '💬',
+        text: 'WhatsApp urgente',
+        url: `https://wa.me/${ticket.contact_whatsapp}?text=Incidente%20crítico%20${ticket.id}%20requiere%20atención%20inmediata`,
+        priority: 'critical'
+      });
+    }
+  } else if (priority === 'media') {
+    // Para incidentes medios - comunicación programada
+    if (ticket.contact_email) {
+      actions.push({
+        icon: '📧',
+        text: 'Responder por email',
+        url: `mailto:${ticket.contact_email}?subject=Re: Incidente ${ticket.id} - ${ticket.incident_type}&body=Estimado cliente,%0A%0AEn relación al incidente ${ticket.id}...`,
+        priority: 'medium'
+      });
+    }
+    
+    if (ticket.contact_phone) {
+      actions.push({
+        icon: '📞',
+        text: 'Programar llamada',
+        url: `tel:${ticket.contact_phone}`,
+        priority: 'medium'
+      });
+    }
+  } else {
+    // Para incidentes leves - comunicación por email principalmente
+    if (ticket.contact_email) {
+      actions.push({
+        icon: '📧',
+        text: 'Enviar actualización',
+        url: `mailto:${ticket.contact_email}?subject=Actualización: Incidente ${ticket.id}&body=Estimado cliente,%0A%0ALe informamos sobre el estado del incidente ${ticket.id}...`,
+        priority: 'low'
+      });
+    }
+  }
+
+  // Acciones específicas por tipo de incidente
+  const incidentType = ticket.incident_type?.toLowerCase();
+  
+  if (incidentType?.includes('ddos')) {
+    actions.push({
+      icon: '🛡️',
+      text: 'Panel anti-DDoS',
+      url: `${baseUrl}/dashboard/ddos-protection`,
+      priority: 'incident-specific'
+    });
+  } else if (incidentType?.includes('malware') || incidentType?.includes('virus')) {
+    actions.push({
+      icon: '🦠',
+      text: 'Herramientas antimalware',
+      url: `${baseUrl}/dashboard/malware-tools`,
+      priority: 'incident-specific'
+    });
+  } else if (incidentType?.includes('phishing')) {
+    actions.push({
+      icon: '🎣',
+      text: 'Reportar phishing',
+      url: `${baseUrl}/dashboard/phishing-report`,
+      priority: 'incident-specific'
+    });
+  } else if (incidentType?.includes('brecha') || incidentType?.includes('breach')) {
+    actions.push({
+      icon: '🔒',
+      text: 'Protocolo de brecha',
+      url: `${baseUrl}/dashboard/breach-protocol`,
+      priority: 'incident-specific'
+    });
+  }
+
+  // Acción de escalación si es necesaria
+  if (priority === 'crítica' && ticket.escalation_contact) {
+    actions.push({
+      icon: '⬆️',
+      text: 'Escalar incidente',
+      url: `mailto:${ticket.escalation_contact}?subject=ESCALACIÓN CRÍTICA: Incidente ${ticket.id}`,
+      priority: 'escalation'
+    });
+  }
+
+  return actions;
 }
 
 function getIncidentActionSteps(incidentType, priority) {
